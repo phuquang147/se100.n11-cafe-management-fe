@@ -1,13 +1,38 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
-    'Droid Sans', 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+  font-family: 'Gilroy';
+  font-weight: 900;
+  src: url(./assets/fonts/SVN-Gilroy\ Bold.otf) format('opentype');
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+@font-face {
+  font-family: 'Gilroy';
+  font-weight: 800;
+  src: url(./assets/fonts/SVN-Gilroy\ SemiBold.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  font-weight: 700;
+  src: url(./assets/fonts/SVN-Gilroy\ Medium.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  font-weight: 600;
+  src: url(./assets/fonts/SVN-Gilroy\ Regular.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  font-weight: 500;
+  src: url(./assets/fonts/SVN-Gilroy\ Thin.otf) format('opentype');
+}
+
+body {
+  margin: 0;
+  font-family: Gilroy, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::-webkit-scrollbar {

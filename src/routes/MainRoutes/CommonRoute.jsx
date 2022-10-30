@@ -1,10 +1,10 @@
-import Dashboard from '~/pages/Dashboard';
+import Home from '~/pages/Home';
 import Page404 from '~/pages/Page404';
 
 const CommonRoutes = [
   {
     path: '/',
-    element: <Dashboard />,
+    element: <Home />,
   },
   {
     path: '*',
