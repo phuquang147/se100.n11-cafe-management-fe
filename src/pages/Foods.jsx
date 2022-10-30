@@ -27,7 +27,7 @@ function a11yProps(index) {
   };
 }
 
-export default function Home() {
+export default function Foods() {
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -47,7 +47,9 @@ export default function Home() {
   return (
     <Container maxWidth="xl">
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
-        <Typography variant="h4">Menu</Typography>
+        <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+          Menu
+        </Typography>
         <CartSidebar isOpenFilter={openFilter} onOpenFilter={handleOpenFilter} onCloseFilter={handleCloseFilter} />
       </Stack>
       <Stack
