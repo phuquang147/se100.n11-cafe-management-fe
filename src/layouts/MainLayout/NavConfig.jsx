@@ -7,13 +7,18 @@ const navConfig = [
   {
     title: 'dashboard',
     path: '/',
-    icon: getIcon('eva:pie-chart-2-fill'),
+    icon: getIcon('ant-design:home-outlined'),
     // children: [
     //   {
     //     title: 'user',
     //     path: '/user',
     //   },
     // ],
+  },
+  {
+    title: 'menu',
+    path: '/menu',
+    icon: getIcon('ep:coffee'),
   },
   {
     title: 'login',

@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 // @mui
-import { Box, Container, Grid, Stack, Tab, Tabs, TextField, Typography } from '@mui/material';
-import CartSidebar from '~/components/Home/CartSideBar';
-import Product from '~/components/Home/Product';
+import { Box, Button, Container, Grid, Stack, Tab, Tabs, TextField, Typography } from '@mui/material';
+// components
+import Iconify from '~/components/Iconify';
+import Product from '~/components/Menu/Product';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -14,28 +16,21 @@ function TabPanel(props) {
   );
 }
 
-export default function Home() {
+export default function Menu() {
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const [openFilter, setOpenFilter] = useState(false);
-
-  const handleOpenFilter = () => {
-    setOpenFilter(true);
-  };
-
-  const handleCloseFilter = () => {
-    setOpenFilter(false);
-  };
-
   return (
     <Container maxWidth="xl">
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
         <Typography variant="h4">Menu</Typography>
-        <CartSidebar isOpenFilter={openFilter} onOpenFilter={handleOpenFilter} onCloseFilter={handleCloseFilter} />
+
+        <Button variant="contained" component={Link} to="/menu/new" startIcon={<Iconify icon="eva:plus-fill" />}>
+          Thêm món
+        </Button>
       </Stack>
       <Stack
         direction="row"
@@ -51,56 +46,32 @@ export default function Home() {
       </Stack>
       <TabPanel value={value} index={0}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={6} xl={4}>
+          <Grid item xs={12} sm={6} md={4} xl={3}>
             <Product />
           </Grid>
-          <Grid item xs={12} md={6} xl={4}>
+          <Grid item xs={12} sm={6} md={4} xl={3}>
             <Product />
           </Grid>
-          <Grid item xs={12} md={6} xl={4}>
+          <Grid item xs={12} sm={6} md={4} xl={3}>
             <Product />
           </Grid>
-          <Grid item xs={12} md={6} xl={4}>
-            <Product />
-          </Grid>
-          <Grid item xs={12} md={6} xl={4}>
-            <Product />
-          </Grid>
-          <Grid item xs={12} md={6} xl={4}>
-            <Product />
-          </Grid>
-          <Grid item xs={12} md={6} xl={4}>
-            <Product />
-          </Grid>
-          <Grid item xs={12} md={6} xl={4}>
-            <Product />
-          </Grid>
-          <Grid item xs={12} md={6} xl={4}>
-            <Product />
-          </Grid>
-          <Grid item xs={12} md={6} xl={4}>
+          <Grid item xs={12} sm={6} md={4} xl={3}>
             <Product />
           </Grid>
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={6} xl={4}>
+          <Grid item xs={12} sm={6} md={4} xl={3}>
             <Product />
           </Grid>
-          <Grid item xs={12} md={6} xl={4}>
+          <Grid item xs={12} sm={6} md={4} xl={3}>
             <Product />
           </Grid>
-          <Grid item xs={12} md={6} xl={4}>
+          <Grid item xs={12} sm={6} md={4} xl={3}>
             <Product />
           </Grid>
-          <Grid item xs={12} md={6} xl={4}>
-            <Product />
-          </Grid>
-          <Grid item xs={12} md={6} xl={4}>
-            <Product />
-          </Grid>
-          <Grid item xs={12} md={6} xl={4}>
+          <Grid item xs={12} sm={6} md={4} xl={3}>
             <Product />
           </Grid>
         </Grid>

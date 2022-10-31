@@ -35,8 +35,8 @@ export default function Product() {
               <Iconify icon="akar-icons:minus" width={24} height={24} color={theme.palette.grey[500]} />
             </IconButton>
             <Typography sx={{ display: 'inline', fontSize: '16px', fontWeight: '700' }}>1</Typography>
-            <IconButton size="small" sx={{ border: '1px solid #ccc' }}>
-              <Iconify icon="akar-icons:plus" width={24} height={24} color={theme.palette.grey[500]} />
+            <IconButton size="small" color="primary" sx={{ border: '1px solid #ffa16c' }}>
+              <Iconify icon="akar-icons:plus" width={24} height={24} />
             </IconButton>
           </Grid>
           <Grid item xs={8}>
