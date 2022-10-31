@@ -16,9 +16,14 @@ const navConfig = [
     // ],
   },
   {
-    title: 'menu',
-    path: '/menu',
-    icon: getIcon('ep:coffee'),
+    title: 'Foods & Drinks',
+    path: '/foods',
+    icon: getIcon('fluent:drink-to-go-24-filled'),
+  },
+  {
+    title: 'Bills',
+    path: '/bills',
+    icon: getIcon('icon-park-solid:bill'),
   },
   {
     title: 'login',

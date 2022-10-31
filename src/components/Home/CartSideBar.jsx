@@ -1,5 +1,5 @@
 // material
-import { Badge, Box, Button, Divider, Drawer, IconButton, Stack, Typography, useTheme } from '@mui/material';
+import { Badge, Button, Divider, Drawer, IconButton, Stack, Typography, useTheme } from '@mui/material';
 // components
 import Iconify from '~/components/Iconify';
 import Scrollbar from '~/components/Scrollbar';
