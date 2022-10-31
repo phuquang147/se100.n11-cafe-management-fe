@@ -18,7 +18,7 @@ export default function BillDetail() {
 
   return (
     <Box>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 4 }}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
         <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
           Order #35
         </Typography>
@@ -35,7 +35,8 @@ export default function BillDetail() {
           Active
         </Button>
       </Stack>
-      <Typography variant="h6" sx={{ mb: 2 }}>
+      <Divider />
+      <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>
         Details
       </Typography>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -76,7 +77,7 @@ export default function BillDetail() {
         </Typography>
       </Stack>
       <Box sx={{ width: '100%' }}>
-        <nav aria-label="main mailbox folders">
+        <nav aria-label="main">
           <List>
             <ListItem disablePadding secondaryAction="$42">
               <ListItemButton>
@@ -115,6 +116,7 @@ export default function BillDetail() {
                 />
               </ListItemButton>
             </ListItem>
+            <Divider />
             <ListItem disablePadding secondaryAction="$42">
               <ListItemButton>
                 <ListItemIcon>
@@ -133,6 +135,29 @@ export default function BillDetail() {
                 />
               </ListItemButton>
             </ListItem>
+            <Divider />
+            <Stack direction="row" alignItems="center" justifyContent="space-between">
+              <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>
+                Total
+              </Typography>
+              <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>
+                $1000
+              </Typography>
+            </Stack>
+            <Box sx={{ px: 3 }}>
+              <Button
+                fullWidth
+                sx={{
+                  backgroundColor: theme.palette.primary.main,
+                  color: 'black',
+                  '&:hover': { backgroundColor: theme.palette.primary.dark },
+                  height: '45px',
+                  fontWeight: 'bold',
+                }}
+              >
+                Charge customer $1000
+              </Button>
+            </Box>
           </List>
         </nav>
       </Box>
