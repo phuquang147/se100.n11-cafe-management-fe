@@ -7,7 +7,7 @@ const navConfig = [
   {
     title: 'dashboard',
     path: '/',
-    icon: getIcon('ant-design:home-outlined'),
+    icon: getIcon('ant-design:home-filled'),
     // children: [
     //   {
     //     title: 'user',
@@ -16,9 +16,9 @@ const navConfig = [
     // ],
   },
   {
-    title: 'Foods & Drinks',
-    path: '/foods',
-    icon: getIcon('fluent:drink-to-go-24-filled'),
+    title: 'menu',
+    path: '/menu',
+    icon: getIcon('mdi:food-fork-drink'),
   },
   {
     title: 'Bills',
