@@ -1,6 +1,8 @@
 import { Button, Container, Grid, Stack, Typography } from '@mui/material';
 import CustomFilter from '~/components/CustomFilter';
 import ViewsDatePicker from '~/components/ViewsDatePicker';
+import ListBill from '~/components/Bills/ListBill';
+import BillDetail from '~/components/Bills/BillDetail';
 
 const optionsFilter = ['All orders', 'Asc number', 'Desc number', 'Asc price', 'Desc price'];
 
@@ -21,9 +23,10 @@ export default function Bills() {
             <CustomFilter options={optionsFilter} />
             <ViewsDatePicker />
           </Stack>
+          <ListBill />
         </Grid>
         <Grid item xs={12} md={7} xl={8}>
-          Order detail
+          <BillDetail />
         </Grid>
       </Grid>
     </Container>

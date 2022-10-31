@@ -6,7 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 export default function ViewsDatePicker() {
-  const [value, setValue] = useState(dayjs('2022-04-07'));
+  const [value, setValue] = useState(dayjs(new Date()));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
