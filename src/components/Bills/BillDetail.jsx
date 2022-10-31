@@ -149,10 +149,11 @@ export default function BillDetail() {
                 fullWidth
                 sx={{
                   backgroundColor: theme.palette.primary.main,
-                  color: 'black',
+                  color: 'white',
                   '&:hover': { backgroundColor: theme.palette.primary.dark },
                   height: '45px',
                   fontWeight: 'bold',
+                  fontSize: '16px',
                 }}
               >
                 Charge customer $1000
