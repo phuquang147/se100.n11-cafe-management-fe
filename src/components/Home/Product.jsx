@@ -14,7 +14,7 @@ export default function Product() {
             <img
               src="https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg"
               alt="product-img"
-              style={{ borderRadius: '10px' }}
+              style={{ borderRadius: '10px', maxWidth: '100%' }}
               draggable={false}
             />
           </Grid>

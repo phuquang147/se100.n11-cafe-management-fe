@@ -13,7 +13,7 @@ export default function ViewsDatePicker() {
       <DatePicker
         views={['year', 'month']}
         openTo="year"
-        label="Year and Month"
+        label="Năm và Tháng"
         minDate={dayjs('2012-03-01')}
         maxDate={dayjs('2023-06-01')}
         value={value}

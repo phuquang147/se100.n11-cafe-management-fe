@@ -14,7 +14,7 @@ import Iconify from '~/components/Iconify';
 const categories = ['Nước uống', 'Đồ ăn nhanh'];
 
 export default function ProductForm() {
-  const StudentSchema = Yup.object().shape({
+  const ProductSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập tên món'),
   });
 
@@ -24,7 +24,7 @@ export default function ProductForm() {
   };
 
   const methods = useForm({
-    resolver: yupResolver(StudentSchema),
+    resolver: yupResolver(ProductSchema),
     defaultValues,
   });
 

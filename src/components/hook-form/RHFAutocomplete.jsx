@@ -19,6 +19,7 @@ export default function RHFAutocomplete({ name, ...other }) {
         return (
           <Autocomplete
             {...field}
+            value={field.value || other.options[0]}
             fullWidth
             disableClearable
             onChange={(e, value) => {

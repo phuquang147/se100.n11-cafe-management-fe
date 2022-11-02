@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Divider,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -12,16 +13,31 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
+import { useNavigate } from 'react-router';
+import Iconify from '../Iconify';
 
 export default function BillDetail() {
   const theme = useTheme();
+  const navigate = useNavigate();
+
+  const handleEdit = () => {
+    navigate('/bills/edit/35');
+  };
 
   return (
     <Box>
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
-        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-          Order #35
-        </Typography>
+        <Stack direction="row" alignItems="center">
+          <Typography variant="h4" sx={{ fontWeight: 'bold', mr: 2 }}>
+            Đơn #35
+          </Typography>
+          <IconButton size="small" color="primary" onClick={handleEdit}>
+            <Iconify icon="ic:baseline-mode-edit" width={24} height={24} />
+          </IconButton>
+          <IconButton size="small" color="primary">
+            <Iconify icon="bxs:trash-alt" width={24} height={24} />
+          </IconButton>
+        </Stack>
         <Button
           sx={{
             backgroundColor: theme.palette.primary.main,
@@ -32,54 +48,42 @@ export default function BillDetail() {
             cursor: 'default',
           }}
         >
-          Active
+          Đang uống
         </Button>
       </Stack>
       <Divider />
       <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>
-        Details
+        Chi tiết
       </Typography>
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Stack direction="row" alignItems="center" spacing={10}>
         <Box sx={{ textAlign: 'center' }}>
           <Typography variant="subtitle1" color={theme.palette.grey[500]} sx={{ fontWeight: 'bold', mb: 1 }}>
-            Table
+            Bàn
           </Typography>
           <Typography variant="h6">2B</Typography>
         </Box>
         <Box sx={{ textAlign: 'center' }}>
           <Typography variant="subtitle1" color={theme.palette.grey[500]} sx={{ fontWeight: 'bold', mb: 1 }}>
-            Guests
+            Khách
           </Typography>
           <Typography variant="h6">2</Typography>
         </Box>
-        <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="subtitle1" color={theme.palette.grey[500]} sx={{ fontWeight: 'bold', mb: 1 }}>
-            Customer
-          </Typography>
-          <Typography variant="h6">{faker.name.fullName()}</Typography>
-        </Box>
-        <Box sx={{ textAlign: 'center' }}>
-          <Typography variant="subtitle1" color={theme.palette.grey[500]} sx={{ fontWeight: 'bold', mb: 1 }}>
-            Payment
-          </Typography>
-          <Typography variant="h6">By Cash</Typography>
-        </Box>
       </Stack>
       <Typography variant="h6" sx={{ mb: 2, mt: 4 }}>
-        Order info
+        Thông tin hóa đơn
       </Typography>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Typography variant="subtitle1" color={theme.palette.grey[500]} sx={{ fontWeight: 'bold', mb: 1 }}>
-          Items
+          Sản phẩm
         </Typography>
         <Typography variant="subtitle1" color={theme.palette.grey[500]} sx={{ fontWeight: 'bold', mb: 1 }}>
-          Price
+          Giá
         </Typography>
       </Stack>
       <Box sx={{ width: '100%' }}>
         <nav aria-label="main">
           <List>
-            <ListItem disablePadding secondaryAction="$42">
+            <ListItem disablePadding secondaryAction="24,000 VNĐ">
               <ListItemButton>
                 <ListItemIcon>
                   <img
@@ -98,7 +102,7 @@ export default function BillDetail() {
               </ListItemButton>
             </ListItem>
             <Divider />
-            <ListItem disablePadding secondaryAction="$42">
+            <ListItem disablePadding secondaryAction="24,000 VNĐ">
               <ListItemButton>
                 <ListItemIcon>
                   <img
@@ -117,7 +121,7 @@ export default function BillDetail() {
               </ListItemButton>
             </ListItem>
             <Divider />
-            <ListItem disablePadding secondaryAction="$42">
+            <ListItem disablePadding secondaryAction="24,000 VNĐ">
               <ListItemButton>
                 <ListItemIcon>
                   <img
@@ -138,10 +142,10 @@ export default function BillDetail() {
             <Divider />
             <Stack direction="row" alignItems="center" justifyContent="space-between">
               <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>
-                Total
+                Tổng
               </Typography>
               <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>
-                $1000
+                200,000 VNĐ
               </Typography>
             </Stack>
             <Box sx={{ px: 3 }}>
@@ -156,7 +160,7 @@ export default function BillDetail() {
                   fontSize: '16px',
                 }}
               >
-                Charge customer $1000
+                Thanh toán
               </Button>
             </Box>
           </List>
