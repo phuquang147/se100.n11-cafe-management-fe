@@ -30,11 +30,6 @@ export default function Product() {
             style={{ maxWidth: '100%' }}
             touchActivation="doubleTap"
           />
-          {/* <img
-            src="https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg"
-            alt="product-img"
-            draggable={false}
-          /> */}
           <Stack rowGap={1} sx={{ px: 2, pb: 2 }}>
             <Stack>
               <Typography
