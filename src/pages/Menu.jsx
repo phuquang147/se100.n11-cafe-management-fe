@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 // @mui
 import { Box, Button, Container, Grid, Stack, Tab, Tabs, TextField, Typography } from '@mui/material';
 // components
-import Iconify from '~/components/Iconify';
+import Iconify from '~/components/UI/Iconify';
 import Product from '~/components/Menu/Product';
 
 function TabPanel(props) {

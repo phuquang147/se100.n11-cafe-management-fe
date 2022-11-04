@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 // material
 import { Button, Divider, Drawer, IconButton, Stack, Typography } from '@mui/material';
 // components
-import Iconify from '~/components/Iconify';
-import Scrollbar from '~/components/Scrollbar';
+import Iconify from '~/components/UI/Iconify';
+import Scrollbar from '~/components/UI/Scrollbar';
 
 FilterSidebar.propTypes = {
   children: PropTypes.node.isRequired,

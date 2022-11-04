@@ -5,7 +5,7 @@ import { NavLink as RouterLink, useLocation } from 'react-router-dom';
 import { Box, Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { alpha, styled, useTheme } from '@mui/material/styles';
 //
-import Iconify from '~/components/Iconify';
+import Iconify from '~/components/UI/Iconify';
 
 const ListItemStyle = styled((props) => <ListItemButton disableGutters {...props} />)(({ theme }) => ({
   ...theme.typography.body2,

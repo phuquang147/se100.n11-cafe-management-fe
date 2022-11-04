@@ -9,9 +9,9 @@ import account from '~/_mock/account';
 // hooks
 import useResponsive from '~/hooks/useResponsive';
 // components
-import Logo from '~/components/Logo';
+import Logo from '~/components/UI/Logo';
 import NavSection from '~/layouts/MainLayout/NavSection';
-import Scrollbar from '~/components/Scrollbar';
+import Scrollbar from '~/components/UI/Scrollbar';
 //
 import navConfig from './NavConfig';
 

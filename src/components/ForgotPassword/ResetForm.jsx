@@ -9,7 +9,7 @@ import { IconButton, InputAdornment, Stack } from '@mui/material';
 // components
 import FormProvider from '~/components/hook-form/FormProvider';
 import RHFTextField from '~/components/hook-form/RHFTextField';
-import Iconify from '~/components/Iconify';
+import Iconify from '~/components/UI/Iconify';
 
 export default function ResetForm() {
   const [showPassword, setShowPassword] = useState(false);

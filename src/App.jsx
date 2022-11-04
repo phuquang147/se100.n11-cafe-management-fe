@@ -1,5 +1,5 @@
 import Routes from './routes';
-import ScrollToTop from './components/ScrollToTop';
+import ScrollToTop from './components/UI/ScrollToTop';
 // import { BaseOptionChartStyle } from './components/chart/BaseOptionChart';
 
 export default function App() {

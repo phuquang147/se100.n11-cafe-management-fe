@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 // hooks
 import useResponsive from '~/hooks/useResponsive';
 // components
-import Logo from '~/components/Logo';
+import Logo from '~/components/UI/Logo';
 // sections
 import LoginForm from '~/components/Login/LoginForm';
 // img

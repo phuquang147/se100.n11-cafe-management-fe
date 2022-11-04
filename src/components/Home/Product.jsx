@@ -1,11 +1,7 @@
 // material
-import { Button, Card, Grid, Stack, Typography, IconButton, useTheme } from '@mui/material';
-// components
-import Iconify from '../Iconify';
+import { Button, Card, Grid, Stack, Typography } from '@mui/material';
 
 export default function Product() {
-  const theme = useTheme();
-
   return (
     <Card sx={{ padding: 1 }}>
       <Stack rowGap={2}>
@@ -29,22 +25,9 @@ export default function Product() {
           </Grid>
         </Grid>
 
-        <Grid container columnSpacing={2}>
-          <Grid item xs={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <IconButton size="small" sx={{ border: '1px solid #ccc' }}>
-              <Iconify icon="akar-icons:minus" width={24} height={24} color={theme.palette.grey[500]} />
-            </IconButton>
-            <Typography sx={{ display: 'inline', fontSize: '16px', fontWeight: '700' }}>1</Typography>
-            <IconButton size="small" color="primary" sx={{ border: '1px solid #ffa16c' }}>
-              <Iconify icon="akar-icons:plus" width={24} height={24} />
-            </IconButton>
-          </Grid>
-          <Grid item xs={8}>
-            <Button variant="outlined" fullWidth sx={{ py: '6px', borderRadius: '10px' }}>
-              Thêm vào giỏ
-            </Button>
-          </Grid>
-        </Grid>
+        <Button variant="outlined" fullWidth sx={{ py: '6px', borderRadius: '10px' }}>
+          Thêm món
+        </Button>
       </Stack>
     </Card>
   );

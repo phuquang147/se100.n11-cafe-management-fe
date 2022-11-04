@@ -6,6 +6,7 @@ import Menu from '~/pages/Menu';
 import AddItemForm from '~/pages/AddItemForm';
 import Page404 from '~/pages/Page404';
 import BillForm from '~/components/Bills/BillForm';
+import Order from '~/pages/Order';
 
 const CommonRoutes = [
   {
@@ -28,6 +29,10 @@ const CommonRoutes = [
   {
     path: '/bills/edit/:id',
     element: <EditItemForm title="Chỉnh sửa hóa đơn" form={<BillForm />} />,
+  },
+  {
+    path: '/order',
+    element: <Order />,
   },
   {
     path: '*',

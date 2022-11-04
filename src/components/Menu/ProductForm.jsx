@@ -9,7 +9,7 @@ import { Button, Grid, Stack, Typography } from '@mui/material';
 import FormProvider from '~/components/hook-form/FormProvider';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 import RHFAutocomplete from '../hook-form/RHFAutocomplete';
-import Iconify from '~/components/Iconify';
+import Iconify from '~/components/UI/Iconify';
 
 const categories = ['Nước uống', 'Đồ ăn nhanh'];
 

@@ -14,8 +14,8 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import Iconify from '../Iconify';
-import ConfirmModal from '../ConfirmModal';
+import Iconify from '../UI/Iconify';
+import ConfirmModal from '../UI/ConfirmModal';
 
 export default function BillDetail({ bill }) {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);

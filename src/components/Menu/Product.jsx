@@ -4,7 +4,7 @@ import { SideBySideMagnifier } from 'react-image-magnifiers';
 // material
 import { Button, Card, Grid, Stack, Typography } from '@mui/material';
 // components
-import ConfirmModal from '~/components/ConfirmModal';
+import ConfirmModal from '~/components/UI/ConfirmModal';
 
 export default function Product() {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
