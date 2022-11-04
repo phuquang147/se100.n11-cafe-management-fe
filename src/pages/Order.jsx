@@ -1,8 +1,22 @@
-import { Box, Button, Grid, IconButton, Modal, Stack, Tab, Tabs, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  Modal,
+  Stack,
+  Tab,
+  Tabs,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
 import Product from '~/components/Home/Product';
+import Table from '~/components/Order/Table';
 import Iconify from '~/components/UI/Iconify';
+import { Link } from 'react-router-dom';
 
 const style = {
   position: 'absolute',
@@ -60,9 +74,31 @@ export default function Order() {
   };
 
   return (
-    <div>
-      <Typography>Chọn bàn</Typography>
-      <Button onClick={handleOpenModal}>Bàn 1</Button>
+    <Container>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
+        <Typography variant="h4">Đặt món</Typography>
+
+        <Button variant="contained" component={Link} to="/menu/new" startIcon={<Iconify icon="eva:plus-fill" />}>
+          Thêm bàn
+        </Button>
+      </Stack>
+      {/* <Button onClick={handleOpenModal}>Bàn 1</Button> */}
+
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={6} md={4} xl={3}>
+          <Table />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4} xl={3}>
+          <Table />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4} xl={3}>
+          <Table />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4} xl={3}>
+          <Table />
+        </Grid>
+      </Grid>
+
       <Modal
         open={openFoodModal}
         onClose={handleCloseModal}
@@ -116,6 +152,6 @@ export default function Order() {
           </Grid>
         </Box>
       </Modal>
-    </div>
+    </Container>
   );
 }
