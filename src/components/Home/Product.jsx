@@ -1,12 +1,12 @@
 // material
-import { Button, Card, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Grid, Stack, Typography } from '@mui/material';
 
 export default function Product() {
   return (
-    <Card sx={{ padding: 1 }}>
+    <Card>
       <Stack rowGap={2}>
-        <Grid container columnSpacing={2}>
-          <Grid item xs={4}>
+        <Grid container rowSpacing={1}>
+          <Grid item xs={12}>
             <img
               src="https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg"
               alt="product-img"
@@ -14,20 +14,18 @@ export default function Product() {
               draggable={false}
             />
           </Grid>
-          <Grid item xs={8}>
-            <Stack>
+          <Grid item xs={12}>
+            <Box sx={{ p: 1 }}>
               <Typography variant="h6">Hi-Tea Vải</Typography>
               <Typography variant="body2" color="primary" sx={{ fontWeight: '700' }}>
                 50.000 VNĐ
               </Typography>
-              <Typography sx={{ fontSize: '14px' }}>Lorem ipsum dolor sit amet consectetur adipisicing eli</Typography>
-            </Stack>
+              <Button variant="outlined" fullWidth sx={{ px: '6px', mt: 1, borderRadius: '10px' }}>
+                Thêm món
+              </Button>
+            </Box>
           </Grid>
         </Grid>
-
-        <Button variant="outlined" fullWidth sx={{ py: '6px', borderRadius: '10px' }}>
-          Thêm món
-        </Button>
       </Stack>
     </Card>
   );

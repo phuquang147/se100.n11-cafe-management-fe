@@ -132,21 +132,6 @@ export default function BillDetail({ bill }) {
                   VNĐ
                 </Typography>
               </Stack>
-              <Box sx={{ px: 3 }}>
-                <Button
-                  fullWidth
-                  sx={{
-                    backgroundColor: theme.palette.primary.main,
-                    color: 'white',
-                    '&:hover': { backgroundColor: theme.palette.primary.dark },
-                    height: '45px',
-                    fontWeight: 'bold',
-                    fontSize: '16px',
-                  }}
-                >
-                  Thanh toán
-                </Button>
-              </Box>
             </List>
           </nav>
         </Box>

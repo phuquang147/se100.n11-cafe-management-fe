@@ -1,9 +1,8 @@
-import { Button, Container, Grid, Stack, Typography } from '@mui/material';
+import { Container, Grid, Stack, Typography } from '@mui/material';
 import CustomFilter from '~/components/UI/CustomFilter';
 import ViewsDatePicker from '~/components/UI/ViewsDatePicker';
 import ListBill from '~/components/Bills/ListBill';
 import BillDetail from '~/components/Bills/BillDetail';
-import { useNavigate } from 'react-router';
 import { faker } from '@faker-js/faker';
 import { useState } from 'react';
 
@@ -74,11 +73,6 @@ const fakeBills = [
 
 export default function Bills() {
   const [currentBill, setCurrentBill] = useState(fakeBills[0]);
-  const navigate = useNavigate();
-
-  const handleCreateBill = () => {
-    navigate('/bills/new');
-  };
 
   const handleSelectBill = (bill) => {
     setCurrentBill(bill);
@@ -88,14 +82,9 @@ export default function Bills() {
     <Container maxWidth="xl">
       <Grid container spacing={4}>
         <Grid item xs={12} md={5} xl={4}>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
-            <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-              Hóa đơn
-            </Typography>
-            <Button variant="contained" sx={{ fontSize: 20 }} onClick={handleCreateBill}>
-              +
-            </Button>
-          </Stack>
+          <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+            Hóa đơn
+          </Typography>
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }} spacing={3}>
             <CustomFilter options={optionsFilter} />
             <ViewsDatePicker />

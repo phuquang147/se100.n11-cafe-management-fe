@@ -2,7 +2,7 @@ import { Badge, Card, Stack, Typography } from '@mui/material';
 
 export default function ListBill({ bills, onSelectBill }) {
   return (
-    <Stack direction="column" spacing={'12px'} sx={{ maxHeight: '600px', overflow: 'scroll' }}>
+    <Stack direction="column" spacing={'12px'} sx={{ maxHeight: '600px', overflowY: 'auto', p: '2px' }}>
       {bills.map((item, index) => (
         <Card key={index} sx={{ p: 2, cursor: 'pointer', minHeight: '94px' }} onClick={() => onSelectBill(item)}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
