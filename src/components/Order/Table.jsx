@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 // material
 import { Button, Card, Grid, IconButton, MenuItem, Stack, Typography } from '@mui/material';
 // components
@@ -11,7 +10,7 @@ import tableImg from '~/assets/images/table.svg';
 import tableUsedImg from '~/assets/images/table_used.svg';
 
 const _ = require('lodash');
-export default function Table() {
+export default function Table({ onOpenModalFood }) {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
 
   const handleOpenConfirmDeleteModal = () => {
@@ -20,6 +19,10 @@ export default function Table() {
 
   const handleCloseConfirmDeleteModal = () => {
     setShowConfirmDeleteModal(false);
+  };
+
+  const handleOpenModalFood = () => {
+    onOpenModalFood();
   };
 
   const handleDeleteTable = () => {};
@@ -60,13 +63,7 @@ export default function Table() {
             </IconButton>
           </Stack>
           {r === 1 ? (
-            <Button
-              variant="outlined"
-              fullWidth
-              sx={{ py: '6px', borderRadius: '10px' }}
-              component={Link}
-              to="/menu/edit/abs"
-            >
+            <Button variant="outlined" fullWidth sx={{ py: '6px', borderRadius: '10px' }} onClick={handleOpenModalFood}>
               Chọn món
             </Button>
           ) : (
@@ -74,8 +71,7 @@ export default function Table() {
               variant="contained"
               fullWidth
               sx={{ py: '6px', borderRadius: '10px' }}
-              component={Link}
-              to="/menu/edit/abs"
+              onClick={handleOpenModalFood}
             >
               Thanh toán
             </Button>

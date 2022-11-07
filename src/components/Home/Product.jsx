@@ -1,7 +1,7 @@
 // material
 import { Box, Button, Card, Grid, Stack, Typography } from '@mui/material';
 
-export default function Product() {
+export default function Product({ onSelect }) {
   return (
     <Card>
       <Stack rowGap={2}>
@@ -20,7 +20,18 @@ export default function Product() {
               <Typography variant="body2" color="primary" sx={{ fontWeight: '700' }}>
                 50.000 VNĐ
               </Typography>
-              <Button variant="outlined" fullWidth sx={{ px: '6px', mt: 1, borderRadius: '10px' }}>
+              <Button
+                variant="outlined"
+                fullWidth
+                sx={{ px: '6px', mt: 1, borderRadius: '10px' }}
+                onClick={() =>
+                  onSelect({
+                    img: 'https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg',
+                    name: 'Hi-Tea Vải',
+                    price: '50.000 VNĐ',
+                  })
+                }
+              >
                 Thêm món
               </Button>
             </Box>
