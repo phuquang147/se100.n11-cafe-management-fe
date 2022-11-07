@@ -98,8 +98,8 @@ export default function BillDetail({ bill }) {
         <Box sx={{ width: '100%' }}>
           <nav aria-label="main">
             <List>
-              {bill.products.map((product) => (
-                <>
+              {bill.products.map((product, index) => (
+                <Box key={index}>
                   <ListItem disablePadding secondaryAction={`${product.price * product.quantity} VNĐ`}>
                     <ListItemButton>
                       <ListItemIcon>
@@ -119,7 +119,7 @@ export default function BillDetail({ bill }) {
                     </ListItemButton>
                   </ListItem>
                   <Divider />
-                </>
+                </Box>
               ))}
               <Stack direction="row" alignItems="center" justifyContent="space-between">
                 <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>

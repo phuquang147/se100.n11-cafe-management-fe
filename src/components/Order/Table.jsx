@@ -10,7 +10,7 @@ import tableImg from '~/assets/images/table.svg';
 import tableUsedImg from '~/assets/images/table_used.svg';
 
 const _ = require('lodash');
-export default function Table({ onOpenModalFood }) {
+export default function Table({ onOpenModalFood, onPay }) {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
 
   const handleOpenConfirmDeleteModal = () => {
@@ -67,12 +67,7 @@ export default function Table({ onOpenModalFood }) {
               Chọn món
             </Button>
           ) : (
-            <Button
-              variant="contained"
-              fullWidth
-              sx={{ py: '6px', borderRadius: '10px' }}
-              onClick={handleOpenModalFood}
-            >
+            <Button variant="contained" fullWidth sx={{ py: '6px', borderRadius: '10px' }} onClick={onPay}>
               Thanh toán
             </Button>
           )}

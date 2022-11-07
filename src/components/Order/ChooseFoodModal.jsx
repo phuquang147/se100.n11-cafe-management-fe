@@ -14,8 +14,11 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React, { useState } from 'react';
+import { useRef } from 'react';
+import { toast } from 'react-toastify';
 import Product from '~/components/Home/Product';
 import Iconify from '~/components/UI/Iconify';
+import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
 
 const style = {
   position: 'absolute',
@@ -30,7 +33,7 @@ const style = {
     xs: '100%',
     md: '80%',
   },
-  overflowY: 'scroll',
+  overflowY: 'auto',
   bgcolor: 'background.paper',
   borderRadius: '10px',
   boxShadow: 24,
@@ -61,10 +64,9 @@ function TabPanel(props) {
 export default function ChooseFoodModal({ isOpen, onCloseModal }) {
   const [value, setValue] = useState(0);
   const [selectedFoods, setSelectedFoods] = useState([]);
+  const totalPriceRef = useRef();
   const styles = useStyles();
   const theme = useTheme();
-
-  const childRefs = React.useMemo(() => [...Array(12)].map(() => React.createRef()), []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -73,30 +75,49 @@ export default function ChooseFoodModal({ isOpen, onCloseModal }) {
   const handleSelectFood = (food) => {
     const updatedFoods = [...selectedFoods, food];
     setSelectedFoods(updatedFoods);
+    if (updatedFoods.length > 1) {
+      handleTotalPrice(updatedFoods);
+    }
   };
 
   const handleDeleteFood = (foodIndex) => {
     const updatedFoods = selectedFoods.filter((food, index) => index !== foodIndex);
     setSelectedFoods(updatedFoods);
+    handleTotalPrice(updatedFoods);
   };
 
   const handleDeleteAll = () => {
     setSelectedFoods([]);
+    totalPriceRef.current.innerText = '0 VNĐ';
   };
 
   const handleChangeQuantity = (index, type) => {
-    let quantity;
+    const updatedFoods = [...selectedFoods];
     if (type === 'increase') {
-      quantity = +childRefs[index].current.innerText + 1;
+      updatedFoods[index].quantity++;
     } else {
-      quantity = +childRefs[index].current.innerText - 1;
+      updatedFoods[index].quantity--;
     }
 
-    if (quantity === 0) {
+    if (updatedFoods[index].quantity === 0) {
       handleDeleteFood(index);
     } else {
-      childRefs[index].current.innerText = quantity;
+      setSelectedFoods(updatedFoods);
+      handleTotalPrice(updatedFoods);
     }
+  };
+
+  const handleTotalPrice = (foods) => {
+    const totalPrice = foods.reduce((acc, cur) => {
+      return acc + cur.price * cur.quantity;
+    }, 0);
+    totalPriceRef.current.innerText = printNumberWithCommas(totalPrice) + ' VNĐ';
+  };
+
+  const handleOrder = () => {
+    toast.success('Đặt bàn thành công');
+    handleDeleteAll();
+    onCloseModal();
   };
 
   return (
@@ -165,7 +186,7 @@ export default function ChooseFoodModal({ isOpen, onCloseModal }) {
                           />
                           <Stack direction="column" spacing="6px">
                             <Typography variant="h6">{item.name}</Typography>
-                            <Typography variant="subtitle2">{item.price}</Typography>
+                            <Typography variant="subtitle2">{printNumberWithCommas(item.price)} VNĐ</Typography>
                             <Stack direction="row" alignItems="center" spacing={2}>
                               <IconButton
                                 size="small"
@@ -177,11 +198,8 @@ export default function ChooseFoodModal({ isOpen, onCloseModal }) {
                               >
                                 <Iconify icon="akar-icons:minus" width={12} height={12} color="#ffa16c" />
                               </IconButton>
-                              <Typography
-                                ref={childRefs[index]}
-                                sx={{ display: 'inline', fontSize: '16px', fontWeight: '700' }}
-                              >
-                                1
+                              <Typography sx={{ display: 'inline', fontSize: '16px', fontWeight: '700' }}>
+                                {selectedFoods[index].quantity}
                               </Typography>
                               <IconButton
                                 size="small"
@@ -205,7 +223,11 @@ export default function ChooseFoodModal({ isOpen, onCloseModal }) {
                       </Stack>
                     </Card>
                   ))}
-                  <Button variant="contained" sx={{ height: '40px' }}>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Typography variant="subtitle1">Tổng</Typography>
+                    <Typography ref={totalPriceRef}>{printNumberWithCommas(selectedFoods[0].price)} VNĐ</Typography>
+                  </Stack>
+                  <Button variant="contained" sx={{ height: '40px' }} onClick={handleOrder}>
                     Đặt bàn
                   </Button>
                 </Stack>

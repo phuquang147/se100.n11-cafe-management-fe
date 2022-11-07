@@ -1,4 +1,5 @@
 // material
+import { faker } from '@faker-js/faker';
 import { Box, Button, Card, Grid, Stack, Typography } from '@mui/material';
 
 export default function Product({ onSelect }) {
@@ -28,7 +29,8 @@ export default function Product({ onSelect }) {
                   onSelect({
                     img: 'https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg',
                     name: 'Hi-Tea Vải',
-                    price: '50.000 VNĐ',
+                    price: faker.datatype.number({ min: 20000, max: 100000, precision: 1000 }),
+                    quantity: 1,
                   })
                 }
               >

@@ -4,16 +4,26 @@ import Table from '~/components/Order/Table';
 import Iconify from '~/components/UI/Iconify';
 import { Link } from 'react-router-dom';
 import ChooseFoodModal from '~/components/Order/ChooseFoodModal';
+import BillModal from '~/components/Order/BillModal';
 
 export default function Order() {
   const [openFoodModal, setOpenFoodModal] = useState(false);
+  const [openBillModal, setOpenBillModal] = useState(false);
 
-  const handleOpenModal = () => {
+  const handleOpenFoodModal = () => {
     setOpenFoodModal(true);
   };
 
-  const handleCloseModal = () => {
+  const handleCloseFoodModal = () => {
     setOpenFoodModal(false);
+  };
+
+  const handleOpenBillModal = () => {
+    setOpenBillModal(true);
+  };
+
+  const handleCloseBillModal = () => {
+    setOpenBillModal(false);
   };
 
   return (
@@ -28,20 +38,21 @@ export default function Order() {
 
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6} md={4} xl={3}>
-          <Table onOpenModalFood={handleOpenModal} />
+          <Table onOpenModalFood={handleOpenFoodModal} onPay={handleOpenBillModal} />
         </Grid>
         <Grid item xs={12} sm={6} md={4} xl={3}>
-          <Table onOpenModalFood={handleOpenModal} />
+          <Table onOpenModalFood={handleOpenFoodModal} onPay={handleOpenBillModal} />
         </Grid>
         <Grid item xs={12} sm={6} md={4} xl={3}>
-          <Table onOpenModalFood={handleOpenModal} />
+          <Table onOpenModalFood={handleOpenFoodModal} onPay={handleOpenBillModal} />
         </Grid>
         <Grid item xs={12} sm={6} md={4} xl={3}>
-          <Table onOpenModalFood={handleOpenModal} />
+          <Table onOpenModalFood={handleOpenFoodModal} onPay={handleOpenBillModal} />
         </Grid>
       </Grid>
 
-      <ChooseFoodModal isOpen={openFoodModal} onCloseModal={handleCloseModal} />
+      <ChooseFoodModal isOpen={openFoodModal} onCloseModal={handleCloseFoodModal} />
+      <BillModal isOpen={openBillModal} onCloseModal={handleCloseBillModal} />
     </Container>
   );
 }
