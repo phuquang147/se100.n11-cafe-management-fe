@@ -5,8 +5,9 @@ import { SideBySideMagnifier } from 'react-image-magnifiers';
 import { Button, Card, Grid, Stack, Typography } from '@mui/material';
 // components
 import ConfirmModal from '~/components/UI/ConfirmModal';
+import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
 
-export default function Product() {
+export default function Product({ data }) {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
 
   const handleOpenConfirmDeleteModal = () => {
@@ -24,8 +25,8 @@ export default function Product() {
       <Card>
         <Stack rowGap={1}>
           <SideBySideMagnifier
-            imageSrc="https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg"
-            imageAlt="product-img"
+            imageSrc={data.img}
+            imageAlt={data.name}
             alwaysInPlace={true}
             style={{ maxWidth: '100%' }}
             touchActivation="doubleTap"
@@ -40,10 +41,10 @@ export default function Product() {
                   whiteSpace: 'nowrap',
                 }}
               >
-                Hi-Tea Vải Lorem ipsum dolor sit amet.
+                {data.name}
               </Typography>
               <Typography variant="body2" color="primary" sx={{ fontWeight: '800' }}>
-                50.000 VNĐ
+                {printNumberWithCommas(data.price)} VNĐ
               </Typography>
             </Stack>
             <Grid container columnSpacing={1}>
@@ -65,6 +66,7 @@ export default function Product() {
                   sx={{ py: '6px', borderRadius: '10px' }}
                   component={Link}
                   to="/menu/edit/abs"
+                  state={data}
                 >
                   Chỉnh sửa
                 </Button>

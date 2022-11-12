@@ -1,131 +1,153 @@
-import * as Yup from 'yup';
-// form
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Grid, IconButton, Modal, Stack, Typography } from '@mui/material';
 // components
-import FormProvider from '~/components/hook-form/FormProvider';
-import RHFTextField from '~/components/hook-form/RHFTextField';
-import RHFAutocomplete from '../hook-form/RHFAutocomplete';
-import { faker } from '@faker-js/faker';
+import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
+import ProductItem from '../Product/ProductItem';
+import { Fragment, useRef, useState } from 'react';
+import { useMemo } from 'react';
+import ProductTabs from '../Order/ProductTabs';
+import Iconify from '../UI/Iconify';
+import { toast } from 'react-toastify';
 
-const tables = ['Bàn 1', 'Bàn 2', 'Bàn 3'];
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: {
+    xs: '95%',
+    sm: '80%',
+  },
+  maxHeight: '90%',
+  overflowY: 'auto',
+  bgcolor: 'background.paper',
+  borderRadius: '10px',
+  boxShadow: 24,
+  p: {
+    xs: '12px',
+    md: 4,
+  },
+};
 
-export default function BillForm() {
-  const BillSchema = Yup.object().shape({
-    table: Yup.string().required('Vui lòng chọn bàn'),
-    guests: Yup.number()
-      .required()
-      .typeError('Vui lòng nhập số khách')
-      .positive('Số khách phải là số lớn hơn 0')
-      .integer('Số khách phải là số nguyên'),
-  });
+export default function BillForm({ data }) {
+  const { table, products } = data;
+  const [selectedFoods, setSelectedFoods] = useState(products);
+  const [isOpenFoodModal, setIsOpenFoodModal] = useState(false);
 
-  const defaultValues = {
-    table: tables[0],
-    guests: 1,
+  const totalPriceRef = useRef();
+
+  const handleChangeQuantity = (index, type) => {
+    const updatedFoods = [...selectedFoods];
+    if (type === 'increase') {
+      updatedFoods[index].quantity++;
+    } else {
+      updatedFoods[index].quantity--;
+    }
+
+    if (updatedFoods[index].quantity === 0) {
+      handleDeleteFood(index);
+    } else {
+      setSelectedFoods(updatedFoods);
+      handleTotalPrice(updatedFoods);
+    }
   };
 
-  const methods = useForm({
-    resolver: yupResolver(BillSchema),
-    defaultValues,
-  });
-
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
-
-  const onSubmit = async (values) => {
-    console.log(values);
+  const handleDeleteFood = (foodIndex) => {
+    const updatedFoods = selectedFoods.filter((food, index) => index !== foodIndex);
+    setSelectedFoods(updatedFoods);
+    handleTotalPrice(updatedFoods);
   };
+
+  const handleSelectFood = (food) => {
+    const updatedFoods = [...selectedFoods];
+    const existingFoodIndex = selectedFoods.findIndex((item) => item.id === food.id);
+    if (existingFoodIndex >= 0) {
+      updatedFoods[existingFoodIndex].quantity++;
+    } else {
+      updatedFoods.push(food);
+    }
+    setSelectedFoods(updatedFoods);
+    handleTotalPrice(updatedFoods);
+    toast.success('Thêm món thành công');
+  };
+
+  const handleTotalPrice = (foods) => {
+    const totalPrice = foods.reduce((acc, cur) => {
+      return acc + cur.price * cur.quantity;
+    }, 0);
+
+    if (totalPriceRef.current) {
+      totalPriceRef.current.innerText = printNumberWithCommas(totalPrice) + ' VNĐ';
+    }
+  };
+
+  const total = useMemo(
+    () =>
+      products.reduce((acc, cur) => {
+        return acc + cur.price * cur.quantity;
+      }, 0),
+    [products],
+  );
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={4}>
-          <RHFAutocomplete
-            name="table"
-            label="Bàn"
-            options={tables}
-            getOptionLabel={(option) => option}
-            isOptionEqualToValue={(option, value) => option === value}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <RHFTextField name="guests" label="Số khách" type="number" />
-        </Grid>
-      </Grid>
+    <Box>
+      <Typography variant="h4">{table}</Typography>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ my: 3 }}>
+        <Typography>Các món đã chọn</Typography>
+        <Button onClick={() => setIsOpenFoodModal(true)}>Thêm món</Button>
+      </Stack>
 
-      <Typography sx={{ my: 3 }}>Các món đã chọn</Typography>
-
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={4}>
-          <Card sx={{ p: 2 }}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Stack direction="row" alignItems="center">
-                <img
-                  src="https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg"
-                  alt="product-img"
-                  style={{ width: '50px', height: '50px', borderRadius: '10px', marginRight: '8px' }}
+      <Grid container spacing={2}>
+        {selectedFoods.map((product, index) => (
+          <Fragment key={index}>
+            {product.quantity > 0 && (
+              <Grid key={index} item xs={12} sm={6}>
+                <ProductItem
+                  item={product}
+                  onDelete={() => handleDeleteFood(index)}
+                  onChangeQuantity={(type) => handleChangeQuantity(index, type)}
                 />
-                <Box>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', fontSize: '14px' }}>
-                    {faker.name.fullName()} x 2
-                  </Typography>
-                  <Typography variant="subtitle2">$42</Typography>
-                </Box>
-              </Stack>
-            </Stack>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Card sx={{ p: 2 }}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Stack direction="row" alignItems="center">
-                <img
-                  src="https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg"
-                  alt="product-img"
-                  style={{ width: '50px', height: '50px', borderRadius: '10px', marginRight: '8px' }}
-                />
-                <Box>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', fontSize: '14px' }}>
-                    {faker.name.fullName()} x 2
-                  </Typography>
-                  <Typography variant="subtitle2">$42</Typography>
-                </Box>
-              </Stack>
-            </Stack>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <Card sx={{ p: 2 }}>
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Stack direction="row" alignItems="center">
-                <img
-                  src="https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg"
-                  alt="product-img"
-                  style={{ width: '50px', height: '50px', borderRadius: '10px', marginRight: '8px' }}
-                />
-                <Box>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', fontSize: '14px' }}>
-                    {faker.name.fullName()} x 2
-                  </Typography>
-                  <Typography variant="subtitle2">$42</Typography>
-                </Box>
-              </Stack>
-            </Stack>
-          </Card>
-        </Grid>
+              </Grid>
+            )}
+          </Fragment>
+        ))}
       </Grid>
+      {selectedFoods.length === 0 && (
+        <Typography textAlign="center" sx={{ my: 3 }}>
+          Chưa có món nào được chọn
+        </Typography>
+      )}
+
+      <Stack direction="row" alignItems="center" spacing={3} sx={{ mt: 3 }}>
+        <Typography variant="h6">Tổng:</Typography>
+        <Typography ref={totalPriceRef} variant="h6">
+          {printNumberWithCommas(total)} VNĐ
+        </Typography>
+      </Stack>
 
       <Stack direction="row" justifyContent="end" sx={{ mt: 3 }}>
-        <LoadingButton size="large" type="submit" variant="contained" loading={isSubmitting}>
-          Tạo mới
+        <LoadingButton size="large" type="submit" variant="contained">
+          Cập nhật
         </LoadingButton>
       </Stack>
-    </FormProvider>
+
+      <Modal
+        open={isOpenFoodModal}
+        onClose={() => setIsOpenFoodModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+            <Typography variant="h4">Chọn món</Typography>
+            <IconButton onClick={() => setIsOpenFoodModal(false)}>
+              <Iconify icon="ep:close" width={24} height={24} />
+            </IconButton>
+          </Stack>
+          <ProductTabs onSelect={handleSelectFood} />
+        </Box>
+      </Modal>
+    </Box>
   );
 }

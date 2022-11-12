@@ -1,4 +1,5 @@
 import { Badge, Card, Stack, Typography } from '@mui/material';
+import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
 
 export default function ListBill({ bills, onSelectBill }) {
   return (
@@ -14,16 +15,18 @@ export default function ListBill({ bills, onSelectBill }) {
               </Typography>
             </Stack>
             <Typography variant="subtitle1">
-              {item.products.reduce((acc, cur) => {
-                return acc + cur.price * cur.quantity;
-              }, 0)}{' '}
+              {printNumberWithCommas(
+                item.products.reduce((acc, cur) => {
+                  return acc + cur.price * cur.quantity;
+                }, 0),
+              )}{' '}
               VNĐ
             </Typography>
           </Stack>
 
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Stack direction="row" alignItems="center" spacing={2}>
-              <Typography variant="body1">Bàn {item.table}</Typography>
+              <Typography variant="body1">{item.table}</Typography>
               <Badge color="info" variant="dot" />
               <Typography>{item.guests} Khách</Typography>
             </Stack>

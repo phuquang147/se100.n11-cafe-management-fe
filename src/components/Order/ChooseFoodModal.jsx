@@ -1,24 +1,11 @@
-import {
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  Modal,
-  Stack,
-  Tab,
-  Tabs,
-  TextField,
-  Typography,
-  useTheme,
-  Card,
-} from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { Box, Button, Grid, IconButton, Modal, Stack, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
-import Product from '~/components/Home/Product';
 import Iconify from '~/components/UI/Iconify';
 import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
+import ProductItem from '../Product/ProductItem';
+import ProductTabs from './ProductTabs';
 
 const style = {
   position: 'absolute',
@@ -43,39 +30,21 @@ const style = {
   },
 };
 
-const useStyles = makeStyles({
-  textField: {
-    '& .css-1u3bzj6-MuiFormControl-root-MuiTextField-root': {
-      width: '100%',
-    },
-  },
-});
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div hidden={value !== index} {...other}>
-      {value === index && <Box sx={{ py: 4 }}>{children}</Box>}
-    </div>
-  );
-}
-
 export default function ChooseFoodModal({ isOpen, onCloseModal }) {
-  const [value, setValue] = useState(0);
   const [selectedFoods, setSelectedFoods] = useState([]);
   const totalPriceRef = useRef();
-  const styles = useStyles();
-  const theme = useTheme();
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
 
   const handleSelectFood = (food) => {
-    const updatedFoods = [...selectedFoods, food];
+    console.log(food);
+    const updatedFoods = [...selectedFoods];
+    const existingFoodIndex = selectedFoods.findIndex((item) => item.id === food.id);
+    if (existingFoodIndex >= 0) {
+      updatedFoods[existingFoodIndex].quantity++;
+    } else {
+      updatedFoods.push(food);
+    }
     setSelectedFoods(updatedFoods);
-    if (updatedFoods.length > 1) {
+    if (updatedFoods.length >= 1) {
       handleTotalPrice(updatedFoods);
     }
   };
@@ -87,8 +56,9 @@ export default function ChooseFoodModal({ isOpen, onCloseModal }) {
   };
 
   const handleDeleteAll = () => {
-    setSelectedFoods([]);
-    totalPriceRef.current.innerText = '0 VNĐ';
+    if (selectedFoods.length > 0) {
+      setSelectedFoods([]);
+    }
   };
 
   const handleChangeQuantity = (index, type) => {
@@ -111,7 +81,10 @@ export default function ChooseFoodModal({ isOpen, onCloseModal }) {
     const totalPrice = foods.reduce((acc, cur) => {
       return acc + cur.price * cur.quantity;
     }, 0);
-    totalPriceRef.current.innerText = printNumberWithCommas(totalPrice) + ' VNĐ';
+
+    if (totalPriceRef.current) {
+      totalPriceRef.current.innerText = printNumberWithCommas(totalPrice) + ' VNĐ';
+    }
   };
 
   const handleOrder = () => {
@@ -136,36 +109,7 @@ export default function ChooseFoodModal({ isOpen, onCloseModal }) {
         </Stack>
         <Grid container spacing={4} sx={{ mt: 3 }}>
           <Grid item xs={12} md={8}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                  <Tab label="Cà phê" />
-                  <Tab label="Đồ ăn nhẹ" />
-                </Tabs>
-              </Grid>
-              <Grid item xs={12} md={6} className={styles.textField}>
-                <TextField variant="outlined" placeholder="Tìm kiếm" />
-              </Grid>
-            </Grid>
-            <TabPanel value={value} index={0}>
-              <Grid container spacing={2}>
-                {[...Array(10)].map((_, index) => (
-                  <Grid key={index} item xs={6} md={4}>
-                    <Product onSelect={handleSelectFood} />
-                  </Grid>
-                ))}
-              </Grid>
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-              <Grid container spacing={2}>
-                <Grid item xs={6} md={4}>
-                  <Product onSelect={handleSelectFood} />
-                </Grid>
-                <Grid item xs={6} md={4}>
-                  <Product onSelect={handleSelectFood} />
-                </Grid>
-              </Grid>
-            </TabPanel>
+            <ProductTabs onSelect={handleSelectFood} />
           </Grid>
           <Grid item xs={12} md={4}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -176,52 +120,12 @@ export default function ChooseFoodModal({ isOpen, onCloseModal }) {
               <Box sx={{ maxHeight: '600px', overflowY: 'auto', p: '2px' }}>
                 <Stack direction="column" spacing={1}>
                   {selectedFoods.map((item, index) => (
-                    <Card sx={{ p: 1 }} key={index}>
-                      <Stack direction="row" justifyContent="space-between" alignItems="center">
-                        <Stack direction="row" alignItems="center" spacing={2}>
-                          <img
-                            src={item.img}
-                            alt={item.name}
-                            style={{ width: '60px', height: '60px', borderRadius: '10px' }}
-                          />
-                          <Stack direction="column" spacing="6px">
-                            <Typography variant="h6">{item.name}</Typography>
-                            <Typography variant="subtitle2">{printNumberWithCommas(item.price)} VNĐ</Typography>
-                            <Stack direction="row" alignItems="center" spacing={2}>
-                              <IconButton
-                                size="small"
-                                color="primary"
-                                sx={{ border: '1px solid #ffa16c' }}
-                                onClick={() => {
-                                  handleChangeQuantity(index, 'decrease');
-                                }}
-                              >
-                                <Iconify icon="akar-icons:minus" width={12} height={12} color="#ffa16c" />
-                              </IconButton>
-                              <Typography sx={{ display: 'inline', fontSize: '16px', fontWeight: '700' }}>
-                                {selectedFoods[index].quantity}
-                              </Typography>
-                              <IconButton
-                                size="small"
-                                color="primary"
-                                sx={{ border: '1px solid #ffa16c' }}
-                                onClick={() => {
-                                  handleChangeQuantity(index, 'increase');
-                                }}
-                              >
-                                <Iconify icon="akar-icons:plus" width={12} height={12} color="#ffa16c" />
-                              </IconButton>
-                            </Stack>
-                          </Stack>
-                        </Stack>
-                        <IconButton onClick={() => handleDeleteFood(index)}>
-                          <Iconify
-                            icon="bxs:trash-alt"
-                            sx={{ width: '20px', height: '20px', color: theme.palette.primary.main }}
-                          />
-                        </IconButton>
-                      </Stack>
-                    </Card>
+                    <ProductItem
+                      key={index}
+                      item={item}
+                      onChangeQuantity={(type) => handleChangeQuantity(index, type)}
+                      onDelete={() => handleDeleteFood(index)}
+                    />
                   ))}
                   <Stack direction="row" justifyContent="space-between" alignItems="center">
                     <Typography variant="subtitle1">Tổng</Typography>

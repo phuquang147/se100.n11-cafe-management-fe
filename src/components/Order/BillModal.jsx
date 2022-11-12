@@ -1,6 +1,7 @@
 import { Box, Button, Grid, IconButton, Modal, Stack, Typography, Card } from '@mui/material';
 import { toast } from 'react-toastify';
 import Iconify from '~/components/UI/Iconify';
+import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
 
 const style = {
   position: 'absolute',
@@ -12,6 +13,7 @@ const style = {
     sm: '70%',
     md: '40%',
   },
+  maxHeight: '90%',
   overflowY: 'auto',
   bgcolor: 'background.paper',
   borderRadius: '10px',
@@ -43,7 +45,7 @@ export default function BillModal({ isOpen, onCloseModal }) {
           </IconButton>
         </Stack>
         <Grid container spacing={2}>
-          {[...Array(1)].map((_, index) => (
+          {[...Array(3)].map((_, index) => (
             <Grid key={index} item xs={12}>
               <Card sx={{ p: 1 }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -66,6 +68,10 @@ export default function BillModal({ isOpen, onCloseModal }) {
             </Grid>
           ))}
         </Grid>
+        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mt: 2 }}>
+          <Typography variant="h6">Tổng</Typography>
+          <Typography variant="h6">{printNumberWithCommas(60000)} VNĐ</Typography>
+        </Stack>
         <Button variant="contained" fullWidth sx={{ height: '40px', mt: 3 }} onClick={handlePay}>
           Thanh toán
         </Button>

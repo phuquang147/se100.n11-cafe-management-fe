@@ -11,7 +11,7 @@ const optionsFilter = ['Tất cả', 'Số thứ tự', 'Giá'];
 const fakeBills = [
   {
     order: 35,
-    table: '1A',
+    table: 'Bàn 1',
     guests: 2,
     status: 'Đang uống',
     products: [
@@ -31,7 +31,7 @@ const fakeBills = [
   },
   {
     order: 30,
-    table: '2B',
+    table: 'Bàn 2',
     guests: 2,
     status: 'Đã thanh toán',
     products: [
@@ -51,7 +51,7 @@ const fakeBills = [
   },
   {
     order: 28,
-    table: '3C',
+    table: 'Bàn 3',
     guests: 2,
     status: 'Đang uống',
     products: [

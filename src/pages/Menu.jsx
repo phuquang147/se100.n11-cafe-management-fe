@@ -5,6 +5,14 @@ import { Box, Button, Container, Grid, Stack, Tab, Tabs, TextField, Typography }
 // components
 import Iconify from '~/components/UI/Iconify';
 import Product from '~/components/Menu/Product';
+import { faker } from '@faker-js/faker';
+
+const products = [...Array(6)].map((_) => ({
+  id: faker.datatype.uuid(),
+  img: 'https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg',
+  name: faker.name.fullName(),
+  price: faker.datatype.number({ min: 20000, max: 100000, precision: 1000 }),
+}));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -46,34 +54,20 @@ export default function Menu() {
       </Stack>
       <TabPanel value={value} index={0}>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={4} xl={3}>
-            <Product />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4} xl={3}>
-            <Product />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4} xl={3}>
-            <Product />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4} xl={3}>
-            <Product />
-          </Grid>
+          {products.map((product, index) => (
+            <Grid key={index} item xs={12} sm={6} md={4} xl={3}>
+              <Product data={product} />
+            </Grid>
+          ))}
         </Grid>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={4} xl={3}>
-            <Product />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4} xl={3}>
-            <Product />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4} xl={3}>
-            <Product />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4} xl={3}>
-            <Product />
-          </Grid>
+          {products.map((product, index) => (
+            <Grid key={index} item xs={12} sm={6} md={4} xl={3}>
+              <Product data={product} />
+            </Grid>
+          ))}
         </Grid>
       </TabPanel>
     </Container>

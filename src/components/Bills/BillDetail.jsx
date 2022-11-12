@@ -16,6 +16,8 @@ import {
 } from '@mui/material';
 import Iconify from '../UI/Iconify';
 import ConfirmModal from '../UI/ConfirmModal';
+import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
+import { faker } from '@faker-js/faker';
 
 export default function BillDetail({ bill }) {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
@@ -33,7 +35,7 @@ export default function BillDetail({ bill }) {
   const handleDeleteBill = () => {};
 
   const handleEdit = () => {
-    navigate('/bills/edit/35');
+    navigate(`/bills/edit/${faker.database.mongodbObjectId()}`, { state: bill });
   };
 
   return (
@@ -47,9 +49,11 @@ export default function BillDetail({ bill }) {
             <IconButton size="small" color="primary" onClick={handleEdit}>
               <Iconify icon="ic:baseline-mode-edit" width={24} height={24} />
             </IconButton>
-            <IconButton size="small" color="primary" onClick={handleOpenConfirmDeleteModal}>
-              <Iconify icon="bxs:trash-alt" width={24} height={24} />
-            </IconButton>
+            {bill.status === 'Đang uống' && (
+              <IconButton size="small" color="primary" onClick={handleOpenConfirmDeleteModal}>
+                <Iconify icon="bxs:trash-alt" width={24} height={24} />
+              </IconButton>
+            )}
           </Stack>
           <Button
             sx={{
@@ -100,25 +104,32 @@ export default function BillDetail({ bill }) {
             <List>
               {bill.products.map((product, index) => (
                 <Box key={index}>
-                  <ListItem disablePadding secondaryAction={`${product.price * product.quantity} VNĐ`}>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <img
-                          src={product.img}
-                          alt="product-img"
-                          style={{ width: '50px', height: '50px', borderRadius: '10px' }}
-                        />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={
-                          <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                            {product.name} x {product.quantity}
-                          </Typography>
-                        }
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                  <Divider />
+                  {product.quantity > 0 && (
+                    <>
+                      <ListItem
+                        disablePadding
+                        secondaryAction={`${printNumberWithCommas(product.price * product.quantity)} VNĐ`}
+                      >
+                        <ListItemButton>
+                          <ListItemIcon>
+                            <img
+                              src={product.img}
+                              alt="product-img"
+                              style={{ width: '50px', height: '50px', borderRadius: '10px' }}
+                            />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={
+                              <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                                {product.name} x {product.quantity}
+                              </Typography>
+                            }
+                          />
+                        </ListItemButton>
+                      </ListItem>
+                      <Divider />
+                    </>
+                  )}
                 </Box>
               ))}
               <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -126,9 +137,11 @@ export default function BillDetail({ bill }) {
                   Tổng
                 </Typography>
                 <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>
-                  {bill.products.reduce((acc, cur) => {
-                    return acc + cur.price * cur.quantity;
-                  }, 0)}{' '}
+                  {printNumberWithCommas(
+                    bill.products.reduce((acc, cur) => {
+                      return acc + cur.price * cur.quantity;
+                    }, 0),
+                  )}{' '}
                   VNĐ
                 </Typography>
               </Stack>

@@ -10,17 +10,23 @@ import FormProvider from '~/components/hook-form/FormProvider';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 import RHFAutocomplete from '../hook-form/RHFAutocomplete';
 import Iconify from '~/components/UI/Iconify';
+import { useState } from 'react';
 
 const categories = ['Nước uống', 'Đồ ăn nhanh'];
 
-export default function ProductForm() {
+export default function ProductForm({ data = {} }) {
+  const { name, price } = data;
+  const [filename, setFilename] = useState('');
+
   const ProductSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập tên món'),
+    price: Yup.number().required().typeError('Vui lòng nhập giá').min(0, 'Giá phải lớn hơn 0'),
   });
 
   const defaultValues = {
-    name: '',
-    description: '',
+    name,
+    price,
+    category: categories[0],
   };
 
   const methods = useForm({
@@ -37,6 +43,15 @@ export default function ProductForm() {
     console.log(values);
   };
 
+  const handleFileUpload = (e) => {
+    if (!e.target.files) {
+      return;
+    }
+
+    const uploadedFilename = e.target.files[0].name;
+    setFilename(uploadedFilename);
+  };
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
@@ -45,7 +60,7 @@ export default function ProductForm() {
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
-          <RHFTextField name="description" label="Mô tả" />
+          <RHFTextField name="price" label="Giá" />
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
@@ -59,16 +74,27 @@ export default function ProductForm() {
         </Grid>
       </Grid>
 
-      <Stack direction="row" sx={{ mt: 2 }} alignItems="center" columnGap={2}>
+      <Stack
+        direction={{ xs: 'column', md: 'row' }}
+        sx={{ mt: 2 }}
+        alignItems={{ xs: 'unset', md: 'center' }}
+        columnGap={2}
+      >
         <Typography variant="body1">Hình ảnh</Typography>
-        <Button variant="outlined" sx={{ py: 2 }}>
+        <Button variant="outlined" component="label" sx={{ py: 2, mt: { xs: 1, md: 0 } }}>
           <Iconify icon="heroicons:photo" width={30} height={30} />
+          <input type="file" accept="image/*" hidden onChange={handleFileUpload} />
+          {filename && (
+            <Typography sx={{ ml: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {filename}
+            </Typography>
+          )}
         </Button>
       </Stack>
 
       <Stack direction="row" justifyContent="end" sx={{ mt: 3 }}>
         <LoadingButton size="large" type="submit" variant="contained" loading={isSubmitting}>
-          Tạo mới
+          {Object.keys(data).length === 0 ? 'Tạo mới' : 'Cập nhật'}
         </LoadingButton>
       </Stack>
     </FormProvider>
