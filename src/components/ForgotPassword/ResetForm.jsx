@@ -1,4 +1,7 @@
+import Cookies from 'js-cookie';
 import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
+import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -10,9 +13,13 @@ import { IconButton, InputAdornment, Stack } from '@mui/material';
 import FormProvider from '~/components/hook-form/FormProvider';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 import Iconify from '~/components/UI/Iconify';
+// services
+import { changePassword } from '~/services/authServices';
 
 export default function ResetForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const { token } = useParams();
 
   const LoginSchema = Yup.object().shape({
     password: Yup.string().required('Vui lòng nhập mật khẩu'),
@@ -30,9 +37,28 @@ export default function ResetForm() {
   const {
     handleSubmit,
     formState: { isSubmitting },
+    getValues,
   } = methods;
 
-  const onSubmit = async () => {};
+  const onSubmit = async () => {
+    const { password } = getValues();
+    const accountId = Cookies.get('accountId');
+
+    try {
+      const res = await changePassword({
+        password,
+        passwordToken: token,
+        accountId,
+      });
+
+      if (res.status === 201) {
+        toast.success('Thay đổi mật khẩu thành công');
+        navigate('/login');
+      } else toast.error('Đã có lỗi xảy ra! Vui lòng thử lại');
+    } catch (err) {
+      toast.error(err.response.data.message);
+    }
+  };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

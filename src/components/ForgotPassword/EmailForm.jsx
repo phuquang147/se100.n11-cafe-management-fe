@@ -1,3 +1,6 @@
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -8,8 +11,12 @@ import { Stack } from '@mui/material';
 // components
 import FormProvider from '~/components/hook-form/FormProvider';
 import RHFTextField from '~/components/hook-form/RHFTextField';
+// services
+import { resetPassword } from '~/services/authServices';
 
 export default function EmailForm() {
+  const navigate = useNavigate();
+
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email không hợp lệ!').required('Vui lòng nhập email'),
   });
@@ -26,9 +33,22 @@ export default function EmailForm() {
   const {
     handleSubmit,
     formState: { isSubmitting },
+    getValues,
   } = methods;
 
-  const onSubmit = async () => {};
+  const onSubmit = async () => {
+    const { email } = getValues();
+    try {
+      const { data, status } = await resetPassword({ email });
+      if (status === 200) {
+        Cookies.set('accountId', data.accountId);
+        toast.success('Yêu cầu đổi mật khẩu thành công! Vui lòng kiểm tra email');
+        navigate('/login');
+      } else toast.error('Đã có lỗi xảy ra! Vui lòng thử lại');
+    } catch (err) {
+      toast.error(err.response.data.message);
+    }
+  };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

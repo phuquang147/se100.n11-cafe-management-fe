@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
-import logoImg from '~/assets/images/logo.svg';
+import logoImg from '~/assets/images/logo.png';
 // @mui
 import { Box } from '@mui/material';
 

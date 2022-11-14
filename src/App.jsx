@@ -9,7 +9,7 @@ export default function App() {
     <>
       <ScrollToTop />
       <Routes />
-      <ToastContainer position="top-right" autoClose={3000} newestOnTop={true} theme="dark" />
+      <ToastContainer position="top-right" autoClose={3000} newestOnTop={true} />
       {/* <BaseOptionChartStyle /> */}
     </>
   );
