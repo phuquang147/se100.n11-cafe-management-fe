@@ -7,6 +7,10 @@ import { Box, Grid, IconButton, Modal, Stack, Typography } from '@mui/material';
 import FormProvider from '../hook-form/FormProvider';
 import RHFTextField from '../hook-form/RHFTextField';
 import Iconify from '../UI/Iconify';
+import { createTable, updateTable } from '~/services/tableService';
+import { toast } from 'react-toastify';
+
+const states = ['Còn trống', 'Đang dùng'];
 
 const style = {
   position: 'absolute',
@@ -29,13 +33,15 @@ const style = {
   },
 };
 
-export default function NewTableModal({ isOpen, onCloseModal }) {
+export default function TableFormModal({ table, isOpen, onCloseModal, onGetTables }) {
   const TableSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập tên bàn'),
+    state: Yup.string().required('Vui lòng chọn trạng thái bàn'),
   });
 
   const defaultValues = {
-    name: '',
+    name: table.name,
+    state: states[0],
   };
 
   const methods = useForm({
@@ -49,7 +55,19 @@ export default function NewTableModal({ isOpen, onCloseModal }) {
   } = methods;
 
   const onSubmit = async (values) => {
-    console.log(values);
+    let res;
+    if (table) {
+      res = await updateTable({ name: values.name }, table._id);
+    } else {
+      res = await createTable(values);
+    }
+
+    if (res.status === 201) {
+      onGetTables();
+      return toast.success(res.data.message);
+    }
+
+    toast.error(res.data.message);
   };
 
   return (
@@ -61,7 +79,7 @@ export default function NewTableModal({ isOpen, onCloseModal }) {
     >
       <Box sx={style}>
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
-          <Typography variant="h4">Thêm bàn</Typography>
+          <Typography variant="h4">{table ? 'Chỉnh sửa bàn' : 'Thêm bàn'}</Typography>
           <IconButton onClick={onCloseModal}>
             <Iconify icon="ep:close" width={24} height={24} />
           </IconButton>
@@ -74,7 +92,7 @@ export default function NewTableModal({ isOpen, onCloseModal }) {
             </Grid>
             <Grid item xs={12}>
               <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-                Tạo mới
+                {table ? 'Cập nhật' : 'Tạo mới'}
               </LoadingButton>
             </Grid>
           </Grid>

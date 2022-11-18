@@ -46,13 +46,16 @@ export default function BillDetail({ bill }) {
             <Typography variant="h4" sx={{ fontWeight: 'bold', mr: 2 }}>
               Đơn #{bill.order}
             </Typography>
-            <IconButton size="small" color="primary" onClick={handleEdit}>
-              <Iconify icon="ic:baseline-mode-edit" width={24} height={24} />
-            </IconButton>
+
             {bill.status === 'Đang uống' && (
-              <IconButton size="small" color="primary" onClick={handleOpenConfirmDeleteModal}>
-                <Iconify icon="bxs:trash-alt" width={24} height={24} />
-              </IconButton>
+              <>
+                <IconButton size="small" color="primary" onClick={handleEdit}>
+                  <Iconify icon="ic:baseline-mode-edit" width={24} height={24} />
+                </IconButton>
+                <IconButton size="small" color="primary" onClick={handleOpenConfirmDeleteModal}>
+                  <Iconify icon="bxs:trash-alt" width={24} height={24} />
+                </IconButton>
+              </>
             )}
           </Stack>
           <Button

@@ -9,8 +9,7 @@ import MenuPopover from '~/HOC/MenuPopover';
 import tableImg from '~/assets/images/table.svg';
 import tableUsedImg from '~/assets/images/table_used.svg';
 
-const _ = require('lodash');
-export default function Table({ onOpenModalFood, onPay }) {
+export default function Table({ table, onOpenModalFood, onPay, onOpenEditForm }) {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
 
   const handleOpenConfirmDeleteModal = () => {
@@ -26,8 +25,6 @@ export default function Table({ onOpenModalFood, onPay }) {
   };
 
   const handleDeleteTable = () => {};
-
-  const r = _.random(1, 2);
 
   const anchorRef = useRef(null);
 
@@ -47,13 +44,13 @@ export default function Table({ onOpenModalFood, onPay }) {
           <Stack direction="row" alignItems="start">
             <Grid container columnSpacing={2}>
               <Grid item xs={3}>
-                <img src={r === 1 ? tableImg : tableUsedImg} alt="" draggable="false" />
+                <img src={table.state === 'Còn trống' ? tableImg : tableUsedImg} alt="" draggable="false" />
               </Grid>
               <Grid item xs={9}>
                 <Stack>
-                  <Typography variant="h6">Bàn 1</Typography>
+                  <Typography variant="h6">{table.name}</Typography>
                   <Typography variant="body2" color="primary" sx={{ fontWeight: '800' }}>
-                    {r === 1 ? 'Còn trống' : 'Đã có khách'}
+                    {table.state}
                   </Typography>
                 </Stack>
               </Grid>
@@ -62,7 +59,7 @@ export default function Table({ onOpenModalFood, onPay }) {
               <Iconify icon={open ? 'eva:close-fill' : 'bx:dots-horizontal-rounded'} sx={{ width: 20, height: 20 }} />
             </IconButton>
           </Stack>
-          {r === 1 ? (
+          {table.state === 'Còn trống' ? (
             <Button variant="outlined" fullWidth sx={{ py: '6px', borderRadius: '10px' }} onClick={handleOpenModalFood}>
               Chọn món
             </Button>
@@ -96,9 +93,9 @@ export default function Table({ onOpenModalFood, onPay }) {
           },
         }}
       >
-        {r === 1 ? (
+        {table.state === 'Còn trống' ? (
           <Stack sx={{ p: 1 }}>
-            <MenuItem>Chỉnh sửa bàn</MenuItem>
+            <MenuItem onClick={() => onOpenEditForm(table)}>Chỉnh sửa bàn</MenuItem>
             <MenuItem>Xóa bàn</MenuItem>
           </Stack>
         ) : (
