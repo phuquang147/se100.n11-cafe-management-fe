@@ -27,3 +27,12 @@ export const updateTable = async (table, tableId) => {
   });
   return res;
 };
+
+export const deleteTable = async (tableId) => {
+  const res = await baseService.delete(`/tables/${tableId}`, {
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token')}`,
+    },
+  });
+  return res;
+};

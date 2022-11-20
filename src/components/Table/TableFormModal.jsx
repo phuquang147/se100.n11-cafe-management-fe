@@ -10,8 +10,6 @@ import Iconify from '../UI/Iconify';
 import { createTable, updateTable } from '~/services/tableService';
 import { toast } from 'react-toastify';
 
-const states = ['Còn trống', 'Đang dùng'];
-
 const style = {
   position: 'absolute',
   top: '50%',
@@ -33,15 +31,13 @@ const style = {
   },
 };
 
-export default function TableFormModal({ table, isOpen, onCloseModal, onGetTables }) {
+export default function TableFormModal({ table, isOpen, onCloseModal, onLoadTables }) {
   const TableSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập tên bàn'),
-    state: Yup.string().required('Vui lòng chọn trạng thái bàn'),
   });
 
   const defaultValues = {
-    name: table.name,
-    state: states[0],
+    name: (table && table.name) || '',
   };
 
   const methods = useForm({
@@ -63,7 +59,7 @@ export default function TableFormModal({ table, isOpen, onCloseModal, onGetTable
     }
 
     if (res.status === 201) {
-      onGetTables();
+      onLoadTables();
       return toast.success(res.data.message);
     }
 

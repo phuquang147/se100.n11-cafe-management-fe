@@ -92,6 +92,7 @@ export default function Order() {
               onOpenModalFood={handleOpenFoodModal}
               onPay={handleOpenBillModal}
               onOpenEditForm={handleEditTable}
+              onLoadTables={getAllTables}
             />
           </Grid>
         ))}
@@ -104,7 +105,7 @@ export default function Order() {
           table={editedTable}
           isOpen={isOpenTableModal}
           onCloseModal={handleCloseTableModal}
-          onGetTables={getAllTables}
+          onLoadTables={getAllTables}
         />
       )}
     </Container>

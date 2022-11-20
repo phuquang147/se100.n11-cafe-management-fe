@@ -8,8 +8,10 @@ import MenuPopover from '~/HOC/MenuPopover';
 // images
 import tableImg from '~/assets/images/table.svg';
 import tableUsedImg from '~/assets/images/table_used.svg';
+import { deleteTable } from '~/services/tableService';
+import { toast } from 'react-toastify';
 
-export default function Table({ table, onOpenModalFood, onPay, onOpenEditForm }) {
+export default function Table({ table, onOpenModalFood, onPay, onOpenEditForm, onLoadTables }) {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
 
   const handleOpenConfirmDeleteModal = () => {
@@ -24,7 +26,20 @@ export default function Table({ table, onOpenModalFood, onPay, onOpenEditForm })
     onOpenModalFood();
   };
 
-  const handleDeleteTable = () => {};
+  const handleDeleteTable = async () => {
+    try {
+      const res = await deleteTable(table._id);
+
+      if (res.status === 200) {
+        toast.success(res.data.message);
+        onLoadTables();
+      } else {
+        toast.error('Đã có lỗi xảy ra! Vui lòng thử lại');
+      }
+    } catch (err) {
+      toast.error(err.response.data.message);
+    }
+  };
 
   const anchorRef = useRef(null);
 
@@ -76,6 +91,7 @@ export default function Table({ table, onOpenModalFood, onPay, onOpenEditForm })
           content="Bạn chắc chắn muốn xóa bàn?"
           handleClose={handleCloseConfirmDeleteModal}
           action={handleDeleteTable}
+          open={showConfirmDeleteModal}
         />
       )}
 
@@ -96,7 +112,7 @@ export default function Table({ table, onOpenModalFood, onPay, onOpenEditForm })
         {table.state === 'Còn trống' ? (
           <Stack sx={{ p: 1 }}>
             <MenuItem onClick={() => onOpenEditForm(table)}>Chỉnh sửa bàn</MenuItem>
-            <MenuItem>Xóa bàn</MenuItem>
+            <MenuItem onClick={handleOpenConfirmDeleteModal}>Xóa bàn</MenuItem>
           </Stack>
         ) : (
           <Stack sx={{ p: 1 }}>
