@@ -15,6 +15,9 @@ import RHFTextField from '~/components/hook-form/RHFTextField';
 import Iconify from '~/components/UI/Iconify';
 // services
 import { login } from '~/services/authServices';
+// redux
+import { useDispatch } from 'react-redux';
+import { setDataStarted } from '~/redux/dataSlice';
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -41,6 +44,8 @@ export default function LoginForm() {
     getValues,
   } = methods;
 
+  const dispatch = useDispatch();
+
   const onSubmit = async () => {
     const { username, password } = getValues();
     try {
@@ -55,6 +60,8 @@ export default function LoginForm() {
 
         toast.success('Đăng nhập thành công');
         navigate('/', { replace: true });
+        console.log('here');
+        dispatch(setDataStarted());
       } else toast.error('Đã có lỗi xảy ra! Vui lòng thử lại');
     } catch (err) {
       toast.error(err.response.data.message);

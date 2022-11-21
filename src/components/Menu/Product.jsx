@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SideBySideMagnifier } from 'react-image-magnifiers';
 // material
-import { Button, Card, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Grid, Stack, Typography } from '@mui/material';
 // components
 import ConfirmModal from '~/components/UI/ConfirmModal';
 import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
@@ -25,7 +25,7 @@ export default function Product({ data }) {
       <Card>
         <Stack rowGap={1}>
           <SideBySideMagnifier
-            imageSrc={data.img}
+            imageSrc={data.image}
             imageAlt={data.name}
             alwaysInPlace={true}
             style={{ maxWidth: '100%' }}

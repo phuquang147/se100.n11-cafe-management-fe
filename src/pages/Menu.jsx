@@ -1,18 +1,14 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 // @mui
-import { Box, Button, Container, Grid, Stack, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Container, Grid, Stack, Tab, Tabs, TextField, Typography } from '@mui/material';
 // components
 import Iconify from '~/components/UI/Iconify';
 import Product from '~/components/Menu/Product';
-import { faker } from '@faker-js/faker';
-
-const products = [...Array(6)].map((_) => ({
-  id: faker.datatype.uuid(),
-  img: 'https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg',
-  name: faker.name.fullName(),
-  price: faker.datatype.number({ min: 20000, max: 100000, precision: 1000 }),
-}));
+import { useSelector } from 'react-redux';
+import { selectProducts } from '~/redux/dataSlice';
+import useDebounce from '~/hooks/useDebounce';
+import { useEffect } from 'react';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -26,9 +22,61 @@ function TabPanel(props) {
 
 export default function Menu() {
   const [value, setValue] = useState(0);
+  const [searchValue, setSearchValue] = useState('');
+  const products = useSelector(selectProducts);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const [loadedProducts, setLoadedProducts] = useState(products);
+
+  const handleChange = useCallback(
+    (event, newValue) => {
+      setValue(newValue);
+      console.log(newValue);
+      switch (newValue) {
+        case 0:
+          const coffeeProducts = products.filter((product) => product.category.name === 'Cà phê');
+          setLoadedProducts(coffeeProducts);
+          break;
+        case 1:
+          const teaProducts = products.filter((product) => product.category.name === 'Trà');
+          setLoadedProducts(teaProducts);
+          break;
+        case 2:
+          const snackProducts = products.filter((product) => product.category.name === 'Đồ ăn vặt');
+          setLoadedProducts(snackProducts);
+          break;
+        case 3:
+          const otherProducts = products.filter((product) => product.category.name === 'Khác');
+          setLoadedProducts(otherProducts);
+          break;
+        default:
+          break;
+      }
+    },
+    [products],
+  );
+
+  const debouncedValue = useDebounce(searchValue);
+  useEffect(() => {
+    if (debouncedValue.trim().length === 0) {
+      setLoadedProducts([]);
+    }
+
+    console.log(debouncedValue, products);
+    if (debouncedValue !== '') {
+      const relevantProducts = products.filter((item) =>
+        item.name.toLowerCase().includes(debouncedValue.toLowerCase()),
+      );
+      setLoadedProducts(relevantProducts);
+    } else {
+      handleChange(null, value);
+    }
+  }, [debouncedValue, products, value, handleChange]);
+
+  const handleInputChange = (e) => {
+    const searchInputValue = e.target.value;
+    if (!searchInputValue.startsWith(' ')) {
+      setSearchValue(searchInputValue);
+    }
   };
 
   return (
@@ -41,35 +89,43 @@ export default function Menu() {
         </Button>
       </Stack>
       <Stack
-        direction="row"
+        direction={{ xs: 'column', md: 'row' }}
         columnGap={2}
+        rowGap={2}
         justifyContent="space-between"
         sx={{ borderColor: 'divider', display: 'flex' }}
       >
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Cà phê" />
+          <Tab label="Trà" />
           <Tab label="Đồ ăn nhẹ" />
+          <Tab label="Khác" />
         </Tabs>
-        <TextField variant="outlined" placeholder="Tìm kiếm" sx={{ flex: '1', maxWidth: '300px' }} />
+        <TextField
+          variant="outlined"
+          value={searchValue}
+          placeholder="Tìm kiếm"
+          sx={{ flex: '1', maxWidth: { md: '300px' } }}
+          onChange={handleInputChange}
+        />
       </Stack>
-      <TabPanel value={value} index={0}>
-        <Grid container spacing={3}>
-          {products.map((product, index) => (
-            <Grid key={index} item xs={12} sm={6} md={4} xl={3}>
-              <Product data={product} />
-            </Grid>
-          ))}
-        </Grid>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <Grid container spacing={3}>
-          {products.map((product, index) => (
-            <Grid key={index} item xs={12} sm={6} md={4} xl={3}>
-              <Product data={product} />
-            </Grid>
-          ))}
-        </Grid>
-      </TabPanel>
+
+      {loadedProducts.length === 0 && (
+        <Box sx={{ textAlign: 'center' }}>
+          <CircularProgress sx={{ mt: 10 }} />
+        </Box>
+      )}
+      {[...Array(4)].map((_, index) => (
+        <TabPanel key={index} value={value} index={index}>
+          <Grid container spacing={3}>
+            {loadedProducts.map((product, index) => (
+              <Grid key={index} item xs={12} sm={6} md={4} xl={3}>
+                <Product data={product} />
+              </Grid>
+            ))}
+          </Grid>
+        </TabPanel>
+      ))}
     </Container>
   );
 }
