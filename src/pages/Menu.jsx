@@ -30,7 +30,6 @@ export default function Menu() {
   const handleChange = useCallback(
     (event, newValue) => {
       setValue(newValue);
-      console.log(newValue);
       switch (newValue) {
         case 0:
           const coffeeProducts = products.filter((product) => product.category.name === 'Cà phê');
@@ -55,13 +54,12 @@ export default function Menu() {
     [products],
   );
 
-  const debouncedValue = useDebounce(searchValue);
+  const debouncedValue = useDebounce(searchValue, 500);
   useEffect(() => {
     if (debouncedValue.trim().length === 0) {
       setLoadedProducts([]);
     }
 
-    console.log(debouncedValue, products);
     if (debouncedValue !== '') {
       const relevantProducts = products.filter((item) =>
         item.name.toLowerCase().includes(debouncedValue.toLowerCase()),
@@ -110,7 +108,13 @@ export default function Menu() {
         />
       </Stack>
 
-      {loadedProducts.length === 0 && (
+      {loadedProducts.length === 0 && searchValue && (
+        <Box sx={{ textAlign: 'center' }}>
+          <Typography sx={{ mt: 10 }}>Không tìm thấy sản phẩm nào</Typography>
+        </Box>
+      )}
+
+      {loadedProducts.length === 0 && !searchValue && (
         <Box sx={{ textAlign: 'center' }}>
           <CircularProgress sx={{ mt: 10 }} />
         </Box>
