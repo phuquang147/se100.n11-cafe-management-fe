@@ -6,15 +6,19 @@ import { setDataFailed, setDataStarted, setDataSuccess } from '../dataSlice';
 function* getData(action) {
   try {
     const data = yield call((url) => {
-      return baseService.get(url, {
+      return fetch('http://localhost:3001/data', {
         headers: {
           Authorization: `Bearer ${Cookies.get('token')}`,
         },
       });
     }, '/data');
 
-    const { products } = data.data;
-    yield put(setDataSuccess({ products }));
+    const resData = yield data.json();
+    console.log(resData);
+
+    const { products, categories } = resData;
+    console.log(products);
+    yield put(setDataSuccess({ products, categories }));
   } catch (err) {
     yield put(setDataFailed());
   }

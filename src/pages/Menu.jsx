@@ -5,10 +5,11 @@ import { Box, Button, CircularProgress, Container, Grid, Stack, Tab, Tabs, TextF
 // components
 import Iconify from '~/components/UI/Iconify';
 import Product from '~/components/Menu/Product';
-import { useSelector } from 'react-redux';
-import { selectProducts } from '~/redux/dataSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCategories, selectProducts, setProducts } from '~/redux/dataSlice';
 import useDebounce from '~/hooks/useDebounce';
 import { useEffect } from 'react';
+import { getProducts } from '~/services/productService';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -24,8 +25,22 @@ export default function Menu() {
   const [value, setValue] = useState(0);
   const [searchValue, setSearchValue] = useState('');
   const products = useSelector(selectProducts);
+  const categories = useSelector(selectCategories);
+  const categoryNames = categories.map((category) => category.name);
+  const dispatch = useDispatch();
 
   const [loadedProducts, setLoadedProducts] = useState(products);
+
+  const loadProducts = useCallback(async () => {
+    const data = await getProducts();
+    console.log(data.products);
+    setLoadedProducts(data.products);
+    dispatch(setProducts(data.products));
+  }, [dispatch]);
+
+  useEffect(() => {
+    loadProducts();
+  }, [dispatch, loadProducts]);
 
   const handleChange = useCallback(
     (event, newValue) => {
@@ -77,6 +92,14 @@ export default function Menu() {
     }
   };
 
+  if (loadedProducts.length === 0 && !searchValue) {
+    return (
+      <Box sx={{ textAlign: 'center' }}>
+        <CircularProgress sx={{ mt: 10 }} />
+      </Box>
+    );
+  }
+
   return (
     <Container maxWidth="xl">
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
@@ -94,10 +117,9 @@ export default function Menu() {
         sx={{ borderColor: 'divider', display: 'flex' }}
       >
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Cà phê" />
-          <Tab label="Trà" />
-          <Tab label="Đồ ăn nhẹ" />
-          <Tab label="Khác" />
+          {categoryNames.map((category, index) => (
+            <Tab key={index} label={category} />
+          ))}
         </Tabs>
         <TextField
           variant="outlined"
@@ -114,17 +136,12 @@ export default function Menu() {
         </Box>
       )}
 
-      {loadedProducts.length === 0 && !searchValue && (
-        <Box sx={{ textAlign: 'center' }}>
-          <CircularProgress sx={{ mt: 10 }} />
-        </Box>
-      )}
       {[...Array(4)].map((_, index) => (
         <TabPanel key={index} value={value} index={index}>
           <Grid container spacing={3}>
             {loadedProducts.map((product, index) => (
               <Grid key={index} item xs={12} sm={6} md={4} xl={3}>
-                <Product data={product} />
+                <Product data={product} onLoadProducts={loadProducts} />
               </Grid>
             ))}
           </Grid>

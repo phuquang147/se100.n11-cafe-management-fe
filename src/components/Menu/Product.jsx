@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { SideBySideMagnifier } from 'react-image-magnifiers';
 // material
-import { Box, Button, Card, Grid, Stack, Typography } from '@mui/material';
+import { Button, Card, Grid, Stack, Typography } from '@mui/material';
 // components
 import ConfirmModal from '~/components/UI/ConfirmModal';
 import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
+import { deleteProduct } from '~/services/productService';
+import { toast } from 'react-toastify';
 
-export default function Product({ data }) {
+export default function Product({ data, onLoadProducts }) {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
 
   const handleOpenConfirmDeleteModal = () => {
@@ -18,19 +19,26 @@ export default function Product({ data }) {
     setShowConfirmDeleteModal(false);
   };
 
-  const handleDeleteProduct = () => {};
+  const handleDeleteProduct = async () => {
+    console.log('xoa');
+    try {
+      const res = await deleteProduct(data._id);
+      if (res.status === 200) {
+        const data = await res.json();
+        toast.success(data.message);
+        onLoadProducts();
+        handleCloseConfirmDeleteModal();
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <>
       <Card>
         <Stack rowGap={1}>
-          <SideBySideMagnifier
-            imageSrc={data.image}
-            imageAlt={data.name}
-            alwaysInPlace={true}
-            style={{ maxWidth: '100%' }}
-            touchActivation="doubleTap"
-          />
+          <img src={`http://localhost:3001/${data.image}`} alt={data.name} crossOrigin="anonymous" />
           <Stack rowGap={1} sx={{ px: 2, pb: 2 }}>
             <Stack>
               <Typography
@@ -65,7 +73,7 @@ export default function Product({ data }) {
                   fullWidth
                   sx={{ py: '6px', borderRadius: '10px' }}
                   component={Link}
-                  to="/menu/edit/abs"
+                  to={`/menu/edit/${data._id}`}
                   state={data}
                 >
                   Chỉnh sửa
@@ -77,6 +85,7 @@ export default function Product({ data }) {
       </Card>
       {showConfirmDeleteModal && (
         <ConfirmModal
+          open={showConfirmDeleteModal}
           content="Bạn chắc chắn muốn xóa sản phẩm?"
           handleClose={handleCloseConfirmDeleteModal}
           action={handleDeleteProduct}
