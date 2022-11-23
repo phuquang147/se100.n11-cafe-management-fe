@@ -1,11 +1,14 @@
+import { faker } from '@faker-js/faker';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import useResponsive from '~/hooks/useResponsive';
 // @mui
-import { Box, Button, Container, Grid, Stack, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { Box, Button, Container, Grid, Stack, Tabs, TextField, Typography } from '@mui/material';
 // components
-import Iconify from '~/components/UI/Iconify';
+import CategoryModal from '~/components/Menu/CategoryModal';
+import CategoryTab from '~/components/Menu/CategoryTab';
 import Product from '~/components/Menu/Product';
-import { faker } from '@faker-js/faker';
+import Iconify from '~/components/UI/Iconify';
 
 const products = [...Array(6)].map((_) => ({
   id: faker.datatype.uuid(),
@@ -25,10 +28,20 @@ function TabPanel(props) {
 }
 
 export default function Menu() {
+  const isMobile = useResponsive('down', 'md');
   const [value, setValue] = useState(0);
+  const [openNewCategoryModal, setOpenNewCategoryModal] = useState(false);
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (newValue) => {
     setValue(newValue);
+  };
+
+  const handleOpenNewCategoryModal = () => {
+    setOpenNewCategoryModal(true);
+  };
+
+  const handleCloseNewCategoryModal = () => {
+    setOpenNewCategoryModal(false);
   };
 
   return (
@@ -41,16 +54,20 @@ export default function Menu() {
         </Button>
       </Stack>
       <Stack
-        direction="row"
-        columnGap={2}
+        direction={isMobile ? 'column' : 'row'}
+        gap={2}
         justifyContent="space-between"
         sx={{ borderColor: 'divider', display: 'flex' }}
       >
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="Cà phê" />
-          <Tab label="Đồ ăn nhẹ" />
+        <Tabs value={value} variant="scrollable" scrollButtons="auto">
+          <CategoryTab label="Cà phê" value={0} handleChange={handleChange} />
+          <CategoryTab label="Đồ ăn nhẹ" value={1} handleChange={handleChange} />
+
+          <Button onClick={handleOpenNewCategoryModal}>
+            <Iconify icon="ic:round-plus" width={32} height={32} />
+          </Button>
         </Tabs>
-        <TextField variant="outlined" placeholder="Tìm kiếm" sx={{ flex: '1', maxWidth: '300px' }} />
+        <TextField variant="outlined" placeholder="Tìm kiếm" sx={{ flex: '1', width: '100%', maxWidth: '300px' }} />
       </Stack>
       <TabPanel value={value} index={0}>
         <Grid container spacing={3}>
@@ -63,13 +80,15 @@ export default function Menu() {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Grid container spacing={3}>
-          {products.map((product, index) => (
+          {/* {products.map((product, index) => (
             <Grid key={index} item xs={12} sm={6} md={4} xl={3}>
               <Product data={product} />
             </Grid>
-          ))}
+          ))} */}
         </Grid>
       </TabPanel>
+
+      <CategoryModal type="new" isOpen={openNewCategoryModal} onCloseModal={handleCloseNewCategoryModal} />
     </Container>
   );
 }
