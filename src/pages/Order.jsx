@@ -5,10 +5,12 @@ import Iconify from '~/components/UI/Iconify';
 import ChooseFoodModal from '~/components/Order/ChooseFoodModal';
 import BillModal from '~/components/Order/BillModal';
 import NewTableModal from '~/components/Table/NewTableModal';
+import ChangeTableModal from '~/components/Order/ChangeTableModal';
 
 export default function Order() {
   const [openFoodModal, setOpenFoodModal] = useState(false);
   const [openBillModal, setOpenBillModal] = useState(false);
+  const [openChangeTableModal, setOpenChangeTableModal] = useState(false);
   const [isOpenTableModal, setIsOpenTableModal] = useState(false);
 
   const handleOpenFoodModal = () => {
@@ -35,6 +37,14 @@ export default function Order() {
     setIsOpenTableModal(false);
   };
 
+  const handleOpenChangeTableModal = () => {
+    setOpenChangeTableModal(true);
+  };
+
+  const handleCloseChangeTableModal = () => {
+    setOpenChangeTableModal(false);
+  };
+
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
@@ -48,7 +58,11 @@ export default function Order() {
       <Grid container spacing={3}>
         {[...Array(3)].map((_, index) => (
           <Grid key={index} item xs={12} sm={6} md={4} xl={3}>
-            <Table onOpenModalFood={handleOpenFoodModal} onPay={handleOpenBillModal} />
+            <Table
+              onOpenModalFood={handleOpenFoodModal}
+              onPay={handleOpenBillModal}
+              openChangeTableModal={handleOpenChangeTableModal}
+            />
           </Grid>
         ))}
       </Grid>
@@ -56,6 +70,7 @@ export default function Order() {
       <ChooseFoodModal isOpen={openFoodModal} onCloseModal={handleCloseFoodModal} />
       <BillModal isOpen={openBillModal} onCloseModal={handleCloseBillModal} />
       <NewTableModal isOpen={isOpenTableModal} onCloseModal={handleCloseTableModal} />
+      <ChangeTableModal isOpen={openChangeTableModal} onCloseModal={handleCloseChangeTableModal} />
     </Container>
   );
 }

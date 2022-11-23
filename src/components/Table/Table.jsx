@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // material
 import { Button, Card, Grid, IconButton, MenuItem, Stack, Typography } from '@mui/material';
 // components
@@ -10,8 +10,9 @@ import tableImg from '~/assets/images/table.svg';
 import tableUsedImg from '~/assets/images/table_used.svg';
 
 const _ = require('lodash');
-export default function Table({ onOpenModalFood, onPay }) {
+export default function Table({ onOpenModalFood, onPay, openChangeTableModal }) {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
+  const [r, setR] = useState(1);
 
   const handleOpenConfirmDeleteModal = () => {
     setShowConfirmDeleteModal(true);
@@ -27,8 +28,6 @@ export default function Table({ onOpenModalFood, onPay }) {
 
   const handleDeleteTable = () => {};
 
-  const r = _.random(1, 2);
-
   const anchorRef = useRef(null);
 
   const [open, setOpen] = useState(null);
@@ -40,9 +39,14 @@ export default function Table({ onOpenModalFood, onPay }) {
   const handleClose = () => {
     setOpen(null);
   };
+
+  useEffect(() => {
+    setR(_.random(1, 2));
+  }, []);
+
   return (
     <>
-      <Card sx={{ padding: 1 }}>
+      <Card sx={{ padding: '12px' }}>
         <Stack rowGap={1}>
           <Stack direction="row" alignItems="start">
             <Grid container columnSpacing={2}>
@@ -76,6 +80,7 @@ export default function Table({ onOpenModalFood, onPay }) {
 
       {showConfirmDeleteModal && (
         <ConfirmModal
+          open={showConfirmDeleteModal}
           content="Bạn chắc chắn muốn xóa bàn?"
           handleClose={handleCloseConfirmDeleteModal}
           action={handleDeleteTable}
@@ -99,12 +104,11 @@ export default function Table({ onOpenModalFood, onPay }) {
         {r === 1 ? (
           <Stack sx={{ p: 1 }}>
             <MenuItem>Chỉnh sửa bàn</MenuItem>
-            <MenuItem>Xóa bàn</MenuItem>
+            <MenuItem onClick={handleOpenConfirmDeleteModal}>Xóa bàn</MenuItem>
           </Stack>
         ) : (
           <Stack sx={{ p: 1 }}>
-            <MenuItem>Chuyển bàn</MenuItem>
-            <MenuItem>Gộp bàn</MenuItem>
+            <MenuItem onClick={openChangeTableModal}>Chuyển bàn / Gộp bàn</MenuItem>
           </Stack>
         )}
       </MenuPopover>
