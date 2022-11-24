@@ -10,9 +10,9 @@ import FormProvider from '~/components/hook-form/FormProvider';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 import RHFAutocomplete from '../hook-form/RHFAutocomplete';
 import Iconify from '~/components/UI/Iconify';
-import { useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addProduct, selectCategories } from '~/redux/dataSlice';
+import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { selectCategories } from '~/redux/dataSlice';
 import { toast } from 'react-toastify';
 // import { createProduct, postImage } from '~/services/productService';
 import Cookies from 'js-cookie';
@@ -24,9 +24,14 @@ export default function ProductForm({ data = {} }) {
   const inputFileRef = useRef();
   const categories = useSelector(selectCategories);
   const categoryNames = categories.map((category) => category.name);
-  const dispatch = useDispatch();
 
   const editMode = Object.keys(data).length > 0;
+
+  useEffect(() => {
+    if (editMode) {
+      setUploadedFile(`http://localhost:3001/${data.image}`);
+    }
+  }, [editMode, data.image]);
 
   const ProductSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập tên món'),
@@ -64,9 +69,6 @@ export default function ProductForm({ data = {} }) {
       try {
         const formData = new FormData();
         formData.append('image', inputFileRef.current.files[0]);
-        // if (editMode) {
-        //   formData.append('oldPath', data.image);
-        // }
 
         const postImgRes = await fetch('http://localhost:3001/post-image', {
           method: 'PUT',
@@ -93,7 +95,7 @@ export default function ProductForm({ data = {} }) {
           },
         });
         const productResData = await addProductRes.json();
-        const { message, product: addedProduct } = productResData;
+        const { message } = productResData;
         console.log(productResData);
 
         toast.success(message);
@@ -105,7 +107,7 @@ export default function ProductForm({ data = {} }) {
       if (!inputFileRef.current.files[0]) {
         const updateProductRes = await fetch(`http://localhost:3001/products/${data._id}`, {
           method: 'PUT',
-          body: JSON.stringify({ name: name, price: price, category: selectedCategory._id }),
+          body: JSON.stringify({ id: data._id, name: name, price: price, category: selectedCategory._id }),
           headers: {
             Authorization: `Bearer ${Cookies.get('token')}`,
             'Content-Type': 'application/json',
@@ -205,7 +207,7 @@ export default function ProductForm({ data = {} }) {
 
       {uploadedFile && (
         <Stack direction="row" justifyContent="start" sx={{ mt: 1 }}>
-          <img src={uploadedFile} alt="Hình sản phẩm" style={{ maxWidth: '100%' }} />
+          <img src={uploadedFile} alt="Hình sản phẩm" crossOrigin="anonymous" style={{ maxWidth: '100%' }} />
         </Stack>
       )}
 

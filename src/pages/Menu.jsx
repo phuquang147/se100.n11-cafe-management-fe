@@ -125,7 +125,7 @@ export default function Menu() {
           variant="outlined"
           value={searchValue}
           placeholder="Tìm kiếm"
-          sx={{ flex: '1', maxWidth: { md: '300px' } }}
+          sx={{ flex: '1', maxWidth: { md: '550px' } }}
           onChange={handleInputChange}
         />
       </Stack>
