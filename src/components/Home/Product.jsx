@@ -28,7 +28,9 @@ export default function Product({ product, onSelect }) {
           </Grid>
           <Grid item xs={12}>
             <Box sx={{ p: 1 }}>
-              <Typography variant="h6">{loadedProduct.name}</Typography>
+              <Typography variant="h6" sx={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                {loadedProduct.name}
+              </Typography>
               <Typography variant="body2" color="primary" sx={{ fontWeight: '700' }}>
                 {printNumberWithCommas(loadedProduct.price)} VNĐ
               </Typography>

@@ -7,6 +7,7 @@ import BillModal from '~/components/Order/BillModal';
 import TableFormModal from '~/components/Table/TableFormModal';
 import { getTables } from '~/services/tableService';
 import { toast } from 'react-toastify';
+import ChangeTableModal from '~/components/Order/ChangeTableModal';
 
 export default function Order() {
   const [tables, setTables] = useState([]);
@@ -14,6 +15,7 @@ export default function Order() {
   const [loading, setLoading] = useState(false);
   const [openFoodModal, setOpenFoodModal] = useState(false);
   const [openBillModal, setOpenBillModal] = useState(false);
+  const [openChangeTableModal, setOpenChangeTableModal] = useState(false);
   const [isOpenTableModal, setIsOpenTableModal] = useState(false);
 
   const getAllTables = async () => {
