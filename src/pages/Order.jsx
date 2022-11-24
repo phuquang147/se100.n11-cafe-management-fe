@@ -1,12 +1,13 @@
-import { Button, Grid, Stack, Typography, Container, CircularProgress, Box } from '@mui/material';
+import { Box, Button, CircularProgress, Container, Grid, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import Table from '~/components/Table/Table';
-import Iconify from '~/components/UI/Iconify';
-import ChooseFoodModal from '~/components/Order/ChooseFoodModal';
-import BillModal from '~/components/Order/BillModal';
-import TableFormModal from '~/components/Table/TableFormModal';
-import { getTables } from '~/services/tableService';
 import { toast } from 'react-toastify';
+import BillModal from '~/components/Order/BillModal';
+import ChangeTableModal from '~/components/Order/ChangeTableModal';
+import ChooseFoodModal from '~/components/Order/ChooseFoodModal';
+import Table from '~/components/Table/Table';
+import TableFormModal from '~/components/Table/TableFormModal';
+import Iconify from '~/components/UI/Iconify';
+import { getTables } from '~/services/tableService';
 
 export default function Order() {
   const [tables, setTables] = useState([]);
@@ -14,6 +15,7 @@ export default function Order() {
   const [loading, setLoading] = useState(false);
   const [openFoodModal, setOpenFoodModal] = useState(false);
   const [openBillModal, setOpenBillModal] = useState(false);
+  const [openChangeTableModal, setOpenChangeTableModal] = useState(false);
   const [isOpenTableModal, setIsOpenTableModal] = useState(false);
 
   const getAllTables = async () => {
@@ -74,6 +76,14 @@ export default function Order() {
     );
   }
 
+  const handleOpenChangeTableModal = () => {
+    setOpenChangeTableModal(true);
+  };
+
+  const handleCloseChangeTableModal = () => {
+    setOpenChangeTableModal(false);
+  };
+
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
@@ -93,6 +103,7 @@ export default function Order() {
               onPay={handleOpenBillModal}
               onOpenEditForm={handleEditTable}
               onLoadTables={getAllTables}
+              openChangeTableModal={handleOpenChangeTableModal}
             />
           </Grid>
         ))}
@@ -108,6 +119,8 @@ export default function Order() {
           onLoadTables={getAllTables}
         />
       )}
+
+      <ChangeTableModal isOpen={openChangeTableModal} onCloseModal={handleCloseChangeTableModal} />
     </Container>
   );
 }

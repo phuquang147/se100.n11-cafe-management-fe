@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // material
 import { Button, Card, Grid, IconButton, MenuItem, Stack, Typography } from '@mui/material';
 // components
@@ -11,8 +11,11 @@ import tableUsedImg from '~/assets/images/table_used.svg';
 import { deleteTable } from '~/services/tableService';
 import { toast } from 'react-toastify';
 
-export default function Table({ table, onOpenModalFood, onPay, onOpenEditForm, onLoadTables }) {
+const _ = require('lodash');
+
+export default function Table({ table, onOpenModalFood, onPay, onOpenEditForm, onLoadTables, openChangeTableModal }) {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
+  const [r, setR] = useState(1);
 
   const handleOpenConfirmDeleteModal = () => {
     setShowConfirmDeleteModal(true);
@@ -52,9 +55,14 @@ export default function Table({ table, onOpenModalFood, onPay, onOpenEditForm, o
   const handleClose = () => {
     setOpen(null);
   };
+
+  useEffect(() => {
+    setR(_.random(1, 2));
+  }, []);
+
   return (
     <>
-      <Card sx={{ padding: 1 }}>
+      <Card sx={{ padding: '12px' }}>
         <Stack rowGap={1}>
           <Stack direction="row" alignItems="start">
             <Grid container columnSpacing={2}>
@@ -88,10 +96,10 @@ export default function Table({ table, onOpenModalFood, onPay, onOpenEditForm, o
 
       {showConfirmDeleteModal && (
         <ConfirmModal
+          open={showConfirmDeleteModal}
           content="Bạn chắc chắn muốn xóa bàn?"
           handleClose={handleCloseConfirmDeleteModal}
           action={handleDeleteTable}
-          open={showConfirmDeleteModal}
         />
       )}
 
@@ -116,8 +124,7 @@ export default function Table({ table, onOpenModalFood, onPay, onOpenEditForm, o
           </Stack>
         ) : (
           <Stack sx={{ p: 1 }}>
-            <MenuItem>Chuyển bàn</MenuItem>
-            <MenuItem>Gộp bàn</MenuItem>
+            <MenuItem onClick={openChangeTableModal}>Chuyển bàn / Gộp bàn</MenuItem>
           </Stack>
         )}
       </MenuPopover>

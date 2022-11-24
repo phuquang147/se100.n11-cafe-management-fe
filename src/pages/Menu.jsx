@@ -1,15 +1,26 @@
+import { faker } from '@faker-js/faker';
 import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
+import useResponsive from '~/hooks/useResponsive';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
 // @mui
 import { Box, Button, CircularProgress, Container, Grid, Stack, Tab, Tabs, TextField, Typography } from '@mui/material';
 // components
-import Iconify from '~/components/UI/Iconify';
+import CategoryModal from '~/components/Menu/CategoryModal';
+import CategoryTab from '~/components/Menu/CategoryTab';
 import Product from '~/components/Menu/Product';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectCategories, selectProducts, setProducts } from '~/redux/dataSlice';
+import Iconify from '~/components/UI/Iconify';
 import useDebounce from '~/hooks/useDebounce';
-import { useEffect } from 'react';
+import { selectCategories, selectProducts, setProducts } from '~/redux/dataSlice';
 import { getProducts } from '~/services/productService';
+
+const products = [...Array(6)].map((_) => ({
+  id: faker.datatype.uuid(),
+  img: 'https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg',
+  name: faker.name.fullName(),
+  price: faker.datatype.number({ min: 20000, max: 100000, precision: 1000 }),
+}));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -22,8 +33,11 @@ function TabPanel(props) {
 }
 
 export default function Menu() {
+  const isMobile = useResponsive('down', 'md');
   const [value, setValue] = useState(0);
   const [searchValue, setSearchValue] = useState('');
+  const [tab, setTab] = useState(0);
+  const [openNewCategoryModal, setOpenNewCategoryModal] = useState(false);
   const products = useSelector(selectProducts);
   const categories = useSelector(selectCategories);
   const categoryNames = categories.map((category) => category.name);
@@ -100,6 +114,18 @@ export default function Menu() {
     );
   }
 
+  const handleChangeTab = (newTab) => {
+    setTab(newTab);
+  };
+
+  const handleOpenNewCategoryModal = () => {
+    setOpenNewCategoryModal(true);
+  };
+
+  const handleCloseNewCategoryModal = () => {
+    setOpenNewCategoryModal(false);
+  };
+
   return (
     <Container maxWidth="xl">
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
@@ -116,9 +142,10 @@ export default function Menu() {
         justifyContent="space-between"
         sx={{ borderColor: 'divider', display: 'flex' }}
       >
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+        <Tabs value={tab}>
           {categoryNames.map((category, index) => (
-            <Tab key={index} label={category} />
+            // <Tab key={index} label={category} />
+            <CategoryTab key={index} label={category} value={index} handleChange={handleChangeTab} />
           ))}
         </Tabs>
         <TextField
@@ -147,6 +174,7 @@ export default function Menu() {
           </Grid>
         </TabPanel>
       ))}
+      <CategoryModal type="new" isOpen={openNewCategoryModal} onCloseModal={handleCloseNewCategoryModal} />
     </Container>
   );
 }
