@@ -7,7 +7,7 @@ import ChooseFoodModal from '~/components/Order/ChooseFoodModal';
 import Table from '~/components/Table/Table';
 import TableFormModal from '~/components/Table/TableFormModal';
 import Iconify from '~/components/UI/Iconify';
-import { getTables } from '~/services/tableService';
+import { getTables } from '~/services/tableServices';
 
 export default function Order() {
   const [tables, setTables] = useState([]);

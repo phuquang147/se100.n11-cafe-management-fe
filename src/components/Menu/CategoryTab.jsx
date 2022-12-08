@@ -1,11 +1,13 @@
 import { IconButton, MenuItem, Stack, Tab } from '@mui/material';
 import { useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 import MenuPopover from '~/HOC/MenuPopover';
+import { deleteCategory } from '~/services/categoryServices';
 import ConfirmModal from '../UI/ConfirmModal';
 import Iconify from '../UI/Iconify';
 import CategoryModal from './CategoryModal';
 
-export default function CategoryTab({ label, value, handleChange }) {
+export default function CategoryTab({ label, value, category, handleChange }) {
   const anchorRef = useRef(null);
 
   const [openMenu, setOpenMenu] = useState(null);
@@ -35,7 +37,18 @@ export default function CategoryTab({ label, value, handleChange }) {
   const handleCloseConfirmDeleteCategory = () => {
     setOpenConfirmDeleteCategory(false);
   };
-  const handleDeleteCategory = () => {};
+  const handleDeleteCategory = async () => {
+    try {
+      const categoryRes = await deleteCategory(category._id);
+      if (categoryRes.status === 200) {
+        toast.success(categoryRes.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    } finally {
+      handleCloseConfirmDeleteCategory();
+    }
+  };
 
   return (
     <>
@@ -71,7 +84,12 @@ export default function CategoryTab({ label, value, handleChange }) {
         </Stack>
       </MenuPopover>
 
-      <CategoryModal type="modify" isOpen={openModifyCategoryModal} onCloseModal={handleCloseModifyCategoryModal} />
+      <CategoryModal
+        type="modify"
+        isOpen={openModifyCategoryModal}
+        category={category}
+        onCloseModal={handleCloseModifyCategoryModal}
+      />
       {openConfirmDeleteCategory && (
         <ConfirmModal
           content="Bạn chắc chắn muốn xóa danh mục?"

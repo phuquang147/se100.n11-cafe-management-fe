@@ -1,6 +1,5 @@
 import Cookies from 'js-cookie';
 import { call, put, takeLatest } from 'redux-saga/effects';
-import baseService from '~/services/baseService';
 import { setDataFailed, setDataStarted, setDataSuccess } from '../dataSlice';
 
 function* getData(action) {

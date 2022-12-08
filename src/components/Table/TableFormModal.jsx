@@ -7,7 +7,7 @@ import { Box, Grid, IconButton, Modal, Stack, Typography } from '@mui/material';
 import FormProvider from '../hook-form/FormProvider';
 import RHFTextField from '../hook-form/RHFTextField';
 import Iconify from '../UI/Iconify';
-import { createTable, updateTable } from '~/services/tableService';
+import { createTable, updateTable } from '~/services/tableServices';
 import { toast } from 'react-toastify';
 
 const style = {

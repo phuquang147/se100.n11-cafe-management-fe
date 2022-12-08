@@ -13,14 +13,7 @@ import Product from '~/components/Menu/Product';
 import Iconify from '~/components/UI/Iconify';
 import useDebounce from '~/hooks/useDebounce';
 import { selectCategories, selectProducts, setProducts } from '~/redux/dataSlice';
-import { getProducts } from '~/services/productService';
-
-const products = [...Array(6)].map((_) => ({
-  id: faker.datatype.uuid(),
-  img: 'https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg',
-  name: faker.name.fullName(),
-  price: faker.datatype.number({ min: 20000, max: 100000, precision: 1000 }),
-}));
+import { getProducts } from '~/services/productServices';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -36,51 +29,48 @@ export default function Menu() {
   const isMobile = useResponsive('down', 'md');
   const [value, setValue] = useState(0);
   const [searchValue, setSearchValue] = useState('');
-  const [tab, setTab] = useState(0);
   const [openNewCategoryModal, setOpenNewCategoryModal] = useState(false);
   const products = useSelector(selectProducts);
   const categories = useSelector(selectCategories);
-  const categoryNames = categories.map((category) => category.name);
   const dispatch = useDispatch();
 
   const [loadedProducts, setLoadedProducts] = useState(products);
 
   const loadProducts = useCallback(async () => {
     const data = await getProducts();
-    console.log(data.products);
     setLoadedProducts(data.products);
     dispatch(setProducts(data.products));
   }, [dispatch]);
 
   useEffect(() => {
     loadProducts();
-  }, [dispatch, loadProducts]);
+  }, [dispatch, loadProducts, categories]);
 
   const handleChange = useCallback(
     (event, newValue) => {
       setValue(newValue);
       switch (newValue) {
         case 0:
-          const coffeeProducts = products.filter((product) => product.category.name === 'Cà phê');
+          const coffeeProducts = products.filter((product) => product.category.name === categories[0]?.name);
           setLoadedProducts(coffeeProducts);
           break;
         case 1:
-          const teaProducts = products.filter((product) => product.category.name === 'Trà');
+          const teaProducts = products.filter((product) => product.category.name === categories[1]?.name);
           setLoadedProducts(teaProducts);
           break;
         case 2:
-          const snackProducts = products.filter((product) => product.category.name === 'Đồ ăn vặt');
+          const snackProducts = products.filter((product) => product.category.name === categories[2]?.name);
           setLoadedProducts(snackProducts);
           break;
         case 3:
-          const otherProducts = products.filter((product) => product.category.name === 'Khác');
+          const otherProducts = products.filter((product) => product.category.name === categories[3]?.name);
           setLoadedProducts(otherProducts);
           break;
         default:
           break;
       }
     },
-    [products],
+    [products, categories],
   );
 
   const debouncedValue = useDebounce(searchValue, 500);
@@ -106,16 +96,9 @@ export default function Menu() {
     }
   };
 
-  if (loadedProducts.length === 0 && !searchValue) {
-    return (
-      <Box sx={{ textAlign: 'center' }}>
-        <CircularProgress sx={{ mt: 10 }} />
-      </Box>
-    );
-  }
-
   const handleChangeTab = (newTab) => {
-    setTab(newTab);
+    setValue(newTab);
+    handleChange(null, newTab);
   };
 
   const handleOpenNewCategoryModal = () => {
@@ -125,6 +108,14 @@ export default function Menu() {
   const handleCloseNewCategoryModal = () => {
     setOpenNewCategoryModal(false);
   };
+
+  if (loadedProducts.length === 0 && !searchValue) {
+    return (
+      <Box sx={{ textAlign: 'center' }}>
+        <CircularProgress sx={{ mt: 10 }} />
+      </Box>
+    );
+  }
 
   return (
     <Container maxWidth="xl">
@@ -142,10 +133,16 @@ export default function Menu() {
         justifyContent="space-between"
         sx={{ borderColor: 'divider', display: 'flex' }}
       >
-        <Tabs value={tab}>
-          {categoryNames.map((category, index) => (
+        <Tabs value={value} sx={{ overflowX: 'auto' }} variant="scrollable" scrollButtons="auto">
+          {categories.map((category, index) => (
             // <Tab key={index} label={category} />
-            <CategoryTab key={index} label={category} value={index} handleChange={handleChangeTab} />
+            <CategoryTab
+              key={index}
+              label={category.name}
+              value={index}
+              category={category}
+              handleChange={handleChangeTab}
+            />
           ))}
         </Tabs>
         <TextField

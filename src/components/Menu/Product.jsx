@@ -5,7 +5,7 @@ import { Button, Card, Grid, Stack, Typography } from '@mui/material';
 // components
 import ConfirmModal from '~/components/UI/ConfirmModal';
 import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
-import { deleteProduct } from '~/services/productService';
+import { deleteProduct } from '~/services/productServices';
 import { toast } from 'react-toastify';
 
 export default function Product({ data, onLoadProducts }) {

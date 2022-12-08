@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const baseService = axios.create({
-  baseURL: 'https://coffee-management-app.herokuapp.com/',
+  baseURL: 'http://localhost:3001',
   headers: {
     'Content-Type': 'application/json',
   },

@@ -16,6 +16,7 @@ import { addProduct, selectCategories } from '~/redux/dataSlice';
 import { toast } from 'react-toastify';
 // import { createProduct, postImage } from '~/services/productService';
 import Cookies from 'js-cookie';
+import { useEffect } from 'react';
 
 export default function ProductForm({ data = {} }) {
   const { name, price } = data;
@@ -27,6 +28,12 @@ export default function ProductForm({ data = {} }) {
   const dispatch = useDispatch();
 
   const editMode = Object.keys(data).length > 0;
+
+  useEffect(() => {
+    if (editMode) {
+      setUploadedFile(`http://localhost:3001/${data.image}`);
+    }
+  }, [editMode, data.image]);
 
   const ProductSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập tên món'),
@@ -205,7 +212,7 @@ export default function ProductForm({ data = {} }) {
 
       {uploadedFile && (
         <Stack direction="row" justifyContent="start" sx={{ mt: 1 }}>
-          <img src={uploadedFile} alt="Hình sản phẩm" style={{ maxWidth: '100%' }} />
+          <img src={uploadedFile} alt="Hình sản phẩm" style={{ maxWidth: '100%' }} crossOrigin="anonymous" />
         </Stack>
       )}
 

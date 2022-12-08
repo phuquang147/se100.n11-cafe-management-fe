@@ -2,7 +2,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Grid, IconButton, Modal, Stack, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 import * as Yup from 'yup';
+import { updateCategory } from '~/services/categoryServices';
+import { updateCategory as updateExistingCategory } from '~/redux/dataSlice';
 import FormProvider from '../hook-form/FormProvider';
 import RHFTextField from '../hook-form/RHFTextField';
 import Iconify from '../UI/Iconify';
@@ -28,13 +32,15 @@ const style = {
   },
 };
 
-export default function CategoryModal({ type, isOpen, onCloseModal }) {
+export default function CategoryModal({ type, isOpen, category, onCloseModal }) {
+  const dispatch = useDispatch();
+
   const CategorySchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập tên bàn'),
   });
 
   const defaultValues = {
-    name: '',
+    name: category?.name || '',
   };
 
   const methods = useForm({
@@ -48,7 +54,16 @@ export default function CategoryModal({ type, isOpen, onCloseModal }) {
   } = methods;
 
   const onSubmit = async (values) => {
-    console.log(values);
+    const { name } = values;
+    try {
+      const categoryRes = await updateCategory({ name }, category._id);
+      if (categoryRes.status === 201) {
+        toast.success(categoryRes.data.message);
+        dispatch(updateExistingCategory({ name, id: category._id }));
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

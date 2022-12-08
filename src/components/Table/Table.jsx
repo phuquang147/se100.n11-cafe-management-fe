@@ -8,7 +8,7 @@ import MenuPopover from '~/HOC/MenuPopover';
 // images
 import tableImg from '~/assets/images/table.svg';
 import tableUsedImg from '~/assets/images/table_used.svg';
-import { deleteTable } from '~/services/tableService';
+import { deleteTable } from '~/services/tableServices';
 import { toast } from 'react-toastify';
 
 const _ = require('lodash');
