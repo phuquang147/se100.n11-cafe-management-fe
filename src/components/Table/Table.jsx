@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 // material
 import { Button, Card, Grid, IconButton, MenuItem, Stack, Typography } from '@mui/material';
 // components
@@ -11,12 +11,15 @@ import tableUsedImg from '~/assets/images/table_used.svg';
 import { deleteTable } from '~/services/tableServices';
 import { toast } from 'react-toastify';
 
-const _ = require('lodash');
-
-export default function Table({ table, onOpenModalFood, onPay, onOpenEditForm, onLoadTables, openChangeTableModal }) {
+export default function Table({
+  table,
+  onOpenModalFood,
+  onOpenBillModal,
+  onOpenEditForm,
+  onLoadTables,
+  openChangeTableModal,
+}) {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
-  const [r, setR] = useState(1);
-
   const handleOpenConfirmDeleteModal = () => {
     setShowConfirmDeleteModal(true);
   };
@@ -56,10 +59,6 @@ export default function Table({ table, onOpenModalFood, onPay, onOpenEditForm, o
     setOpen(null);
   };
 
-  useEffect(() => {
-    setR(_.random(1, 2));
-  }, []);
-
   return (
     <>
       <Card sx={{ padding: '12px' }}>
@@ -87,7 +86,12 @@ export default function Table({ table, onOpenModalFood, onPay, onOpenEditForm, o
               Chọn món
             </Button>
           ) : (
-            <Button variant="contained" fullWidth sx={{ py: '6px', borderRadius: '10px' }} onClick={onPay}>
+            <Button
+              variant="contained"
+              fullWidth
+              sx={{ py: '6px', borderRadius: '10px' }}
+              onClick={() => onOpenBillModal(table?.receipt?._id)}
+            >
               Thanh toán
             </Button>
           )}

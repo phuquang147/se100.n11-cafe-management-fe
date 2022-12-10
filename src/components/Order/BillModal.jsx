@@ -24,11 +24,13 @@ const style = {
   },
 };
 
-export default function BillModal({ isOpen, onCloseModal }) {
+export default function BillModal({ isOpen, receipt, onCloseModal }) {
   const handlePay = () => {
     toast.success('Thanh toán thành công');
     onCloseModal();
   };
+
+  console.log(receipt);
 
   return (
     <Modal
@@ -45,32 +47,34 @@ export default function BillModal({ isOpen, onCloseModal }) {
           </IconButton>
         </Stack>
         <Grid container spacing={2}>
-          {[...Array(3)].map((_, index) => (
-            <Grid key={index} item xs={12}>
-              <Card sx={{ p: 1 }}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <Stack direction="row" alignItems="center" spacing={2}>
-                    <img
-                      src="https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg"
-                      alt="product-img"
-                      style={{ width: '60px', height: '60px', borderRadius: '10px' }}
-                    />
-                    <Typography
-                      variant="h6"
-                      sx={{ whiteSpace: 'nowrap', width: '130px', overflow: 'hidden', textOverflow: 'ellipsis' }}
-                    >
-                      Hi-Tea Vải x 2
-                    </Typography>
+          {receipt &&
+            receipt.products.map((product, index) => (
+              <Grid key={index} item xs={12}>
+                <Card sx={{ p: 1 }}>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Stack direction="row" alignItems="center" spacing={2}>
+                      <img
+                        src={`http://localhost:3001/${product.product.image}`}
+                        alt="product-img"
+                        style={{ width: '60px', height: '60px', borderRadius: '10px' }}
+                        crossOrigin="anonymous"
+                      />
+                      <Typography
+                        variant="h6"
+                        sx={{ whiteSpace: 'nowrap', width: '130px', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                      >
+                        {product.product.name} x {product.quantity}
+                      </Typography>
+                    </Stack>
+                    <Typography variant="subtitle2">{printNumberWithCommas(product.product.price)} VNĐ</Typography>
                   </Stack>
-                  <Typography variant="subtitle2">20,000 VNĐ</Typography>
-                </Stack>
-              </Card>
-            </Grid>
-          ))}
+                </Card>
+              </Grid>
+            ))}
         </Grid>
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mt: 2 }}>
           <Typography variant="h6">Tổng</Typography>
-          <Typography variant="h6">{printNumberWithCommas(60000)} VNĐ</Typography>
+          {receipt && <Typography variant="h6">{printNumberWithCommas(receipt.totalPrice)} VNĐ</Typography>}
         </Stack>
         <Button variant="contained" fullWidth sx={{ height: '40px', mt: 3 }} onClick={handlePay}>
           Thanh toán

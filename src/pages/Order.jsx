@@ -7,10 +7,12 @@ import ChooseFoodModal from '~/components/Order/ChooseFoodModal';
 import Table from '~/components/Table/Table';
 import TableFormModal from '~/components/Table/TableFormModal';
 import Iconify from '~/components/UI/Iconify';
+import { getReceiptById } from '~/services/receiptServices';
 import { getTables } from '~/services/tableServices';
 
 export default function Order() {
   const [tables, setTables] = useState([]);
+  const [receipt, setReceipt] = useState();
   const [editedTable, setEditedTable] = useState(null);
   const [loading, setLoading] = useState(false);
   const [openFoodModal, setOpenFoodModal] = useState(false);
@@ -25,6 +27,7 @@ export default function Order() {
     }
 
     const tables = res.data.tables;
+    console.log(tables);
     setTables(tables);
   };
 
@@ -46,7 +49,11 @@ export default function Order() {
     setOpenFoodModal(false);
   };
 
-  const handleOpenBillModal = () => {
+  const handleOpenBillModal = async (receiptId) => {
+    console.log(receiptId);
+    const res = await getReceiptById(receiptId);
+    console.log(res.data.receipt);
+    setReceipt(res.data.receipt);
     setOpenBillModal(true);
   };
 
@@ -100,7 +107,7 @@ export default function Order() {
             <Table
               table={table}
               onOpenModalFood={handleOpenFoodModal}
-              onPay={handleOpenBillModal}
+              onOpenBillModal={handleOpenBillModal}
               onOpenEditForm={handleEditTable}
               onLoadTables={getAllTables}
               openChangeTableModal={handleOpenChangeTableModal}
@@ -110,7 +117,7 @@ export default function Order() {
       </Grid>
 
       <ChooseFoodModal isOpen={openFoodModal} onCloseModal={handleCloseFoodModal} />
-      <BillModal isOpen={openBillModal} onCloseModal={handleCloseBillModal} />
+      <BillModal isOpen={openBillModal} receipt={receipt} onCloseModal={handleCloseBillModal} />
       {isOpenTableModal && (
         <TableFormModal
           table={editedTable}

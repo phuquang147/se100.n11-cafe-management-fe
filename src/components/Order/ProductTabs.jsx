@@ -3,8 +3,10 @@ import { Box, Grid, Tab, Tabs, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import Product from '~/components/Home/Product';
 import useDebounce from '~/hooks/useDebounce';
+import { selectCategories } from '~/redux/dataSlice';
 
 const useStyles = makeStyles({
   textField: {
@@ -49,6 +51,7 @@ export default function ProductTabs({ onSelect }) {
   const [value, setValue] = useState(0);
   const [coffee, setCoffee] = useState(coffeeProducts);
   const [searchValue, setSearchValue] = useState('');
+  const categories = useSelector(selectCategories);
   const styles = useStyles();
 
   const debouncedValue = useDebounce(searchValue, 500);
@@ -78,33 +81,27 @@ export default function ProductTabs({ onSelect }) {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label="Cà phê" />
-            <Tab label="Đồ ăn nhẹ" />
+          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" variant="scrollable">
+            {categories.map((category, index) => (
+              <Tab label={category.name} key={index} />
+            ))}
           </Tabs>
         </Grid>
         <Grid item xs={12} md={6} className={styles.textField}>
           <TextField variant="outlined" placeholder="Tìm kiếm" value={searchValue} onChange={handleInputChange} />
         </Grid>
       </Grid>
-      <TabPanel value={value} index={0}>
-        <Grid container spacing={2}>
-          {coffee.map((item, index) => (
-            <Grid key={index} item xs={6} md={4}>
-              <Product product={item} onSelect={onSelect} />
-            </Grid>
-          ))}
-        </Grid>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <Grid container spacing={2}>
-          {coffee.map((item, index) => (
-            <Grid key={index} item xs={6} md={4}>
-              <Product product={item} onSelect={onSelect} />
-            </Grid>
-          ))}
-        </Grid>
-      </TabPanel>
+      {[...Array(categories.length)].map((_, index) => (
+        <TabPanel value={value} index={index} key={index}>
+          <Grid container spacing={2}>
+            {coffee.map((item, index) => (
+              <Grid key={index} item xs={6} md={4}>
+                <Product product={item} onSelect={onSelect} />
+              </Grid>
+            ))}
+          </Grid>
+        </TabPanel>
+      ))}
     </>
   );
 }

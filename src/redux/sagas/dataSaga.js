@@ -13,10 +13,8 @@ function* getData(action) {
     }, '/data');
 
     const resData = yield data.json();
-    console.log(resData);
 
     const { products, categories } = resData;
-    console.log(products);
     yield put(setDataSuccess({ products, categories }));
   } catch (err) {
     yield put(setDataFailed());
