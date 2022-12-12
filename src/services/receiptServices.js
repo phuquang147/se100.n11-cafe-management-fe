@@ -9,3 +9,29 @@ export const getReceiptById = async (receiptId) => {
   });
   return res;
 };
+
+export const payForReceipt = async (receiptId) => {
+  const res = baseService.put(
+    `/receipts/${receiptId}/pay`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+    },
+  );
+  return res;
+};
+
+export const createReceipt = async (products, totalPrice, tables) => {
+  const res = await baseService.post(
+    '/receipts',
+    { products, totalPrice, tables },
+    {
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+    },
+  );
+  return res;
+};

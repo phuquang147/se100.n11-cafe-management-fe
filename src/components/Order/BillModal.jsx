@@ -1,6 +1,7 @@
 import { Box, Button, Grid, IconButton, Modal, Stack, Typography, Card } from '@mui/material';
 import { toast } from 'react-toastify';
 import Iconify from '~/components/UI/Iconify';
+import { payForReceipt } from '~/services/receiptServices';
 import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
 
 const style = {
@@ -24,13 +25,19 @@ const style = {
   },
 };
 
-export default function BillModal({ isOpen, receipt, onCloseModal }) {
-  const handlePay = () => {
-    toast.success('Thanh toán thành công');
+export default function BillModal({ isOpen, receipt, onReloadTables, onCloseModal }) {
+  const handlePay = async () => {
     onCloseModal();
+    try {
+      const receiptRes = await payForReceipt(receipt._id);
+      if (receiptRes.status === 200) {
+        toast.success(receiptRes.data.message);
+        await onReloadTables();
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || 'Đã xảy ra lỗi, vui lòng thử lại');
+    }
   };
-
-  console.log(receipt);
 
   return (
     <Modal

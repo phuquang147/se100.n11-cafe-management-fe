@@ -28,8 +28,8 @@ export default function Table({
     setShowConfirmDeleteModal(false);
   };
 
-  const handleOpenModalFood = () => {
-    onOpenModalFood();
+  const handleOpenModalFood = (table) => {
+    onOpenModalFood(table);
   };
 
   const handleDeleteTable = async () => {
@@ -82,7 +82,12 @@ export default function Table({
             </IconButton>
           </Stack>
           {table.state === 'Còn trống' ? (
-            <Button variant="outlined" fullWidth sx={{ py: '6px', borderRadius: '10px' }} onClick={handleOpenModalFood}>
+            <Button
+              variant="outlined"
+              fullWidth
+              sx={{ py: '6px', borderRadius: '10px' }}
+              onClick={() => handleOpenModalFood(table)}
+            >
               Chọn món
             </Button>
           ) : (

@@ -8,7 +8,12 @@ export default function ProductItem({ item, onChangeQuantity, onDelete }) {
     <Card sx={{ p: 1 }}>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" alignItems="center" spacing={2}>
-          <img src={item.img} alt={item.name} style={{ width: '60px', height: '60px', borderRadius: '10px' }} />
+          <img
+            src={`http://localhost:3001/${item.image}`}
+            alt={item.name}
+            style={{ width: '60px', height: '60px', borderRadius: '10px' }}
+            crossOrigin="anonymous"
+          />
           <Stack direction="column" spacing="6px">
             <Typography variant="h6">{item.name}</Typography>
             <Typography variant="subtitle2">{printNumberWithCommas(item.price)} VNĐ</Typography>

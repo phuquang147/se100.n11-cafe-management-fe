@@ -20,10 +20,11 @@ export default function Product({ product, onSelect }) {
         <Grid container rowSpacing={1}>
           <Grid item xs={12}>
             <img
-              src={loadedProduct.img}
+              src={`http://localhost:3001/${loadedProduct.image}`}
               alt={loadedProduct.name}
               style={{ borderRadius: '10px', maxWidth: '100%' }}
               draggable={false}
+              crossOrigin="anonymous"
             />
           </Grid>
           <Grid item xs={12}>

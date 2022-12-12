@@ -7,7 +7,7 @@ import { Box, Grid, IconButton, Modal, Stack, Typography } from '@mui/material';
 import FormProvider from '../hook-form/FormProvider';
 import RHFTextField from '../hook-form/RHFTextField';
 import Iconify from '../UI/Iconify';
-import { createTable, updateTable } from '~/services/tableServices';
+import { updateTable } from '~/services/tableServices';
 import { toast } from 'react-toastify';
 
 const style = {
@@ -51,19 +51,19 @@ export default function TableFormModal({ table, isOpen, onCloseModal, onLoadTabl
   } = methods;
 
   const onSubmit = async (values) => {
-    let res;
-    if (table) {
-      res = await updateTable({ name: values.name }, table._id);
-    } else {
-      res = await createTable(values);
-    }
+    onCloseModal();
+    try {
+      const tableRes = await updateTable({ name: values.name }, table._id);
 
-    if (res.status === 201) {
-      onLoadTables();
-      return toast.success(res.data.message);
-    }
+      if (tableRes.status === 201) {
+        onLoadTables();
+        return toast.success(tableRes.data.message);
+      }
 
-    toast.error(res.data.message);
+      toast.error(tableRes.data.message);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || 'Đã xảy ra lỗi, vui lòng thử lại');
+    }
   };
 
   return (

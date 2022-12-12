@@ -1,12 +1,11 @@
-import { faker } from '@faker-js/faker';
 import { Box, Grid, Tab, Tabs, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Product from '~/components/Home/Product';
 import useDebounce from '~/hooks/useDebounce';
-import { selectCategories } from '~/redux/dataSlice';
+import { selectCategories, selectProducts } from '~/redux/dataSlice';
 
 const useStyles = makeStyles({
   textField: {
@@ -15,27 +14,6 @@ const useStyles = makeStyles({
     },
   },
 });
-
-const coffeeProducts = [
-  {
-    id: faker.datatype.uuid(),
-    img: 'https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg',
-    name: faker.name.fullName(),
-    price: faker.datatype.number({ min: 20000, max: 100000, precision: 1000 }),
-  },
-  {
-    id: faker.datatype.uuid(),
-    img: 'https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg',
-    name: faker.name.fullName(),
-    price: faker.datatype.number({ min: 20000, max: 100000, precision: 1000 }),
-  },
-  {
-    id: faker.datatype.uuid(),
-    img: 'https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg',
-    name: faker.name.fullName(),
-    price: faker.datatype.number({ min: 20000, max: 100000, precision: 1000 }),
-  },
-];
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -49,26 +27,59 @@ function TabPanel(props) {
 
 export default function ProductTabs({ onSelect }) {
   const [value, setValue] = useState(0);
-  const [coffee, setCoffee] = useState(coffeeProducts);
   const [searchValue, setSearchValue] = useState('');
   const categories = useSelector(selectCategories);
+  const products = useSelector(selectProducts);
   const styles = useStyles();
+  const [loadedProducts, setLoadedProducts] = useState(products);
+
+  const handleChange = useCallback(
+    (event, newValue) => {
+      setValue(newValue);
+      switch (newValue) {
+        case 0:
+          const coffeeProducts = products.filter((product) => product.category.name === categories[0]?.name);
+          setLoadedProducts(coffeeProducts);
+          break;
+        case 1:
+          const teaProducts = products.filter((product) => product.category.name === categories[1]?.name);
+          setLoadedProducts(teaProducts);
+          break;
+        case 2:
+          const snackProducts = products.filter((product) => product.category.name === categories[2]?.name);
+          setLoadedProducts(snackProducts);
+          break;
+        case 3:
+          const otherProducts = products.filter((product) => product.category.name === categories[3]?.name);
+          setLoadedProducts(otherProducts);
+          break;
+        default:
+          break;
+      }
+    },
+    [products, categories],
+  );
+
+  const handleChangeTab = (newTab) => {
+    setValue(newTab);
+    handleChange(null, newTab);
+  };
 
   const debouncedValue = useDebounce(searchValue, 500);
   useEffect(() => {
     if (debouncedValue.trim().length === 0) {
-      setCoffee([]);
+      setLoadedProducts([]);
     }
 
-    const relevantProducts = coffeeProducts.filter((item) =>
-      item.name.toLowerCase().includes(debouncedValue.toLowerCase()),
-    );
-    setCoffee(relevantProducts);
-  }, [debouncedValue]);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+    if (debouncedValue !== '') {
+      const relevantProducts = products.filter((item) =>
+        item.name.toLowerCase().includes(debouncedValue.toLowerCase()),
+      );
+      setLoadedProducts(relevantProducts);
+    } else {
+      handleChange(null, value);
+    }
+  }, [debouncedValue, products, value, handleChange]);
 
   const handleInputChange = (e) => {
     const searchInputValue = e.target.value;
@@ -81,9 +92,9 @@ export default function ProductTabs({ onSelect }) {
     <>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" variant="scrollable">
+          <Tabs value={value} aria-label="basic tabs example" variant="scrollable">
             {categories.map((category, index) => (
-              <Tab label={category.name} key={index} />
+              <Tab label={category.name} key={index} onClick={() => handleChangeTab(index)} />
             ))}
           </Tabs>
         </Grid>
@@ -94,7 +105,7 @@ export default function ProductTabs({ onSelect }) {
       {[...Array(categories.length)].map((_, index) => (
         <TabPanel value={value} index={index} key={index}>
           <Grid container spacing={2}>
-            {coffee.map((item, index) => (
+            {loadedProducts.map((item, index) => (
               <Grid key={index} item xs={6} md={4}>
                 <Product product={item} onSelect={onSelect} />
               </Grid>

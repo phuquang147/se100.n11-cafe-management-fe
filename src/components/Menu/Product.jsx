@@ -20,7 +20,6 @@ export default function Product({ data, onLoadProducts }) {
   };
 
   const handleDeleteProduct = async () => {
-    console.log('xoa');
     try {
       const res = await deleteProduct(data._id);
       if (res.status === 200) {

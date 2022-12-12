@@ -8,10 +8,11 @@ import Table from '~/components/Table/Table';
 import TableFormModal from '~/components/Table/TableFormModal';
 import Iconify from '~/components/UI/Iconify';
 import { getReceiptById } from '~/services/receiptServices';
-import { getTables } from '~/services/tableServices';
+import { createTable, getTables } from '~/services/tableServices';
 
 export default function Order() {
   const [tables, setTables] = useState([]);
+  const [selectedTable, setSelectedTable] = useState(null);
   const [receipt, setReceipt] = useState();
   const [editedTable, setEditedTable] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -41,7 +42,9 @@ export default function Order() {
     loadTables();
   }, []);
 
-  const handleOpenFoodModal = () => {
+  const handleOpenFoodModal = (table) => {
+    console.log(table);
+    setSelectedTable(table);
     setOpenFoodModal(true);
   };
 
@@ -50,9 +53,7 @@ export default function Order() {
   };
 
   const handleOpenBillModal = async (receiptId) => {
-    console.log(receiptId);
     const res = await getReceiptById(receiptId);
-    console.log(res.data.receipt);
     setReceipt(res.data.receipt);
     setOpenBillModal(true);
   };
@@ -61,8 +62,14 @@ export default function Order() {
     setOpenBillModal(false);
   };
 
-  const handleOpenTableModal = () => {
-    setIsOpenTableModal(true);
+  const handleAddTable = async () => {
+    try {
+      const tableRes = await createTable({ name: `Bàn ${tables.length + 1}` });
+      if (tableRes.status === 201) {
+        toast.success(tableRes.data.message);
+        await getAllTables();
+      }
+    } catch (error) {}
   };
 
   const handleCloseTableModal = () => {
@@ -71,8 +78,16 @@ export default function Order() {
   };
 
   const handleEditTable = (table) => {
-    handleOpenTableModal();
+    setIsOpenTableModal(true);
     setEditedTable(table);
+  };
+
+  const handleOpenChangeTableModal = () => {
+    setOpenChangeTableModal(true);
+  };
+
+  const handleCloseChangeTableModal = () => {
+    setOpenChangeTableModal(false);
   };
 
   if (loading) {
@@ -83,20 +98,12 @@ export default function Order() {
     );
   }
 
-  const handleOpenChangeTableModal = () => {
-    setOpenChangeTableModal(true);
-  };
-
-  const handleCloseChangeTableModal = () => {
-    setOpenChangeTableModal(false);
-  };
-
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
         <Typography variant="h4">Đặt món</Typography>
 
-        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpenTableModal}>
+        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleAddTable}>
           Thêm bàn
         </Button>
       </Stack>
@@ -116,8 +123,18 @@ export default function Order() {
         ))}
       </Grid>
 
-      <ChooseFoodModal isOpen={openFoodModal} onCloseModal={handleCloseFoodModal} />
-      <BillModal isOpen={openBillModal} receipt={receipt} onCloseModal={handleCloseBillModal} />
+      <ChooseFoodModal
+        isOpen={openFoodModal}
+        selectedTable={selectedTable}
+        onCloseModal={handleCloseFoodModal}
+        onReloadTables={getAllTables}
+      />
+      <BillModal
+        isOpen={openBillModal}
+        receipt={receipt}
+        onCloseModal={handleCloseBillModal}
+        onReloadTables={getAllTables}
+      />
       {isOpenTableModal && (
         <TableFormModal
           table={editedTable}

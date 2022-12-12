@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import Iconify from '~/components/UI/Iconify';
+import { createReceipt } from '~/services/receiptServices';
 import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
 import ProductItem from '../Product/ProductItem';
 import ProductTabs from './ProductTabs';
@@ -30,14 +31,13 @@ const style = {
   },
 };
 
-export default function ChooseFoodModal({ isOpen, onCloseModal }) {
+export default function ChooseFoodModal({ isOpen, selectedTable, onCloseModal, onReloadTables }) {
   const [selectedFoods, setSelectedFoods] = useState([]);
   const totalPriceRef = useRef();
 
   const handleSelectFood = (food) => {
-    console.log(food);
     const updatedFoods = [...selectedFoods];
-    const existingFoodIndex = selectedFoods.findIndex((item) => item.id === food.id);
+    const existingFoodIndex = selectedFoods.findIndex((item) => item._id === food._id);
     if (existingFoodIndex >= 0) {
       updatedFoods[existingFoodIndex].quantity++;
     } else {
@@ -55,7 +55,7 @@ export default function ChooseFoodModal({ isOpen, onCloseModal }) {
     handleTotalPrice(updatedFoods);
   };
 
-  const handleDeleteAll = () => {
+  const handleResetAll = () => {
     if (selectedFoods.length > 0) {
       setSelectedFoods([]);
     }
@@ -87,10 +87,29 @@ export default function ChooseFoodModal({ isOpen, onCloseModal }) {
     }
   };
 
-  const handleOrder = () => {
-    toast.success('Đặt bàn thành công');
-    handleDeleteAll();
-    onCloseModal();
+  const handleOrder = async () => {
+    try {
+      const totalPrice = selectedFoods.reduce((acc, cur) => {
+        return acc + cur.price * cur.quantity;
+      }, 0);
+
+      const products = selectedFoods.map((food) => ({
+        product: food._id,
+        name: food.name,
+        price: food.price,
+        quantity: food.quantity,
+      }));
+
+      const receiptRes = await createReceipt(products, totalPrice, [selectedTable._id]);
+      if (receiptRes.status === 201) {
+        toast.success('Đặt bàn thành công');
+        handleResetAll();
+        onCloseModal();
+        await onReloadTables();
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || 'Đã xảy ra lỗi, vui lòng thử lại');
+    }
   };
 
   return (
@@ -114,7 +133,7 @@ export default function ChooseFoodModal({ isOpen, onCloseModal }) {
           <Grid item xs={12} md={4}>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
               <Typography variant="h5">Hóa đơn</Typography>
-              <Button onClick={handleDeleteAll}>Xoá tất cả</Button>
+              <Button onClick={handleResetAll}>Xoá tất cả</Button>
             </Stack>
             {selectedFoods.length > 0 && (
               <Box sx={{ maxHeight: '600px', overflowY: 'auto', p: '2px' }}>
