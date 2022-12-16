@@ -36,3 +36,29 @@ export const deleteTable = async (tableId) => {
   });
   return res;
 };
+
+export const moveTable = async (movedTableId, targetedTableId) => {
+  const res = await baseService.put(
+    `/tables/move/${movedTableId}`,
+    { targetedTableId },
+    {
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+    },
+  );
+  return res;
+};
+
+export const mergeTable = async (tableIds) => {
+  const res = await baseService.post(
+    `/tables/merge`,
+    { tableIds },
+    {
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+    },
+  );
+  return res;
+};

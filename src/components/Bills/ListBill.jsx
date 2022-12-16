@@ -8,29 +8,21 @@ export default function ListBill({ bills, onSelectBill }) {
         <Card key={index} sx={{ p: 2, cursor: 'pointer', minHeight: '94px' }} onClick={() => onSelectBill(item)}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
             <Stack direction="row" alignItems="center" spacing={2}>
-              <Typography variant="h5">Đơn #{item.order}</Typography>
-              <Badge color={index % 2 === 0 ? 'primary' : 'success'} variant="dot" />
+              <Typography variant="h5">Đơn #{item._id.slice(0, 3).toUpperCase()}</Typography>
+              <Badge color={item.state !== 'Đã thanh toán' ? 'primary' : 'success'} variant="dot" />
               <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
-                {item.status}
+                {item.state}
               </Typography>
             </Stack>
-            <Typography variant="subtitle1">
-              {printNumberWithCommas(
-                item.products.reduce((acc, cur) => {
-                  return acc + cur.price * cur.quantity;
-                }, 0),
-              )}{' '}
-              VNĐ
-            </Typography>
           </Stack>
 
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Stack direction="row" alignItems="center" spacing={2}>
-              <Typography variant="body1">{item.table}</Typography>
-              <Badge color="info" variant="dot" />
-              <Typography>{item.guests} Khách</Typography>
+              <Typography variant="subtitle1">{item.tables.length} bàn</Typography>
+              <Badge color="secondary" variant="dot" />
+              <Typography variant="subtitle1">{printNumberWithCommas(item.totalPrice)} VNĐ</Typography>
             </Stack>
-            <Typography>{new Date().toLocaleTimeString()}</Typography>
+            <Typography>{new Date(item.createdAt).toLocaleTimeString()}</Typography>
           </Stack>
         </Card>
       ))}

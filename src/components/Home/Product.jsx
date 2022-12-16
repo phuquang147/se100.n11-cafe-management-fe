@@ -4,15 +4,15 @@ import { Box, Button, Card, Grid, Stack, Typography } from '@mui/material';
 import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
 
 export default function Product({ product, onSelect }) {
-  let loadedProduct = product;
-  if (!loadedProduct) {
-    loadedProduct = {
-      id: faker.datatype.uuid(),
-      img: 'https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg',
-      name: faker.name.fullName(),
-      price: faker.datatype.number({ min: 20000, max: 100000, precision: 1000 }),
-    };
-  }
+  // let loadedProduct = product;
+  // if (!loadedProduct) {
+  //   loadedProduct = {
+  //     id: faker.datatype.uuid(),
+  //     img: 'https://product.hstatic.net/1000075078/product/1653291204_hi-tea-vai_0e8376fb3eec4127ba33aa47b8d2c723_large.jpg',
+  //     name: faker.name.fullName(),
+  //     price: faker.datatype.number({ min: 20000, max: 100000, precision: 1000 }),
+  //   };
+  // }
 
   return (
     <Card>
@@ -20,8 +20,8 @@ export default function Product({ product, onSelect }) {
         <Grid container rowSpacing={1}>
           <Grid item xs={12}>
             <img
-              src={`http://localhost:3001/${loadedProduct.image}`}
-              alt={loadedProduct.name}
+              src={`http://localhost:3001/${product.image}`}
+              alt={product.name}
               style={{ borderRadius: '10px', maxWidth: '100%' }}
               draggable={false}
               crossOrigin="anonymous"
@@ -30,10 +30,10 @@ export default function Product({ product, onSelect }) {
           <Grid item xs={12}>
             <Box sx={{ p: 1 }}>
               <Typography variant="h6" sx={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                {loadedProduct.name}
+                {product.name}
               </Typography>
               <Typography variant="body2" color="primary" sx={{ fontWeight: '700' }}>
-                {printNumberWithCommas(loadedProduct.price)} VNĐ
+                {printNumberWithCommas(product.price)} VNĐ
               </Typography>
               <Button
                 variant="outlined"
@@ -41,7 +41,7 @@ export default function Product({ product, onSelect }) {
                 sx={{ px: '6px', mt: 1, borderRadius: '10px' }}
                 onClick={() =>
                   onSelect({
-                    ...loadedProduct,
+                    ...product,
                     quantity: 1,
                   })
                 }

@@ -17,12 +17,18 @@ import {
 import Iconify from '../UI/Iconify';
 import ConfirmModal from '../UI/ConfirmModal';
 import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
-import { faker } from '@faker-js/faker';
 
 export default function BillDetail({ bill }) {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
   const theme = useTheme();
   const navigate = useNavigate();
+
+  const tableNames = bill.tables.map((table, index) => {
+    if (index !== bill.tables.length - 1) {
+      return `${table.name} - `;
+    }
+    return table.name;
+  });
 
   const handleOpenConfirmDeleteModal = () => {
     setShowConfirmDeleteModal(true);
@@ -35,7 +41,7 @@ export default function BillDetail({ bill }) {
   const handleDeleteBill = () => {};
 
   const handleEdit = () => {
-    navigate(`/bills/edit/${faker.database.mongodbObjectId()}`, { state: bill });
+    navigate(`/bills/edit/${bill._id}`, { state: bill });
   };
 
   return (
@@ -44,10 +50,10 @@ export default function BillDetail({ bill }) {
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
           <Stack direction="row" alignItems="center">
             <Typography variant="h4" sx={{ fontWeight: 'bold', mr: 2 }}>
-              Đơn #{bill.order}
+              Đơn #{bill._id.slice(0, 3).toUpperCase()}
             </Typography>
 
-            {bill.status === 'Đang uống' && (
+            {bill.state !== 'Đã thanh toán' && (
               <>
                 <IconButton size="small" color="primary" onClick={handleEdit}>
                   <Iconify icon="ic:baseline-mode-edit" width={24} height={24} />
@@ -60,9 +66,10 @@ export default function BillDetail({ bill }) {
           </Stack>
           <Button
             sx={{
-              backgroundColor: bill.status === 'Đang uống' ? theme.palette.primary.main : theme.palette.success.main,
+              backgroundColor: bill.state !== 'Đã thanh toán' ? theme.palette.primary.main : theme.palette.success.main,
               '&:hover': {
-                backgroundColor: bill.status === 'Đang uống' ? theme.palette.primary.dark : theme.palette.success.dark,
+                backgroundColor:
+                  bill.state !== 'Đã thanh toán' ? theme.palette.primary.dark : theme.palette.success.dark,
               },
               color: 'white',
               width: '160px',
@@ -70,25 +77,21 @@ export default function BillDetail({ bill }) {
               cursor: 'default',
             }}
           >
-            {bill.status}
+            {bill.state}
           </Button>
         </Stack>
         <Divider />
         <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>
           Chi tiết
         </Typography>
-        <Stack direction="row" alignItems="center" spacing={10}>
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="subtitle1" color={theme.palette.grey[500]} sx={{ fontWeight: 'bold', mb: 1 }}>
-              Bàn
+        <Stack direction="column">
+          <Typography variant="subtitle1" color={theme.palette.grey[500]} sx={{ fontWeight: 'bold', mb: 1 }}>
+            Bàn
+          </Typography>
+          <Box>
+            <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+              {tableNames}
             </Typography>
-            <Typography variant="h6">{bill.table}</Typography>
-          </Box>
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="subtitle1" color={theme.palette.grey[500]} sx={{ fontWeight: 'bold', mb: 1 }}>
-              Khách
-            </Typography>
-            <Typography variant="h6">{bill.guests}</Typography>
           </Box>
         </Stack>
         <Typography variant="h6" sx={{ mb: 2, mt: 4 }}>
@@ -105,26 +108,27 @@ export default function BillDetail({ bill }) {
         <Box sx={{ width: '100%' }}>
           <nav aria-label="main">
             <List>
-              {bill.products.map((product, index) => (
+              {bill.products.map((item, index) => (
                 <Box key={index}>
-                  {product.quantity > 0 && (
+                  {item.quantity > 0 && (
                     <>
                       <ListItem
                         disablePadding
-                        secondaryAction={`${printNumberWithCommas(product.price * product.quantity)} VNĐ`}
+                        secondaryAction={`${printNumberWithCommas(item.price * item.quantity)} VNĐ`}
                       >
                         <ListItemButton>
                           <ListItemIcon>
                             <img
-                              src={product.img}
+                              src={`http://localhost:3001/${item.product.image}`}
                               alt="product-img"
                               style={{ width: '50px', height: '50px', borderRadius: '10px' }}
+                              crossOrigin="anonymous"
                             />
                           </ListItemIcon>
                           <ListItemText
                             primary={
                               <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                                {product.name} x {product.quantity}
+                                {item.name} x {item.quantity}
                               </Typography>
                             }
                           />

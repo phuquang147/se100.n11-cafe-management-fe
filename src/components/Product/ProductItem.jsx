@@ -9,7 +9,7 @@ export default function ProductItem({ item, onChangeQuantity, onDelete }) {
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" alignItems="center" spacing={2}>
           <img
-            src={`http://localhost:3001/${item.image}`}
+            src={`http://localhost:3001/${item?.product?.image || item.image}`}
             alt={item.name}
             style={{ width: '60px', height: '60px', borderRadius: '10px' }}
             crossOrigin="anonymous"

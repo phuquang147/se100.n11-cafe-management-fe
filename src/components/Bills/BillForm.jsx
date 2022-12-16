@@ -60,8 +60,10 @@ export default function BillForm({ data }) {
   };
 
   const handleSelectFood = (food) => {
+    console.log(food);
+    console.log(selectedFoods);
     const updatedFoods = [...selectedFoods];
-    const existingFoodIndex = selectedFoods.findIndex((item) => item.id === food.id);
+    const existingFoodIndex = selectedFoods.findIndex((item) => item.product._id === food._id);
     if (existingFoodIndex >= 0) {
       updatedFoods[existingFoodIndex].quantity++;
     } else {
@@ -119,7 +121,7 @@ export default function BillForm({ data }) {
         </Typography>
       )}
 
-      <Stack direction="row" alignItems="center" spacing={3} sx={{ mt: 3 }}>
+      <Stack direction="row" alignItems="center" justifyContent="end" spacing={3} sx={{ mt: 3 }}>
         <Typography variant="h6">Tổng:</Typography>
         <Typography ref={totalPriceRef} variant="h6">
           {printNumberWithCommas(total)} VNĐ

@@ -2,13 +2,14 @@ import { Box, Button, CircularProgress, Container, Grid, Stack, Typography } fro
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import BillModal from '~/components/Order/BillModal';
-import ChangeTableModal from '~/components/Order/ChangeTableModal';
+import MoveTableModal from '~/components/Order/MoveTableModal';
 import ChooseFoodModal from '~/components/Order/ChooseFoodModal';
 import Table from '~/components/Table/Table';
 import TableFormModal from '~/components/Table/TableFormModal';
 import Iconify from '~/components/UI/Iconify';
 import { getReceiptById } from '~/services/receiptServices';
 import { createTable, getTables } from '~/services/tableServices';
+import MergeTableModal from '~/components/Order/MergeTableModal';
 
 export default function Order() {
   const [tables, setTables] = useState([]);
@@ -18,7 +19,9 @@ export default function Order() {
   const [loading, setLoading] = useState(false);
   const [openFoodModal, setOpenFoodModal] = useState(false);
   const [openBillModal, setOpenBillModal] = useState(false);
-  const [openChangeTableModal, setOpenChangeTableModal] = useState(false);
+  const [mode, setMode] = useState();
+  const [openMoveTableModal, setOpenMoveTableModal] = useState(false);
+  const [openMergeTableModal, setOpenMergeTableModal] = useState(false);
   const [isOpenTableModal, setIsOpenTableModal] = useState(false);
 
   const getAllTables = async () => {
@@ -28,7 +31,6 @@ export default function Order() {
     }
 
     const tables = res.data.tables;
-    console.log(tables);
     setTables(tables);
   };
 
@@ -43,7 +45,6 @@ export default function Order() {
   }, []);
 
   const handleOpenFoodModal = (table) => {
-    console.log(table);
     setSelectedTable(table);
     setOpenFoodModal(true);
   };
@@ -69,7 +70,9 @@ export default function Order() {
         toast.success(tableRes.data.message);
         await getAllTables();
       }
-    } catch (error) {}
+    } catch (error) {
+      toast.error(error?.response?.data?.message || 'Đã xảy ra lỗi, vui lòng thử lại');
+    }
   };
 
   const handleCloseTableModal = () => {
@@ -82,12 +85,25 @@ export default function Order() {
     setEditedTable(table);
   };
 
-  const handleOpenChangeTableModal = () => {
-    setOpenChangeTableModal(true);
+  const handleOpenMoveTableModal = (table) => {
+    setSelectedTable(table);
+    setMode('move');
+    setOpenMoveTableModal(true);
   };
 
-  const handleCloseChangeTableModal = () => {
-    setOpenChangeTableModal(false);
+  const handleCloseMoveTableModal = () => {
+    setOpenMoveTableModal(false);
+  };
+
+  const handleOpenMergeTableModal = (table) => {
+    console.log(table);
+    setSelectedTable(table);
+    setMode('merge');
+    setOpenMergeTableModal(true);
+  };
+
+  const handleCloseMergeTableModal = () => {
+    setOpenMergeTableModal(false);
   };
 
   if (loading) {
@@ -117,7 +133,8 @@ export default function Order() {
               onOpenBillModal={handleOpenBillModal}
               onOpenEditForm={handleEditTable}
               onLoadTables={getAllTables}
-              openChangeTableModal={handleOpenChangeTableModal}
+              openMoveTableModal={handleOpenMoveTableModal}
+              openMergeTableModal={handleOpenMergeTableModal}
             />
           </Grid>
         ))}
@@ -144,7 +161,23 @@ export default function Order() {
         />
       )}
 
-      <ChangeTableModal isOpen={openChangeTableModal} onCloseModal={handleCloseChangeTableModal} />
+      {mode === 'move' && (
+        <MoveTableModal
+          isOpen={openMoveTableModal}
+          selectedTable={selectedTable}
+          onCloseModal={handleCloseMoveTableModal}
+          onReloadTables={getAllTables}
+        />
+      )}
+
+      {mode === 'merge' && selectedTable.receipt && (
+        <MergeTableModal
+          isOpen={openMergeTableModal}
+          selectedTable={selectedTable}
+          onCloseModal={handleCloseMergeTableModal}
+          onReloadTables={getAllTables}
+        />
+      )}
     </Container>
   );
 }

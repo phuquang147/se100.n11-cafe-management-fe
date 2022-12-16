@@ -1,6 +1,15 @@
 import Cookies from 'js-cookie';
 import baseService from './baseService';
 
+export const getReceipts = async () => {
+  const res = await baseService.get('/receipts', {
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token')}`,
+    },
+  });
+  return res;
+};
+
 export const getReceiptById = async (receiptId) => {
   const res = await baseService.get(`/receipts/${receiptId}`, {
     headers: {

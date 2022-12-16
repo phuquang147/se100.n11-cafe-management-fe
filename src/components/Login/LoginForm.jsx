@@ -60,7 +60,6 @@ export default function LoginForm() {
 
         toast.success('Đăng nhập thành công');
         navigate('/', { replace: true });
-        console.log('here');
         dispatch(setDataStarted());
       } else toast.error('Đã có lỗi xảy ra! Vui lòng thử lại');
     } catch (err) {

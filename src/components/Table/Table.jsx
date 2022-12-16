@@ -17,9 +17,11 @@ export default function Table({
   onOpenBillModal,
   onOpenEditForm,
   onLoadTables,
-  openChangeTableModal,
+  openMoveTableModal,
+  openMergeTableModal,
 }) {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
+
   const handleOpenConfirmDeleteModal = () => {
     setShowConfirmDeleteModal(true);
   };
@@ -57,6 +59,21 @@ export default function Table({
 
   const handleClose = () => {
     setOpen(null);
+  };
+
+  const handleOpenEditForm = () => {
+    handleClose();
+    onOpenEditForm(table);
+  };
+
+  const handleOpenMoveTableModal = () => {
+    handleClose();
+    openMoveTableModal(table);
+  };
+
+  const handleOpenMergeTableModal = () => {
+    handleClose();
+    openMergeTableModal(table);
   };
 
   return (
@@ -128,12 +145,13 @@ export default function Table({
       >
         {table.state === 'Còn trống' ? (
           <Stack sx={{ p: 1 }}>
-            <MenuItem onClick={() => onOpenEditForm(table)}>Chỉnh sửa bàn</MenuItem>
+            <MenuItem onClick={handleOpenEditForm}>Chỉnh sửa bàn</MenuItem>
             <MenuItem onClick={handleOpenConfirmDeleteModal}>Xóa bàn</MenuItem>
           </Stack>
         ) : (
           <Stack sx={{ p: 1 }}>
-            <MenuItem onClick={openChangeTableModal}>Chuyển bàn / Gộp bàn</MenuItem>
+            <MenuItem onClick={handleOpenMoveTableModal}>Chuyển bàn</MenuItem>
+            <MenuItem onClick={handleOpenMergeTableModal}>Gộp bàn</MenuItem>
           </Stack>
         )}
       </MenuPopover>

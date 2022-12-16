@@ -1,10 +1,11 @@
-import { Container, Grid, Stack, Typography } from '@mui/material';
+import { Box, CircularProgress, Container, Grid, Stack, Typography } from '@mui/material';
 import CustomFilter from '~/components/UI/CustomFilter';
 import ViewsDatePicker from '~/components/UI/ViewsDatePicker';
 import ListBill from '~/components/Bills/ListBill';
 import BillDetail from '~/components/Bills/BillDetail';
 import { faker } from '@faker-js/faker';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getReceipts } from '~/services/receiptServices';
 
 const optionsFilter = ['Tất cả', 'Số thứ tự', 'Giá'];
 
@@ -72,7 +73,20 @@ const fakeBills = [
 ];
 
 export default function Bills() {
-  const [currentBill, setCurrentBill] = useState(fakeBills[0]);
+  const [receipts, setReceipts] = useState([]);
+  const [currentBill, setCurrentBill] = useState();
+
+  useEffect(() => {
+    const getAllReceipts = async () => {
+      const receiptRes = await getReceipts();
+      const receiptsData = receiptRes.data.receipts;
+      console.log(receiptsData);
+      setReceipts(receiptsData);
+      setCurrentBill(receiptsData[0]);
+    };
+
+    getAllReceipts();
+  }, []);
 
   const handleSelectBill = (bill) => {
     setCurrentBill(bill);
@@ -89,10 +103,16 @@ export default function Bills() {
             <CustomFilter options={optionsFilter} />
             <ViewsDatePicker />
           </Stack>
-          <ListBill bills={fakeBills} onSelectBill={handleSelectBill} />
+          <ListBill bills={receipts} onSelectBill={handleSelectBill} />
         </Grid>
         <Grid item xs={12} md={7} xl={8}>
-          <BillDetail bill={currentBill} />
+          {currentBill ? (
+            <BillDetail bill={currentBill} />
+          ) : (
+            <Box sx={{ textAlign: 'center' }}>
+              <CircularProgress />
+            </Box>
+          )}
         </Grid>
       </Grid>
     </Container>
