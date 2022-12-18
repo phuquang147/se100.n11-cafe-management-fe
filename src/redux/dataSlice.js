@@ -4,6 +4,10 @@ const initialState = {
   status: 'idle',
   products: [],
   categories: [],
+  user: {
+    name: '',
+    email: '',
+  },
 };
 
 const dataSlice = createSlice({
@@ -14,9 +18,10 @@ const dataSlice = createSlice({
       state.status = 'loading';
     },
     setDataSuccess(state, action) {
-      const { products, categories } = action.payload;
+      const { products, categories, user } = action.payload;
       state.products = products;
       state.categories = categories;
+      state.user = user;
       state.status = 'idle';
     },
     setDataFailed(state) {
@@ -41,6 +46,7 @@ const dataSlice = createSlice({
 
 export const selectProducts = (state) => state.data.products;
 export const selectCategories = (state) => state.data.categories;
+export const selectUser = (state) => state.data.user;
 
 export const { setDataStarted, setDataSuccess, setDataFailed, addProduct, setProducts, updateCategory } =
   dataSlice.actions;

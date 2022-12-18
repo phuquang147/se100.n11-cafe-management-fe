@@ -21,7 +21,7 @@ export const getReceiptById = async (receiptId) => {
 
 export const payForReceipt = async (receiptId) => {
   const res = baseService.put(
-    `/receipts/${receiptId}/pay`,
+    `/receipts/pay/${receiptId}`,
     {},
     {
       headers: {
@@ -36,6 +36,32 @@ export const createReceipt = async (products, totalPrice, tables) => {
   const res = await baseService.post(
     '/receipts',
     { products, totalPrice, tables },
+    {
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+    },
+  );
+  return res;
+};
+
+export const editReceipt = async (receiptId, products) => {
+  const res = await baseService.put(
+    `/receipts/edit/${receiptId}`,
+    { products },
+    {
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+    },
+  );
+  return res;
+};
+
+export const removeReceipt = async (receiptId) => {
+  const res = await baseService.put(
+    `/receipts/remove/${receiptId}`,
+    {},
     {
       headers: {
         Authorization: `Bearer ${Cookies.get('token')}`,

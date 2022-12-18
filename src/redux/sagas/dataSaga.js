@@ -14,8 +14,8 @@ function* getData(action) {
 
     const resData = yield data.json();
 
-    const { products, categories } = resData;
-    yield put(setDataSuccess({ products, categories }));
+    const { products, categories, user } = resData;
+    yield put(setDataSuccess({ products, categories, user }));
   } catch (err) {
     yield put(setDataFailed());
   }

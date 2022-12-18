@@ -8,7 +8,7 @@ export default function ListBill({ bills, onSelectBill }) {
         <Card key={index} sx={{ p: 2, cursor: 'pointer', minHeight: '94px' }} onClick={() => onSelectBill(item)}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
             <Stack direction="row" alignItems="center" spacing={2}>
-              <Typography variant="h5">Đơn #{item._id.slice(0, 3).toUpperCase()}</Typography>
+              <Typography variant="h5">Đơn #{item._id.slice(0, 6).toUpperCase()}</Typography>
               <Badge color={item.state !== 'Đã thanh toán' ? 'primary' : 'success'} variant="dot" />
               <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
                 {item.state}
@@ -22,7 +22,7 @@ export default function ListBill({ bills, onSelectBill }) {
               <Badge color="secondary" variant="dot" />
               <Typography variant="subtitle1">{printNumberWithCommas(item.totalPrice)} VNĐ</Typography>
             </Stack>
-            <Typography>{new Date(item.createdAt).toLocaleTimeString()}</Typography>
+            <Typography>{new Date(item.createdAt).toLocaleDateString()}</Typography>
           </Stack>
         </Card>
       ))}

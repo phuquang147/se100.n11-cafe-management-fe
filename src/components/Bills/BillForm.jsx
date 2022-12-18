@@ -9,6 +9,8 @@ import { useMemo } from 'react';
 import ProductTabs from '../Order/ProductTabs';
 import Iconify from '../UI/Iconify';
 import { toast } from 'react-toastify';
+import { editReceipt } from '~/services/receiptServices';
+import { useLocation, useNavigate } from 'react-router';
 
 const style = {
   position: 'absolute',
@@ -30,12 +32,16 @@ const style = {
   },
 };
 
-export default function BillForm({ data }) {
-  const { table, products } = data;
+export default function BillForm() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { table, products, _id: receiptId } = location.state;
   const [selectedFoods, setSelectedFoods] = useState(products);
   const [isOpenFoodModal, setIsOpenFoodModal] = useState(false);
 
   const totalPriceRef = useRef();
+
+  console.log(receiptId);
 
   const handleChangeQuantity = (index, type) => {
     const updatedFoods = [...selectedFoods];
@@ -60,10 +66,11 @@ export default function BillForm({ data }) {
   };
 
   const handleSelectFood = (food) => {
-    console.log(food);
-    console.log(selectedFoods);
+    console.log(food, selectedFoods);
     const updatedFoods = [...selectedFoods];
-    const existingFoodIndex = selectedFoods.findIndex((item) => item.product._id === food._id);
+    const existingFoodIndex = selectedFoods.findIndex(
+      (item) => item?.product?._id === food._id || item._id === food._id,
+    );
     if (existingFoodIndex >= 0) {
       updatedFoods[existingFoodIndex].quantity++;
     } else {
@@ -81,6 +88,26 @@ export default function BillForm({ data }) {
 
     if (totalPriceRef.current) {
       totalPriceRef.current.innerText = printNumberWithCommas(totalPrice) + ' VNĐ';
+    }
+  };
+
+  const handleEditBill = async () => {
+    const formattedFoods = selectedFoods.map((food) => ({
+      name: food.name,
+      price: food.price,
+      quantity: food.quantity,
+      product: food?.product?._id || food._id,
+    }));
+    console.log(formattedFoods);
+
+    try {
+      const receiptRes = await editReceipt(receiptId, formattedFoods);
+      if (receiptRes.status === 201) {
+        toast.success(receiptRes.data.message);
+        navigate('/bills');
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
     }
   };
 
@@ -129,7 +156,7 @@ export default function BillForm({ data }) {
       </Stack>
 
       <Stack direction="row" justifyContent="end" sx={{ mt: 3 }}>
-        <LoadingButton size="large" type="submit" variant="contained">
+        <LoadingButton size="large" type="submit" variant="contained" onClick={handleEditBill}>
           Cập nhật
         </LoadingButton>
       </Stack>

@@ -14,6 +14,8 @@ import NavSection from '~/layouts/MainLayout/NavSection';
 import Scrollbar from '~/components/UI/Scrollbar';
 //
 import navConfig from './NavConfig';
+import { useSelector } from 'react-redux';
+import { selectUser } from '~/redux/dataSlice';
 
 const DRAWER_WIDTH = 280;
 
@@ -39,6 +41,8 @@ Sidebar.propTypes = {
 
 export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
+  const user = useSelector(selectUser);
+  console.log(user);
 
   const isDesktop = useResponsive('up', 'lg');
 
@@ -66,10 +70,10 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
             <Avatar src={account.photoURL} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
+                {user?.name}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
+                {user?.role?.name}
               </Typography>
             </Box>
           </AccountStyle>

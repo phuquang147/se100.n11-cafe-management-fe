@@ -17,8 +17,10 @@ import {
 import Iconify from '../UI/Iconify';
 import ConfirmModal from '../UI/ConfirmModal';
 import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
+import { removeReceipt } from '~/services/receiptServices';
+import { toast } from 'react-toastify';
 
-export default function BillDetail({ bill }) {
+export default function BillDetail({ bill, onReloadReceipts }) {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
   const theme = useTheme();
   const navigate = useNavigate();
@@ -38,7 +40,18 @@ export default function BillDetail({ bill }) {
     setShowConfirmDeleteModal(false);
   };
 
-  const handleDeleteBill = () => {};
+  const handleDeleteBill = async () => {
+    handleCloseConfirmDeleteModal();
+    try {
+      const receiptRes = await removeReceipt(bill._id);
+      if (receiptRes.status === 200) {
+        toast.success(receiptRes.data.message);
+        onReloadReceipts();
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
 
   const handleEdit = () => {
     navigate(`/bills/edit/${bill._id}`, { state: bill });
@@ -50,10 +63,10 @@ export default function BillDetail({ bill }) {
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
           <Stack direction="row" alignItems="center">
             <Typography variant="h4" sx={{ fontWeight: 'bold', mr: 2 }}>
-              Đơn #{bill._id.slice(0, 3).toUpperCase()}
+              Đơn #{bill._id.slice(0, 6).toUpperCase()}
             </Typography>
 
-            {bill.state !== 'Đã thanh toán' && (
+            {bill.state !== 'Đã thanh toán' && bill.state !== 'Đã hủy' && (
               <>
                 <IconButton size="small" color="primary" onClick={handleEdit}>
                   <Iconify icon="ic:baseline-mode-edit" width={24} height={24} />
@@ -158,7 +171,7 @@ export default function BillDetail({ bill }) {
       </Box>
       {showConfirmDeleteModal && (
         <ConfirmModal
-          content="Bạn chắc chắn muốn xóa sản phẩm?"
+          content="Bạn chắc chắn muốn hủy hóa đơn?"
           open={showConfirmDeleteModal}
           handleClose={handleCloseConfirmDeleteModal}
           action={handleDeleteBill}

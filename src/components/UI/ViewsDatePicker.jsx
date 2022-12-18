@@ -5,20 +5,21 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-export default function ViewsDatePicker() {
+export default function ViewsDatePicker({ onFilter }) {
   const [value, setValue] = useState(dayjs(new Date()));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
-        views={['year', 'month']}
+        views={['day', 'month', 'year']}
         openTo="year"
-        label="Năm và Tháng"
+        label="Ngày"
         minDate={dayjs('2012-03-01')}
         maxDate={dayjs('2023-06-01')}
         value={value}
         onChange={(newValue) => {
           setValue(newValue);
+          onFilter(newValue);
         }}
         renderInput={(params) => <TextField {...params} helperText={null} />}
       />

@@ -1,13 +1,9 @@
 // material
 import { Card, Container, Stack, Typography } from '@mui/material';
-import { useLocation } from 'react-router';
 
 // components
 
 export default function EditItemForm({ title, Form }) {
-  const location = useLocation();
-  console.log(location.state);
-
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -17,7 +13,7 @@ export default function EditItemForm({ title, Form }) {
       </Stack>
 
       <Card sx={{ padding: 4 }}>
-        <Form data={location.state} />
+        <Form />
       </Card>
     </Container>
   );
