@@ -10,6 +10,7 @@ import Iconify from '~/components/UI/Iconify';
 import { getReceiptById } from '~/services/receiptServices';
 import { createTable, getTables } from '~/services/tableServices';
 import MergeTableModal from '~/components/Order/MergeTableModal';
+import PrintedBillModal from '~/components/UI/PrintedBillModal';
 
 export default function Order() {
   const [tables, setTables] = useState([]);
@@ -23,6 +24,7 @@ export default function Order() {
   const [openMoveTableModal, setOpenMoveTableModal] = useState(false);
   const [openMergeTableModal, setOpenMergeTableModal] = useState(false);
   const [isOpenTableModal, setIsOpenTableModal] = useState(false);
+  const [isOpenConfirmPrintModal, setIsOpenConfirmPrintModal] = useState(false);
 
   const getAllTables = async () => {
     const res = await getTables();
@@ -61,6 +63,7 @@ export default function Order() {
 
   const handleCloseBillModal = () => {
     setOpenBillModal(false);
+    handleOpenConfirmPrintModal();
   };
 
   const handleAddTable = async () => {
@@ -104,6 +107,14 @@ export default function Order() {
 
   const handleCloseMergeTableModal = () => {
     setOpenMergeTableModal(false);
+  };
+
+  const handleOpenConfirmPrintModal = () => {
+    setIsOpenConfirmPrintModal(true);
+  };
+
+  const handleCloseConfirmPrintModal = () => {
+    setIsOpenConfirmPrintModal(false);
   };
 
   if (loading) {
@@ -178,6 +189,12 @@ export default function Order() {
           onReloadTables={getAllTables}
         />
       )}
+
+      <PrintedBillModal
+        open={isOpenConfirmPrintModal}
+        content="Bạn có muốn in hóa đơn?"
+        handleClose={handleCloseConfirmPrintModal}
+      />
     </Container>
   );
 }

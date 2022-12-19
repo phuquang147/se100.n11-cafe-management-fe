@@ -29,11 +29,11 @@ export default function BillModal({ isOpen, receipt, onReloadTables, onCloseModa
   const handlePay = async () => {
     onCloseModal();
     try {
-      const receiptRes = await payForReceipt(receipt._id);
-      if (receiptRes.status === 200) {
-        toast.success(receiptRes.data.message);
-        await onReloadTables();
-      }
+      // const receiptRes = await payForReceipt(receipt._id);
+      // if (receiptRes.status === 200) {
+      //   toast.success(receiptRes.data.message);
+      //   await onReloadTables();
+      // }
     } catch (error) {
       toast.error(error?.response?.data?.message || 'Đã xảy ra lỗi, vui lòng thử lại');
     }
@@ -68,7 +68,7 @@ export default function BillModal({ isOpen, receipt, onReloadTables, onCloseModa
                       />
                       <Typography
                         variant="h6"
-                        sx={{ whiteSpace: 'nowrap', width: '130px', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                        sx={{ whiteSpace: 'nowrap', width: '150px', overflow: 'hidden', textOverflow: 'ellipsis' }}
                       >
                         {product.product.name} x {product.quantity}
                       </Typography>

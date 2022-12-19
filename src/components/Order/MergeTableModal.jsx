@@ -137,7 +137,7 @@ export default function MergeTableModal({ isOpen, selectedTable, onCloseModal, o
         {showConfirmMoveTableModal && (
           <ConfirmModal
             open={showConfirmMoveTableModal}
-            content="Bạn chắc chắn muốn chuyển bàn?"
+            content="Bạn chắc chắn muốn gộp bàn?"
             handleClose={handleCloseConfirmMergeTableModal}
             action={handleMergeTable}
           />
