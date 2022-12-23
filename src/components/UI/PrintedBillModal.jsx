@@ -3,7 +3,7 @@ import MuiTypography from '@mui/material/Typography';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import PDFBill from '../Bills/PDFBill';
 
-export default function PrintedBillModal({ content, handleClose, open }) {
+export default function PrintedBillModal({ receipt, content, handleClose, open }) {
   return (
     <Dialog open={open} sx={{ p: 4 }}>
       <DialogContent>
@@ -14,7 +14,7 @@ export default function PrintedBillModal({ content, handleClose, open }) {
           <Button onClick={handleClose} color="error" sx={{ mr: 1 }}>
             Huỷ
           </Button>
-          <PDFDownloadLink document={<PDFBill />} fileName="bill">
+          <PDFDownloadLink document={<PDFBill receipt={receipt} />} fileName="bill">
             {({ blob, url, loading, error }) =>
               loading ? (
                 <Button type="submit" variant="outlined">

@@ -1,12 +1,10 @@
-import { Box, Button, CircularProgress, Container, Grid, Stack, Typography } from '@mui/material';
+import { Box, CircularProgress, Container, Grid, Stack, Typography } from '@mui/material';
 import CustomFilter from '~/components/UI/CustomFilter';
 import ViewsDatePicker from '~/components/UI/ViewsDatePicker';
 import ListBill from '~/components/Bills/ListBill';
 import BillDetail from '~/components/Bills/BillDetail';
 import { useEffect, useState } from 'react';
 import { getReceipts } from '~/services/receiptServices';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import PDFBill from '~/components/Bills/PDFBill';
 
 const optionsFilter = ['Tất cả', 'Giá tăng dần', 'Giá giảm dần'];
 let allReceipts;
@@ -18,12 +16,12 @@ export default function Bills() {
   const getAllReceipts = async () => {
     const receiptRes = await getReceipts();
     const receiptsData = receiptRes.data.receipts;
-    const receiptsForToday = receiptsData.filter(
-      (receipt) => new Date(receipt.createdAt).toLocaleDateString() === new Date().toLocaleDateString(),
-    );
+    // const receiptsForToday = receiptsData.filter(
+    //   (receipt) => new Date(receipt.createdAt).toLocaleDateString() === new Date().toLocaleDateString(),
+    // );
 
     allReceipts = receiptsData;
-    setReceipts(receiptsForToday);
+    setReceipts(receiptsData);
     setCurrentBill(receiptsData[0]);
   };
 

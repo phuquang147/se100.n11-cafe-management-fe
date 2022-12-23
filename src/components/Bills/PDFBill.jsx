@@ -1,63 +1,102 @@
-import { Document, Line, Page, StyleSheet, Svg, Text, View } from '@react-pdf/renderer';
+import { Document, Font, Line, Page, StyleSheet, Svg, Text, View } from '@react-pdf/renderer';
+import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
+import ReportTable from './BillTable';
+
+Font.register({
+  family: 'Roboto',
+  fonts: [
+    { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf', fontWeight: 300 },
+    {
+      src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-lightitalic-webfont.woff',
+      fontStyle: 'italic',
+    },
+    {
+      src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-regular-webfont.ttf',
+      fontWeight: 400,
+    },
+    {
+      src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-medium-webfont.ttf',
+      fontWeight: 500,
+    },
+    { src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-bold-webfont.ttf', fontWeight: 600 },
+  ],
+});
 
 const styles = StyleSheet.create({
   body: {
-    paddingTop: 35,
-    paddingBottom: 65,
-    paddingHorizontal: 35,
+    paddingTop: 20,
+    paddingBottom: 45,
+    paddingHorizontal: 20,
+    fontFamily: 'Roboto',
   },
   title: {
-    fontSize: 24,
+    fontSize: 16,
     textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  subTitle: {
+    fontSize: 12,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  description: {
+    fontSize: 10,
+    fontWeight: 'normal',
   },
   text: {
     margin: 12,
     fontSize: 14,
     textAlign: 'justify',
   },
-  image: {
-    marginVertical: 15,
-    marginHorizontal: 100,
-  },
-  header: {
-    fontSize: 30,
-    marginBottom: 20,
-    textAlign: 'center',
-    color: 'grey',
-  },
-  pageNumber: {
-    position: 'absolute',
+  total: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     fontSize: 12,
+    fontWeight: 'medium',
+    marginTop: 6,
+  },
+  thanks: { fontSize: 10, textAlign: 'center' },
+  footer: {
+    position: 'absolute',
     bottom: 30,
     left: 0,
     right: 0,
     textAlign: 'center',
-    color: 'red',
+    fontSize: 10,
+    fontStyle: 'italic',
+    paddingHorizontal: 20,
   },
 });
 
-function PDFBill() {
+function PDFBill({ receipt }) {
+  console.log(receipt);
+  const tableNames = receipt.tables.map((table) => table.name);
+
   return (
     <Document language="vietnamese">
-      <Page style={styles.body} size="A4">
-        <Text style={styles.header}>Coffee Management</Text>
-        <Svg height="20" width="520">
-          <Line x1="0" y1="0" x2="520" y2="0" strokeWidth={2} stroke="grey" />
-        </Svg>
+      <Page style={styles.body} size="A6">
+        <Text style={styles.title}>BROTHER COFFEE</Text>
+        <Text style={styles.subTitle}>HÓA ĐƠN THANH TOÁN</Text>
+        <Text style={styles.description}>Số: {receipt._id.slice(0, 6).toUpperCase()}</Text>
         <View>
-          <Text>Ngày: 19/12/2022</Text>
-          <Text>Bàn: Bàn 1</Text>
+          <Text style={styles.description}>Ngày: {new Date(receipt.createdAt).toLocaleString()}</Text>
+          <Text style={styles.description}>Bàn: {tableNames.join(' - ')}</Text>
         </View>
-        <Text style={styles.text}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem ullam maxime libero vel? Pariatur
-          voluptatum quis accusantium repellendus, quisquam aliquam?
+        <ReportTable products={receipt.products} />
+        <View style={styles.total}>
+          <Text>Tổng thanh toán</Text>
+          <Text>{printNumberWithCommas(receipt.totalPrice)} VNĐ</Text>
+        </View>
+        <Svg height={20} style={{ marginVertical: 6 }}>
+          <Line x1="0" y1="0" x2="260" y2="0" strokeWidth={2} stroke="#000" />
+        </Svg>
+        <Text style={styles.thanks}>Trân trọng cảm ơn, hẹn gặp lại quý khách</Text>
+        <Text style={styles.footer} fixed>
+          Wifi password: xincamon{'\n'}
+          Địa chỉ: Khu phố 6 P, Thủ Đức, Thành phố Hồ Chí Minh
         </Text>
-
-        <Text
-          style={styles.pageNumber}
-          render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
-          fixed
-        />
       </Page>
     </Document>
   );

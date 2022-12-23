@@ -191,6 +191,7 @@ export default function Order() {
       )}
 
       <PrintedBillModal
+        receipt={receipt}
         open={isOpenConfirmPrintModal}
         content="Bạn có muốn in hóa đơn?"
         handleClose={handleCloseConfirmPrintModal}
