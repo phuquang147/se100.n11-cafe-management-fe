@@ -42,7 +42,6 @@ Sidebar.propTypes = {
 export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
   const user = useSelector(selectUser);
-  console.log(user);
 
   const isDesktop = useResponsive('up', 'lg');
 

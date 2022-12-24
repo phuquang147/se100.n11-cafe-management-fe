@@ -60,11 +60,11 @@ const styles = StyleSheet.create({
   thanks: { fontSize: 10, textAlign: 'center' },
   footer: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 10,
     left: 0,
     right: 0,
     textAlign: 'center',
-    fontSize: 10,
+    fontSize: 8,
     fontStyle: 'italic',
     paddingHorizontal: 20,
   },
@@ -89,7 +89,7 @@ function PDFBill({ receipt }) {
           <Text>Tổng thanh toán</Text>
           <Text>{printNumberWithCommas(receipt.totalPrice)} VNĐ</Text>
         </View>
-        <Svg height={20} style={{ marginVertical: 6 }}>
+        <Svg height={20} style={{ marginVertical: 4 }}>
           <Line x1="0" y1="0" x2="260" y2="0" strokeWidth={2} stroke="#000" />
         </Svg>
         <Text style={styles.thanks}>Trân trọng cảm ơn, hẹn gặp lại quý khách</Text>

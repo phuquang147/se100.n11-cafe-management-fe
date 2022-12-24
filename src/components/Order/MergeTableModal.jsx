@@ -50,7 +50,6 @@ export default function MergeTableModal({ isOpen, selectedTable, onCloseModal, o
   };
 
   const handleDeselectTable = (table) => {
-    console.log(table);
     const updatedSelectedTables = [...selectedTables];
     const filterSelectedTables = updatedSelectedTables.filter((item) => item._id !== table._id);
     setSelectedTables(filterSelectedTables);

@@ -9,11 +9,6 @@ const styles = StyleSheet.create({
     fontSize: 8,
     marginTop: 10,
   },
-  row: {
-    display: 'flex',
-    flexDirection: 'row',
-    borderTop: '1px solid #000',
-  },
   header: {
     borderTop: 'none',
   },
@@ -23,7 +18,11 @@ const styles = StyleSheet.create({
   textCenter: {
     textAlign: 'center',
   },
-  // So Declarative and unDRY 👌
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+    borderTop: '1px solid #000',
+  },
   row1: {
     width: '10%',
     borderRight: '1px solid #000',

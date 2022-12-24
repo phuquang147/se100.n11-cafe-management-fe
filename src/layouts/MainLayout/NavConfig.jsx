@@ -24,6 +24,11 @@ const navConfig = [
     path: '/bills',
     icon: getIcon('icon-park-solid:bill'),
   },
+  {
+    title: 'Nhân viên',
+    path: '/staffs',
+    icon: getIcon('mdi:user-circle'),
+  },
 ];
 
 export default navConfig;

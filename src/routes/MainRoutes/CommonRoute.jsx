@@ -8,6 +8,7 @@ import Page404 from '~/pages/Page404';
 import BillForm from '~/components/Bills/BillForm';
 import Order from '~/pages/Order';
 import TableForm from '~/components/Table/TableForm';
+import Staff from '~/pages/Staff';
 
 const CommonRoutes = [
   {
@@ -38,6 +39,10 @@ const CommonRoutes = [
   {
     path: '/tables/new',
     element: <AddItemForm title="Tạo bàn" form={<TableForm />} />,
+  },
+  {
+    path: '/staffs',
+    element: <Staff />,
   },
   {
     path: '*',

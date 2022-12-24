@@ -63,7 +63,6 @@ export default function Order() {
 
   const handleCloseBillModal = () => {
     setOpenBillModal(false);
-    handleOpenConfirmPrintModal();
   };
 
   const handleAddTable = async () => {
@@ -110,6 +109,7 @@ export default function Order() {
   };
 
   const handleOpenConfirmPrintModal = () => {
+    handleCloseBillModal();
     setIsOpenConfirmPrintModal(true);
   };
 
@@ -162,6 +162,7 @@ export default function Order() {
         receipt={receipt}
         onCloseModal={handleCloseBillModal}
         onReloadTables={getAllTables}
+        onOpenConfirmModal={handleOpenConfirmPrintModal}
       />
       {isOpenTableModal && (
         <TableFormModal

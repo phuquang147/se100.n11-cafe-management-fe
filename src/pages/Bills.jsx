@@ -55,14 +55,12 @@ export default function Bills() {
     if (mode === optionsFilter[1]) {
       const ascPriceReceipts = [...receipts];
       ascPriceReceipts.sort((a, b) => a.totalPrice - b.totalPrice);
-      console.log(ascPriceReceipts);
       setReceipts(ascPriceReceipts);
     }
 
     if (mode === optionsFilter[2]) {
       const desPriceReceipts = [...receipts];
       desPriceReceipts.sort((a, b) => b.totalPrice - a.totalPrice);
-      console.log(desPriceReceipts);
       setReceipts(desPriceReceipts);
     }
   };

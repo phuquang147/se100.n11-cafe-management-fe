@@ -25,15 +25,15 @@ const style = {
   },
 };
 
-export default function BillModal({ isOpen, receipt, onReloadTables, onCloseModal }) {
+export default function BillModal({ isOpen, receipt, onReloadTables, onCloseModal, onOpenConfirmModal }) {
   const handlePay = async () => {
-    onCloseModal();
+    onOpenConfirmModal();
     try {
-      // const receiptRes = await payForReceipt(receipt._id);
-      // if (receiptRes.status === 200) {
-      //   toast.success(receiptRes.data.message);
-      //   await onReloadTables();
-      // }
+      const receiptRes = await payForReceipt(receipt._id);
+      if (receiptRes.status === 200) {
+        toast.success(receiptRes.data.message);
+        await onReloadTables();
+      }
     } catch (error) {
       toast.error(error?.response?.data?.message || 'Đã xảy ra lỗi, vui lòng thử lại');
     }
