@@ -1,10 +1,12 @@
 // @mui
 import { Container, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useParams } from 'react-router';
+import { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router';
 // components
 import EmailForm from '~/components/ForgotPassword/EmailForm';
 import ResetForm from '~/components/ForgotPassword/ResetForm';
+import { getExistingAccount } from '~/services/authServices';
 
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -24,6 +26,21 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function ForgotPassword() {
   const { token } = useParams();
+  const navigate = useNavigate();
+  console.log(token === undefined);
+
+  useEffect(() => {
+    const checkExistingAccount = async () => {
+      const accountRes = await getExistingAccount(token);
+      if (accountRes.status === 401) {
+        navigate('/login', { replace: true });
+      }
+    };
+
+    if (token !== undefined) {
+      checkExistingAccount();
+    }
+  }, [token, navigate]);
 
   return (
     <RootStyle>

@@ -20,3 +20,7 @@ export const changePassword = ({ password, passwordToken, accountId }) => {
     accountId,
   });
 };
+
+export const getExistingAccount = (token) => {
+  return baseService.get(`/auth/account?token=${token}`);
+};

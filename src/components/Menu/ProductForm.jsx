@@ -17,9 +17,11 @@ import { toast } from 'react-toastify';
 // import { createProduct, postImage } from '~/services/productService';
 import Cookies from 'js-cookie';
 import { useEffect } from 'react';
+import { useLocation } from 'react-router';
 
-export default function ProductForm({ data = {} }) {
-  const { name, price } = data;
+export default function ProductForm() {
+  const location = useLocation();
+  console.log(location.state);
   const [filename, setFilename] = useState('');
   const [uploadedFile, setUploadedFile] = useState();
   const inputFileRef = useRef();
@@ -27,13 +29,13 @@ export default function ProductForm({ data = {} }) {
   const categoryNames = categories.map((category) => category.name);
   const dispatch = useDispatch();
 
-  const editMode = Object.keys(data).length > 0;
+  const editMode = Object.keys(location.state || {}).length > 0;
 
   useEffect(() => {
     if (editMode) {
-      setUploadedFile(`http://localhost:3001/${data.image}`);
+      setUploadedFile(`http://localhost:3001/${location.state.image}`);
     }
-  }, [editMode, data.image]);
+  }, [editMode, location.state]);
 
   const ProductSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập tên món'),
@@ -44,9 +46,9 @@ export default function ProductForm({ data = {} }) {
   });
 
   const defaultValues = {
-    name,
-    price,
-    category: (data.category && data.category.name) || 'Cà phê',
+    name: location?.state?.name || '',
+    price: location?.state?.price || '',
+    category: location?.state?.category?.name || 'Cà phê',
   };
 
   const methods = useForm({
@@ -110,7 +112,7 @@ export default function ProductForm({ data = {} }) {
       }
     } else {
       if (!inputFileRef.current.files[0]) {
-        const updateProductRes = await fetch(`http://localhost:3001/products/${data._id}`, {
+        const updateProductRes = await fetch(`http://localhost:3001/products/${location.state._id}`, {
           method: 'PUT',
           body: JSON.stringify({ name: name, price: price, category: selectedCategory._id }),
           headers: {
@@ -123,7 +125,7 @@ export default function ProductForm({ data = {} }) {
       } else {
         const formData = new FormData();
         formData.append('image', inputFileRef.current.files[0]);
-        formData.append('oldPath', data.image);
+        formData.append('oldPath', location.state.image);
 
         const postImgRes = await fetch('http://localhost:3001/post-image', {
           method: 'PUT',
@@ -136,13 +138,13 @@ export default function ProductForm({ data = {} }) {
         const imageUrl = imgResData.filePath;
 
         const product = {
-          id: data._id,
+          id: location.state._id,
           name: name,
           price: price,
           image: imageUrl,
           category: selectedCategory._id,
         };
-        const updateProductRes = await fetch(`http://localhost:3001/products/${data._id}`, {
+        const updateProductRes = await fetch(`http://localhost:3001/products/${location.state._id}`, {
           method: 'PUT',
           body: JSON.stringify(product),
           headers: {

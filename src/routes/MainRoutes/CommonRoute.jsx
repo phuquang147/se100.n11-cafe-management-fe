@@ -9,6 +9,7 @@ import BillForm from '~/components/Bills/BillForm';
 import Order from '~/pages/Order';
 import TableForm from '~/components/Table/TableForm';
 import Staff from '~/pages/Staff';
+import StaffForm from '~/components/Staff/StaffForm';
 
 const CommonRoutes = [
   {
@@ -43,6 +44,14 @@ const CommonRoutes = [
   {
     path: '/staffs',
     element: <Staff />,
+  },
+  {
+    path: '/staffs/new',
+    element: <AddItemForm title="Thêm nhân viên" form={<StaffForm />} />,
+  },
+  {
+    path: '/staffs/edit/:staffId',
+    element: <EditItemForm title="Chỉnh sửa thông tin nhân viên" Form={StaffForm} />,
   },
   {
     path: '*',

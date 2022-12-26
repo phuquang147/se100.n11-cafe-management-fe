@@ -1,6 +1,5 @@
 // import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
 import { useState } from 'react';
 // @mui
 import {
@@ -29,8 +28,13 @@ import Scrollbar from '~/components/UI/Scrollbar';
 import StaffListHead from '~/components/Staff/StaffListHead';
 import StaffListToolbar from '~/components/Staff/StaffListToolbar';
 // mock
-import USERLIST from '~/_mock/staff';
+// import USERLIST from '~/_mock/staff';
 import ConfirmModal from '~/components/UI/ConfirmModal';
+import { useEffect } from 'react';
+import { deleteSelectedStaffs, deleteStaff, getStaffs } from '~/services/staffServices';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +46,8 @@ const TABLE_HEAD = [
   { id: 'status', label: 'Tình trạng', alignRight: false },
   { id: '' },
 ];
+
+let allStaffs;
 
 // ----------------------------------------------------------------------
 
@@ -69,7 +75,7 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.name.toLowerCase().includes(query.toLowerCase()));
   }
   return stabilizedThis.map((el) => el[0]);
 }
@@ -89,11 +95,31 @@ export default function Staff() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const [currentStaff, setCurrentStaff] = useState();
+
   const [openConfirmDeleteModal, setOpenConfirmDeleteModal] = useState(false);
 
   const [openConfirmDeleteSelected, setOpenConfirmDeleteSelected] = useState(false);
 
-  const handleOpenMenu = (event) => {
+  const [staffs, setStaffs] = useState([]);
+
+  const navigate = useNavigate();
+
+  const filteredStaffs = applySortFilter(staffs, getComparator(order, orderBy), filterName);
+
+  const getAllStaffs = async () => {
+    const staffRes = await getStaffs();
+    const { users } = staffRes.data;
+    allStaffs = users;
+    setStaffs(users);
+  };
+
+  useEffect(() => {
+    getAllStaffs();
+  }, []);
+
+  const handleOpenMenu = (event, staff) => {
+    setCurrentStaff(staff);
     setOpen(event.currentTarget);
   };
 
@@ -109,19 +135,18 @@ export default function Staff() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
-      console.log(newSelecteds);
+      const newSelecteds = [...staffs];
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, staff) => {
+    const selectedIndex = selected.findIndex((item) => item._id === staff._id);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, staff);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -144,23 +169,50 @@ export default function Staff() {
   const handleFilterByName = (event) => {
     setPage(0);
     setFilterName(event.target.value);
+    if (event.target.value === '') {
+      setStaffs(allStaffs);
+    } else {
+      setStaffs(filteredStaffs);
+    }
   };
 
-  const handleDeleteStaff = () => {
-    console.log('delete');
+  const handleDeleteStaff = async (staffId) => {
     setOpenConfirmDeleteModal(false);
+    handleCloseMenu();
+    try {
+      const staffRes = await deleteStaff(staffId);
+      if (staffRes.status === 200) {
+        toast.success(staffRes.data.message);
+        await getAllStaffs();
+      }
+    } catch (error) {
+      toast.error(error.reponse.data.message);
+    }
   };
 
-  const handleDeleteSelected = () => {
-    console.log(selected);
+  const handleDeleteSelected = async () => {
     setOpenConfirmDeleteSelected(false);
+    setSelected([]);
+    try {
+      const staffIds = selected.map((item) => item._id);
+      const staffRes = await deleteSelectedStaffs(staffIds);
+      if (staffRes.status === 200) {
+        toast.success(staffRes.data.message);
+        await getAllStaffs();
+      }
+    } catch (error) {}
+
+    // const updatedStaffs = staffs.filter((staff) => selected.findIndex((item) => item.name === staff.name) === -1);
+    // setStaffs(updatedStaffs);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const handleCreateStaff = () => {
+    navigate('/staffs/new');
+  };
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - staffs.length) : 0;
 
-  const isNotFound = !filteredUsers.length && !!filterName;
+  const isNotFound = staffs.length === 0;
 
   return (
     <>
@@ -173,7 +225,7 @@ export default function Staff() {
           <Typography variant="h4" gutterBottom>
             Nhân viên
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleCreateStaff}>
             Thêm nhân viên
           </Button>
         </Stack>
@@ -193,21 +245,20 @@ export default function Staff() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={staffs.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role, status, gender, birthday } = row;
-                    console.log(birthday);
-                    const selectedUser = selected.indexOf(name) !== -1;
+                  {staffs.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((staff) => {
+                    const { _id, name, role, status, gender, birthday } = staff;
+                    const selectedUser = selected.findIndex((item) => item._id === _id) !== -1;
 
                     return (
-                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
+                      <TableRow hover key={_id} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
+                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, staff)} />
                         </TableCell>
 
                         <TableCell component="th" scope="row" padding="none">
@@ -218,18 +269,18 @@ export default function Staff() {
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="center">{role}</TableCell>
+                        <TableCell align="center">{role.name}</TableCell>
 
                         <TableCell align="center">{gender}</TableCell>
 
                         <TableCell align="center">{new Date(birthday).toLocaleDateString()}</TableCell>
 
                         <TableCell align="center">
-                          <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
+                          <Label color={(status === 'Đã nghỉ' && 'error') || 'success'}>{status}</Label>
                         </TableCell>
 
                         <TableCell align="center">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                          <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, staff)}>
                             <Iconify icon={'eva:more-vertical-fill'} />
                           </IconButton>
                         </TableCell>
@@ -273,7 +324,7 @@ export default function Staff() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={staffs.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -300,7 +351,14 @@ export default function Staff() {
           },
         }}
       >
-        <MenuItem>
+        {/* <MenuItem>
+          <Link to={`/staffs/edit/${currentStaff?._id}`} state={currentStaff}>
+            <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+            Edit
+          </Link>
+        </MenuItem> */}
+
+        <MenuItem component={Link} to={`/staffs/edit/${currentStaff?._id}`} state={currentStaff}>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
           Edit
         </MenuItem>
@@ -315,7 +373,7 @@ export default function Staff() {
         content="Bạn chắc chắn muốn xóa nhân viên?"
         open={openConfirmDeleteModal}
         handleClose={() => setOpenConfirmDeleteModal(false)}
-        action={handleDeleteStaff}
+        action={() => handleDeleteStaff(currentStaff._id)}
       />
 
       <ConfirmModal
