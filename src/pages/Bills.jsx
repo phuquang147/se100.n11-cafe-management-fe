@@ -1,5 +1,5 @@
 import { Box, CircularProgress, Container, Grid, Stack, Typography } from '@mui/material';
-import CustomFilter from '~/components/UI/CustomFilter';
+import CustomSelect from '~/components/UI/CustomSelect';
 import ViewsDatePicker from '~/components/UI/ViewsDatePicker';
 import ListBill from '~/components/Bills/ListBill';
 import BillDetail from '~/components/Bills/BillDetail';
@@ -75,7 +75,7 @@ export default function Bills() {
             Hóa đơn
           </Typography>
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }} spacing={3}>
-            <CustomFilter options={optionsFilter} onSelect={handleSelectMode} />
+            <CustomSelect options={optionsFilter} onSelect={handleSelectMode} />
             <ViewsDatePicker onFilter={handleFilterDate} />
           </Stack>
           {!receipts && (
