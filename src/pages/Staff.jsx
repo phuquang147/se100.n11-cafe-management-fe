@@ -1,4 +1,4 @@
-// import { Helmet } from 'react-helmet-async';
+import { MetaTags } from 'react-meta-tags';
 import { filter } from 'lodash';
 import { useState } from 'react';
 // @mui
@@ -240,11 +240,10 @@ export default function Staff() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> User | Minimal UI </title>
-      </Helmet> */}
-
       <Container>
+        <MetaTags>
+          <title>Brother Coffee - Nhân viên</title>
+        </MetaTags>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
             Nhân viên

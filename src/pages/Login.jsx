@@ -12,6 +12,7 @@ import LoginForm from '~/components/Login/LoginForm';
 // img
 import illustrationLoginImg from '~/assets/images/illustration.jpg';
 import Cookies from 'js-cookie';
+import { MetaTags } from 'react-meta-tags';
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex',
@@ -77,6 +78,9 @@ export default function Login() {
       )}
 
       <Container maxWidth="sm">
+        <MetaTags>
+          <title>Brother Coffee - Đăng nhập</title>
+        </MetaTags>
         <ContentStyle>
           {state && (
             <Alert severity="error" variant="outlined" sx={{ mb: 2, color: '#e57373' }}>

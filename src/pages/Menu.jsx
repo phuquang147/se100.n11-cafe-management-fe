@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 // @mui
 import { Box, Button, CircularProgress, Container, Grid, Stack, Tabs, TextField, Typography } from '@mui/material';
 // components
+import { MetaTags } from 'react-meta-tags';
 import CategoryModal from '~/components/Menu/CategoryModal';
 import CategoryTab from '~/components/Menu/CategoryTab';
 import Product from '~/components/Menu/Product';
@@ -114,6 +115,9 @@ export default function Menu() {
 
   return (
     <Container maxWidth="xl">
+      <MetaTags>
+        <title>Brother Coffee - Menu</title>
+      </MetaTags>
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
         <Typography variant="h4">Menu</Typography>
 

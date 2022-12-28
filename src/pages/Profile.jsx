@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import { MetaTags } from 'react-meta-tags';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
@@ -77,6 +78,9 @@ export default function Profile() {
 
   return (
     <Container>
+      <MetaTags>
+        <title>Brother Coffee - Thông tin tài khoản</title>
+      </MetaTags>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4" gutterBottom>
           Thông tin tài khoản

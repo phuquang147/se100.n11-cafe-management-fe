@@ -42,7 +42,7 @@ export default function Product({ data, onLoadProducts }) {
             alt={data.name}
             crossOrigin="anonymous"
             height="281"
-            style={{ objectFit: 'cover' }}
+            // style={{ objectFit: 'cover' }}
           />
           <Stack rowGap={1} sx={{ px: 2, pb: 2 }}>
             <Stack>

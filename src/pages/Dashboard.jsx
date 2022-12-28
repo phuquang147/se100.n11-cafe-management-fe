@@ -9,6 +9,7 @@ import TotalRevenueInDay from '~/components/Dashboard/TotalRevenueInDay';
 import TotalStaff from '~/components/Dashboard/TotalStaff';
 // services
 import { getDashboardData } from '~/services/dashboardServices';
+import { MetaTags } from 'react-meta-tags';
 
 export default function Dashboard() {
   const [data, setData] = useState(null);
@@ -32,6 +33,9 @@ export default function Dashboard() {
   console.log(data);
   return (
     <Container maxWidth="xl" sx={{ pb: 4 }}>
+      <MetaTags>
+        <title>Brother Coffee - Dashboard</title>
+      </MetaTags>
       {loading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 10 }}>
           <CircularProgress />

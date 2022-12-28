@@ -1,4 +1,5 @@
 import { Box, CircularProgress, Container, Grid, Stack, Typography } from '@mui/material';
+import { MetaTags } from 'react-meta-tags';
 import CustomSelect from '~/components/UI/CustomSelect';
 import ViewsDatePicker from '~/components/UI/ViewsDatePicker';
 import ListBill from '~/components/Bills/ListBill';
@@ -83,6 +84,9 @@ export default function Bills() {
 
   return (
     <Container maxWidth="xl">
+      <MetaTags>
+        <title>Brother Coffee - Hóa đơn</title>
+      </MetaTags>
       <Grid container spacing={4}>
         <Grid item xs={12} md={6} xl={5}>
           <Typography variant="h3" sx={{ fontWeight: 'bold' }}>

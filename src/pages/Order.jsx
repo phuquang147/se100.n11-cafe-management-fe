@@ -1,6 +1,7 @@
 import { Box, Button, CircularProgress, Container, Grid, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { MetaTags } from 'react-meta-tags';
 import BillModal from '~/components/Order/BillModal';
 import MoveTableModal from '~/components/Order/MoveTableModal';
 import ChooseFoodModal from '~/components/Order/ChooseFoodModal';
@@ -126,6 +127,9 @@ export default function Order() {
 
   return (
     <Container>
+      <MetaTags>
+        <title>Brother Coffee - Đặt món</title>
+      </MetaTags>
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
         <Typography variant="h4">Đặt món</Typography>
 

@@ -88,9 +88,8 @@ export default function MergeTableModal({ isOpen, selectedTable, onCloseModal, o
       }
 
       const tables = res.data.tables;
-      const filteredTables = tables.filter(
-        (table) => table._id !== selectedTable._id && table?.receipt?._id !== selectedTable.receipt._id,
-      );
+      const filteredTables = tables.filter((table) => table._id !== selectedTable._id && !table.receipt);
+      // console.log(filteredTables[3]);
       setTables(filteredTables);
       setLoading(false);
     };

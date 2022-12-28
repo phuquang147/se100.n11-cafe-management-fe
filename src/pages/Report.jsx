@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { MetaTags } from 'react-meta-tags';
 // @mui
 import { Box, Container, Stack, Tab, Tabs, Typography } from '@mui/material';
 // components
@@ -31,6 +32,9 @@ export default function Report() {
 
   return (
     <Container maxWidth="xl">
+      <MetaTags>
+        <title>Brother Coffee - Thống kê</title>
+      </MetaTags>
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
         <Typography variant="h4">Báo cáo</Typography>
       </Stack>

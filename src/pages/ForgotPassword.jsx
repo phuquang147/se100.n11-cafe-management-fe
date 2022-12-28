@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
 // components
+import { MetaTags } from 'react-meta-tags';
 import EmailForm from '~/components/ForgotPassword/EmailForm';
 import ResetForm from '~/components/ForgotPassword/ResetForm';
 import { getExistingAccount } from '~/services/authServices';
@@ -44,6 +45,9 @@ export default function ForgotPassword() {
   return (
     <RootStyle>
       <Container maxWidth="sm">
+        <MetaTags>
+          <title>Brother Coffee - Quên mật khẩu</title>
+        </MetaTags>
         <ContentStyle>
           <Typography variant="h4" gutterBottom>
             {token ? 'Tạo mật khẩu mới' : 'Quên mật khẩu'}

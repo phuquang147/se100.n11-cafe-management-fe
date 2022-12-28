@@ -1,4 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
+import { MetaTags } from 'react-meta-tags';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Button, Typography, Container, Box } from '@mui/material';
@@ -17,6 +18,9 @@ const ContentStyle = styled('div')(({ theme }) => ({
 export default function Page404() {
   return (
     <Container>
+      <MetaTags>
+        <title>Brother Coffee - Không tìm thấy trang</title>
+      </MetaTags>
       <ContentStyle sx={{ textAlign: 'center', alignItems: 'center' }}>
         <Typography variant="h3" paragraph>
           Không tìm thấy trang

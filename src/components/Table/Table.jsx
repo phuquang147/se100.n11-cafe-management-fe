@@ -22,7 +22,7 @@ export default function Table({
 }) {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
   const [mergedTo, setMergedTo] = useState();
-  // console.log(table, mergedTo);
+  // console.log(table);
 
   useEffect(() => {
     const checkTableIsMerged = async () => {
