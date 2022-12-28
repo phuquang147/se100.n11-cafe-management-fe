@@ -11,7 +11,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CustomFilter({ options, onSelect }) {
+export default function CustomSelect({ options, onSelect }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const open = Boolean(anchorEl);
@@ -33,14 +33,13 @@ export default function CustomFilter({ options, onSelect }) {
 
   return (
     <div>
-      <List component="nav" aria-label="Device settings" sx={{ p: 0 }}>
+      <List component="nav" sx={{ p: 0 }}>
         <ListItem
           button
           sx={{ borderRadius: '10px', width: '220px' }}
           id="lock-button"
           aria-haspopup="listbox"
           aria-controls="lock-menu"
-          aria-label="Filter"
           aria-expanded={open ? 'true' : undefined}
           onClick={handleClickListItem}
         >
@@ -63,7 +62,7 @@ export default function CustomFilter({ options, onSelect }) {
             key={option}
             selected={index === selectedIndex}
             onClick={(event) => handleMenuItemClick(event, index)}
-            sx={{ width: '200px' }}
+            sx={{ width: '220px' }}
           >
             {option}
           </MenuItem>

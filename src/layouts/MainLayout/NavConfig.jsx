@@ -29,6 +29,11 @@ const navConfig = [
     path: '/staffs',
     icon: getIcon('mdi:user-circle'),
   },
+  {
+    title: 'Báo cáo',
+    path: '/report',
+    icon: getIcon('mdi:report-box'),
+  },
 ];
 
 export default navConfig;
