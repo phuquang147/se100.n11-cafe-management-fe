@@ -7,7 +7,7 @@ const _ = require('lodash');
 
 export default function CategoryBestSellersChart({ categories }) {
   const categoryNames = _.map(categories, (category) => category.name);
-  const categoryQuantity = _.map(categories, (category) => category.quantity);
+  const categoryQuantity = _.map(categories, (category) => category.sales);
 
   const chartOptions = {
     labels: categoryNames,

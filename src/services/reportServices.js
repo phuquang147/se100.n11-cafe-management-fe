@@ -1,10 +1,10 @@
 import Cookies from 'js-cookie';
 import baseService from './baseService';
 
-export const getReportByDate = async ({ date, month, year }) => {
+export const getReportByDay = async ({ day, month, year }) => {
   const res = await baseService.post(
-    '/report-by-date',
-    { date: date, month: month + 1, year: year },
+    '/report-by-day',
+    { day: day, month: month + 1, year: year },
     {
       headers: {
         Authorization: `Bearer ${Cookies.get('token')}`,

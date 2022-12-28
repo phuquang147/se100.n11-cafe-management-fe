@@ -59,11 +59,19 @@ export default function YearReport() {
       ) : (
         <>
           {data ? (
-            <Stack>
-              <Typography variant="h5">Số lượng các sản phẩm đã bán</Typography>
-              <YearQuantityChart data={data} />
-              <Typography variant="h5">Doanh thu các sản phẩm đã bán</Typography>
-              <YearRevenueChart data={data} />
+            <Stack rowGap={2}>
+              <Box sx={{ overflowX: 'overlay', overflowY: 'hidden' }}>
+                <Typography variant="h5">Số lượng các sản phẩm đã bán</Typography>
+                <Box sx={{ minWidth: 600, pr: 1 }}>
+                  <YearQuantityChart data={data} />
+                </Box>
+              </Box>
+              <Box sx={{ overflowX: 'overlay', overflowY: 'hidden' }}>
+                <Typography variant="h5">Doanh thu các sản phẩm đã bán</Typography>
+                <Box sx={{ minWidth: 600, pr: 1 }}>
+                  <YearRevenueChart data={data} />
+                </Box>
+              </Box>
             </Stack>
           ) : (
             <Box sx={{ display: 'flex', justifyContent: 'center', py: 10 }}>

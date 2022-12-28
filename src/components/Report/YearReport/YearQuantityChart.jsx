@@ -4,16 +4,7 @@ const _ = require('lodash');
 
 export default function YearQuantityChart({ data }) {
   const chartOptions = {
-    // chart: {
-    //   events: {
-    //     click: function (event, chartContext, config) {
-    //       console.log(config.config.series[config.seriesIndex]);
-    //       console.log(config.config.series[config.seriesIndex].name);
-    //       console.log(config.config.series[config.seriesIndex].data[config.dataPointIndex]);
-    //     },
-    //   },
-    // },
-    labels: _.map(_.keys(data.monthRevenues), (key) => Number(key) + 1),
+    labels: _.keys(data.monthlyReport),
     colors: ['#ffa16c'],
   };
 
@@ -22,7 +13,7 @@ export default function YearQuantityChart({ data }) {
       series={[
         {
           name: 'Số lượng',
-          data: _.values(_.mapValues(data.monthRevenues, (monthRevenue) => monthRevenue.totalQuantity)),
+          data: _.values(_.mapValues(data.monthlyReport, (monthRevenue) => monthRevenue.sales)),
         },
       ]}
       options={chartOptions}

@@ -5,16 +5,7 @@ const _ = require('lodash');
 
 export default function YearRevenueChart({ data }) {
   const chartOptions = {
-    // chart: {
-    //   events: {
-    //     click: function (event, chartContext, config) {
-    //       console.log(config.config.series[config.seriesIndex]);
-    //       console.log(config.config.series[config.seriesIndex].name);
-    //       console.log(config.config.series[config.seriesIndex].data[config.dataPointIndex]);
-    //     },
-    //   },
-    // },
-    labels: _.map(_.keys(data.monthRevenues), (key) => Number(key) + 1),
+    labels: _.keys(data.monthlyReport),
     colors: ['#20c997'],
     tooltip: {
       shared: true,
@@ -35,7 +26,7 @@ export default function YearRevenueChart({ data }) {
       series={[
         {
           name: 'Số lượng',
-          data: _.values(_.mapValues(data.monthRevenues, (monthRevenue) => monthRevenue.totalPrice)),
+          data: _.values(_.mapValues(data.monthlyReport, (monthRevenue) => monthRevenue.revenue)),
         },
       ]}
       options={chartOptions}

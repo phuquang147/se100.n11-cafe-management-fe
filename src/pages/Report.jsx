@@ -41,7 +41,7 @@ export default function Report() {
 
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={tab} onChange={handleChangeTab}>
+          <Tabs value={tab} onChange={handleChangeTab} variant="scrollable" scrollButtons allowScrollButtonsMobile>
             <Tab label="Báo cáo theo ngày" {...a11yProps(0)} />
             <Tab label="Báo cáo theo tháng" {...a11yProps(1)} />
             <Tab label="Báo cáo theo năm" {...a11yProps(2)} />
