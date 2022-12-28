@@ -5,9 +5,8 @@ import { Box, Card, CardHeader } from '@mui/material';
 const _ = require('lodash');
 
 export default function ProductBestSellersChart({ products }) {
-  const filteredProducts = _.filter(products, (product) => product.quantity > 0);
-  const productNames = _.map(filteredProducts, (product) => product.name);
-  const productQuantity = _.map(filteredProducts, (product) => product.quantity);
+  const productNames = _.map(products, (product) => product.name);
+  const productQuantity = _.map(products, (product) => product.sales);
 
   const chartOptions = {
     colors: ['#ffa16c'],
@@ -18,9 +17,13 @@ export default function ProductBestSellersChart({ products }) {
 
   return (
     <Card>
-      <CardHeader title="Top sản phẩm bán chạy" />
-      <Box sx={{ px: 2 }}>
-        <BarChart series={[{ name: 'Số lượng', data: productQuantity }]} options={chartOptions} />
+      <CardHeader title="Top sản phẩm bán chạy" sx={{ mb: 2 }} />
+      <Box sx={{ maxHeight: 360, overflow: 'overlay', pr: 1 }}>
+        <BarChart
+          series={[{ name: 'Số lượng', data: productQuantity }]}
+          options={chartOptions}
+          height={products.length > 0 ? products.length * 36 + 50 : 300}
+        />
       </Box>
     </Card>
   );

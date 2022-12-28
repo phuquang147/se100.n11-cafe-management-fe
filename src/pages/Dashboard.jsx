@@ -29,7 +29,6 @@ export default function Dashboard() {
     getData();
   }, []);
 
-  console.log(data);
   return (
     <Container maxWidth="xl" sx={{ pb: 4 }}>
       {loading ? (
@@ -41,13 +40,13 @@ export default function Dashboard() {
           {data ? (
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6} md={4}>
-                <TotalRevenueInDay revenue={data.revenue} />
+                <TotalRevenueInDay revenue={data.totalRevenue} />
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
-                <TotalProductSaleInDay quantity={data.quantity} />
+                <TotalProductSaleInDay quantity={data.totalSales} />
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
-                <TotalStaff staff={data.staff} />
+                <TotalStaff staff={data.numberOfStaff} />
               </Grid>
 
               <Grid item xs={12} md={6} lg={6}>
