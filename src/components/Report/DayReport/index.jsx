@@ -1,10 +1,10 @@
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 // MUI
 import { Box, CircularProgress, Divider, Grid, Stack, TextField, Typography } from '@mui/material';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // components
 import CustomSelect from '~/components/UI/CustomSelect';
 import DayQuantityChart from './DayQuantityChart';
@@ -12,22 +12,22 @@ import DayQuantityRateChart from './DayQuantityRateChart';
 import DayRevenueChart from './DayRevenueChart';
 import DayRevenueRateChart from './DayRevenueRateChart';
 // services
-import { getReportByDate } from '~/services/reportServices';
+import { getReportByDay } from '~/services/reportServices';
 // utils
 import { printNumberWithCommas } from '~/utils/printNumerWithCommas';
 
 const viewModes = ['Theo sản phẩm', 'Theo danh mục'];
 
 export default function DayReport() {
-  const [date, setDate] = useState(dayjs());
+  const [day, setDay] = useState(dayjs());
   const [viewMode, setViewMode] = useState(viewModes[0]);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const getReport = async (date) => {
+  const getReport = async (day) => {
     try {
       setLoading(true);
-      const { data, status } = await getReportByDate({ date: date.$D, month: date.$M, year: date.$y });
+      const { data, status } = await getReportByDay({ day: day.$D, month: day.$M, year: day.$y });
       if (status === 200) setData(data.report);
       setLoading(false);
     } catch (e) {
@@ -36,28 +36,29 @@ export default function DayReport() {
   };
 
   useEffect(() => {
-    getReport(date);
+    getReport(day);
   }, []);
 
   const handleChangeViewMode = (newViewMode) => {
     if (newViewMode !== viewMode) setViewMode(newViewMode);
   };
 
-  const handleChangeDate = (newDate) => {
-    setDate(newDate);
-    getReport(newDate);
+  const handleChangeDay = (newDay) => {
+    setDay(newDay);
+    getReport(newDay);
   };
 
+  console.log(data);
   return (
     <Box maxWidth sx={{ padding: 0 }} padding={0}>
       <Stack direction="row" justifyContent="space-between" sx={{ mb: 2 }}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             label="Chọn ngày"
-            value={date}
+            value={day}
             inputFormat="DD/MM/YYYY"
-            onChange={(newDate) => {
-              handleChangeDate(newDate);
+            onChange={(newDay) => {
+              handleChangeDay(newDay);
             }}
             renderInput={(params) => <TextField {...params} />}
           />
@@ -70,19 +71,35 @@ export default function DayReport() {
         </Box>
       ) : (
         <>
-          {data && data.totalQuantity > 0 ? (
+          {data && data.totalSales > 0 ? (
             <Grid container spacing={3}>
               <Grid item xs={12} lg={6}>
                 <Typography variant="h5" sx={{ mb: 2 }}>
                   Số lượng các sản phẩm đã bán
                 </Typography>
-                {viewMode === 'Theo sản phẩm' ? <DayQuantityChart data={data} /> : <DayQuantityRateChart data={data} />}
+                {viewMode === 'Theo sản phẩm' ? (
+                  <Box height={360} sx={{ overflow: 'overlay', pr: 1 }}>
+                    <Box minWidth={500}>
+                      <DayQuantityChart data={data} />
+                    </Box>
+                  </Box>
+                ) : (
+                  <DayQuantityRateChart data={data} />
+                )}
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography variant="h5" sx={{ mb: 2 }}>
                   Doanh thu các sản phẩm đã bán
                 </Typography>
-                {viewMode === 'Theo sản phẩm' ? <DayRevenueChart data={data} /> : <DayRevenueRateChart data={data} />}
+                {viewMode === 'Theo sản phẩm' ? (
+                  <Box height={360} sx={{ overflow: 'overlay', pr: 1 }}>
+                    <Box minWidth={500}>
+                      <DayRevenueChart data={data} />
+                    </Box>
+                  </Box>
+                ) : (
+                  <DayRevenueRateChart data={data} />
+                )}
               </Grid>
               <Grid item xs={12} lg={6}></Grid>
               <Grid item xs={12} lg={6}>
@@ -92,13 +109,13 @@ export default function DayReport() {
                   <Stack direction="row" columnGap={1}>
                     <Typography fontSize={16}>Tổng số sản phẩm đã bán:</Typography>
                     <Typography fontSize={16} fontWeight="bold" color="#ffa16c">
-                      {data.totalQuantity}
+                      {data.totalSales}
                     </Typography>
                   </Stack>
                   <Stack direction="row" columnGap={1}>
                     <Typography fontSize={16}>Tổng doanh thu:</Typography>
                     <Typography fontSize={16} fontWeight="bold" color="#ffa16c">
-                      {`${data ? printNumberWithCommas(data.totalPrice) : 0} VNĐ`}
+                      {`${data ? printNumberWithCommas(data.totalRevenue) : 0} VNĐ`}
                     </Typography>
                   </Stack>
                 </Stack>

@@ -4,14 +4,13 @@ import BarChart from '~/components/UI/Chart/BarChart';
 const _ = require('lodash');
 
 export default function MonthRevenuePerProductChart({ data }) {
-  const filteredProduct = _.filter(data.products, (product) => product.quantity > 0);
-  const filteredProductName = _.map(filteredProduct, (product) => product.name);
-  const filteredProductRevenue = _.map(filteredProduct, (product) => product.totalPrice);
+  const productName = _.map(data.products, (product) => product.name);
+  const productRevenue = _.map(data.products, (product) => product.revenue);
 
   const chartOptions = {
     colors: ['#20c997'],
     xaxis: {
-      categories: filteredProductName,
+      categories: productName,
     },
     tooltip: {
       y: {
@@ -32,9 +31,9 @@ export default function MonthRevenuePerProductChart({ data }) {
 
   return (
     <BarChart
-      series={[{ name: 'Doanh thu', data: filteredProductRevenue }]}
+      series={[{ name: 'Doanh thu', data: productRevenue }]}
       options={chartOptions}
-      height={filteredProduct.length > 0 ? filteredProduct.length * 36 + 50 : 300}
+      height={data.products.length > 0 ? data.products.length * 36 + 50 : 300}
     />
   );
 }

@@ -4,16 +4,7 @@ const _ = require('lodash');
 
 export default function MonthQuantityPerDayChart({ data }) {
   const chartOptions = {
-    // chart: {
-    //   events: {
-    //     click: function (event, chartContext, config) {
-    //       console.log(config.config.series[config.seriesIndex]);
-    //       console.log(config.config.series[config.seriesIndex].name);
-    //       console.log(config.config.series[config.seriesIndex].data[config.dataPointIndex]);
-    //     },
-    //   },
-    // },
-    labels: _.keys(data.dateRevenues),
+    labels: _.keys(data.dailyReport),
     colors: ['#ffa16c'],
   };
 
@@ -22,7 +13,7 @@ export default function MonthQuantityPerDayChart({ data }) {
       series={[
         {
           name: 'Số lượng',
-          data: _.values(_.mapValues(data.dateRevenues, (dateRevenue) => dateRevenue.totalQuantity)),
+          data: _.values(_.mapValues(data.dailyReport, (dateRevenue) => dateRevenue.sales)),
         },
       ]}
       options={chartOptions}

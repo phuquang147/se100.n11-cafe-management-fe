@@ -4,12 +4,11 @@ import DonutChart from '~/components/UI/Chart/DonutChart';
 const _ = require('lodash');
 
 export default function MonthRevenueRateChart({ data }) {
-  const filteredProduct = _.filter(data.products, (product) => product.quantity > 0);
-  const categories = _.groupBy(filteredProduct, 'categoryName');
+  const categories = _.groupBy(data.products, 'category');
   const categoryNames = _.keys(categories);
   const groupedCategoryPrice = _.values(
     _.mapValues(categories, (categoryValue) => {
-      const totalPrice = _.reduce(categoryValue, (sum, product) => sum + product.totalPrice, 0);
+      const totalPrice = _.reduce(categoryValue, (sum, product) => sum + product.revenue, 0);
       return totalPrice;
     }),
   );

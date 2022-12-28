@@ -5,17 +5,8 @@ const _ = require('lodash');
 
 export default function MonthRevenuePerDayChart({ data }) {
   const chartOptions = {
-    // chart: {
-    //   events: {
-    //     click: function (event, chartContext, config) {
-    //       console.log(config.config.series[config.seriesIndex]);
-    //       console.log(config.config.series[config.seriesIndex].name);
-    //       console.log(config.config.series[config.seriesIndex].data[config.dataPointIndex]);
-    //     },
-    //   },
-    // },
     colors: ['#20c997'],
-    labels: data ? _.keys(data.dateRevenues) : [],
+    labels: data ? _.keys(data.dailyReport) : [],
     tooltip: {
       shared: true,
       intersect: false,
@@ -35,7 +26,7 @@ export default function MonthRevenuePerDayChart({ data }) {
       series={[
         {
           name: 'Doanh thu',
-          data: data ? _.values(_.mapValues(data.dateRevenues, (dateRevenue) => dateRevenue.totalPrice)) : [],
+          data: data ? _.values(_.mapValues(data.dailyReport, (dateRevenue) => dateRevenue.revenue)) : [],
         },
       ]}
       options={chartOptions}

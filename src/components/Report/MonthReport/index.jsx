@@ -29,13 +29,21 @@ const renderChartByViewMode = (viewMode, data) => {
             <Typography variant="h5" sx={{ mb: 2 }}>
               Số lượng các sản phẩm đã bán
             </Typography>
-            <MonthQuantityPerProductChart data={data} />
+            <Box height={360} sx={{ overflow: 'overlay', pr: 1 }}>
+              <Box minWidth={500}>
+                <MonthQuantityPerProductChart data={data} />
+              </Box>
+            </Box>
           </Grid>
           <Grid item xs={12} lg={6}>
             <Typography variant="h5" sx={{ mb: 2 }}>
               Doanh thu các sản phẩm đã bán
             </Typography>
-            <MonthRevenuePerProductChart data={data} />
+            <Box height={360} sx={{ overflow: 'overlay', pr: 1 }}>
+              <Box minWidth={500}>
+                <MonthRevenuePerProductChart data={data} />
+              </Box>
+            </Box>
           </Grid>
         </Grid>
       );
@@ -58,26 +66,35 @@ const renderChartByViewMode = (viewMode, data) => {
       );
     default:
       return (
-        <Stack>
-          <Typography variant="h5" sx={{ mb: 2 }}>
-            Số lượng các sản phẩm đã bán
-          </Typography>
-          <MonthQuantityPerDayChart data={data} />
-          <Typography variant="h5" sx={{ mb: 2 }}>
-            Doanh thu các sản phẩm đã bán
-          </Typography>
-          <MonthRevenuePerDayChart data={data} />
+        <Stack rowGap={2}>
+          <Box sx={{ overflowX: 'overlay', overflowY: 'hidden' }}>
+            <Typography variant="h5" sx={{ mb: 2 }}>
+              Số lượng các sản phẩm đã bán
+            </Typography>
+            <Box sx={{ minWidth: 600, pr: 1 }}>
+              <MonthQuantityPerDayChart data={data} />
+            </Box>
+          </Box>
+          <Box sx={{ overflowX: 'overlay', overflowY: 'hidden' }}>
+            <Typography variant="h5" sx={{ mb: 2 }}>
+              Doanh thu các sản phẩm đã bán
+            </Typography>
+            <Box sx={{ minWidth: 600, pr: 1 }}>
+              <MonthRevenuePerDayChart data={data} />
+            </Box>
+          </Box>
         </Stack>
       );
   }
 };
+
 export default function MonthReport() {
   const [month, setMonth] = useState(dayjs());
   const [viewMode, setViewMode] = useState(viewModes[0]);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const getReport = async () => {
+  const getReport = async (month) => {
     try {
       setLoading(true);
       const { data, status } = await getReportByMonth({ month: month.$M, year: month.$y });
@@ -89,7 +106,7 @@ export default function MonthReport() {
   };
 
   useEffect(() => {
-    getReport();
+    getReport(month);
   }, []);
 
   const handleChangeViewMode = (newViewMode) => {
@@ -124,7 +141,7 @@ export default function MonthReport() {
         </Box>
       ) : (
         <>
-          {data && data.totalQuantity > 0 ? (
+          {data && data.totalSales > 0 ? (
             <Stack>
               {renderChartByViewMode(viewMode, data)}
               <Grid container>
@@ -136,13 +153,13 @@ export default function MonthReport() {
                     <Stack direction="row" columnGap={1}>
                       <Typography fontSize={16}>Tổng số sản phẩm đã bán:</Typography>
                       <Typography fontSize={16} fontWeight="bold" color="#ffa16c">
-                        {data.totalQuantity}
+                        {data.totalSales}
                       </Typography>
                     </Stack>
                     <Stack direction="row" columnGap={1}>
                       <Typography fontSize={16}>Tổng doanh thu:</Typography>
                       <Typography fontSize={16} fontWeight="bold" color="#ffa16c">
-                        {`${printNumberWithCommas(data.totalPrice)} VNĐ`}
+                        {`${printNumberWithCommas(data.totalRevenue)} VNĐ`}
                       </Typography>
                     </Stack>
                   </Stack>

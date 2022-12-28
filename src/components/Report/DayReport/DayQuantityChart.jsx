@@ -3,22 +3,21 @@ import BarChart from '~/components/UI/Chart/BarChart';
 const _ = require('lodash');
 
 export default function DayQuantityChart({ data }) {
-  const filteredProduct = _.filter(data.products, (product) => product.quantity > 0);
-  const filteredProductName = _.map(filteredProduct, (product) => product.name);
-  const filteredProductQuantity = _.map(filteredProduct, (product) => product.quantity);
+  const productName = _.map(data.products, (product) => product.name);
+  const productQuantity = _.map(data.products, (product) => product.sales);
 
   const chartOptions = {
     colors: ['#ffa16c'],
     xaxis: {
-      categories: filteredProductName,
+      categories: productName,
     },
   };
 
   return (
     <BarChart
-      series={[{ name: 'Số lượng', data: filteredProductQuantity }]}
+      series={[{ name: 'Số lượng', data: productQuantity }]}
       options={chartOptions}
-      height={filteredProduct.length > 0 ? filteredProduct.length * 36 + 50 : 300}
+      height={data.products.length > 0 ? data.products.length * 36 + 50 : 300}
     />
   );
 }
