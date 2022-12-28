@@ -31,6 +31,7 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 }));
 
 export default function TotalRevenueInDay({ revenue }) {
+  console.log(revenue);
   return (
     <RootStyle>
       <IconWrapperStyle>
