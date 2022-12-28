@@ -5,8 +5,8 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
-import { updateCategory } from '~/services/categoryServices';
-import { updateCategory as updateExistingCategory } from '~/redux/dataSlice';
+import { createCategory, updateCategory } from '~/services/categoryServices';
+import { addCategory, updateCategory as updateExistingCategory } from '~/redux/dataSlice';
 import FormProvider from '../hook-form/FormProvider';
 import RHFTextField from '../hook-form/RHFTextField';
 import Iconify from '../UI/Iconify';
@@ -56,6 +56,16 @@ export default function CategoryModal({ type, isOpen, category, onCloseModal }) 
   const onSubmit = async (values) => {
     const { name } = values;
     try {
+      if (type === 'new') {
+        const categoryRes = await createCategory(name);
+        if (categoryRes.status === 201) {
+          toast.success(categoryRes.data.message);
+          dispatch(addCategory(categoryRes.data.category));
+          onCloseModal();
+        }
+        return;
+      }
+
       const categoryRes = await updateCategory({ name }, category._id);
       if (categoryRes.status === 201) {
         toast.success(categoryRes.data.message);

@@ -49,3 +49,12 @@ export const editStaff = async (updatedStaff) => {
   });
   return res;
 };
+
+export const changePassword = async (passwordBody, staffId) => {
+  const res = await baseService.put(`users/change-password/${staffId}`, passwordBody, {
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token')}`,
+    },
+  });
+  return res;
+};

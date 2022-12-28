@@ -47,7 +47,8 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
 
   let navConfigByRole = [...navConfig];
   if (user?.name !== '' && user?.role?.name === 'Nhân viên') {
-    navConfigByRole = navConfig.slice(0, navConfig.length - 1);
+    navConfigByRole = navConfig.slice(0, navConfig.length - 2);
+    navConfigByRole.shift();
   }
 
   useEffect(() => {

@@ -41,6 +41,14 @@ const dataSlice = createSlice({
         updatedCategories[existingCategoryIndex].name = name;
       }
     },
+    addCategory(state, action) {
+      state.categories.push(action.payload);
+    },
+    removeCategory(state, action) {
+      const categoryName = action.payload;
+      const updatedCategories = [...state.categories];
+      state.categories = updatedCategories.filter((category) => category.name !== categoryName);
+    },
     setUser(state, action) {
       state.user = action.payload;
     },
@@ -51,7 +59,16 @@ export const selectProducts = (state) => state.data.products;
 export const selectCategories = (state) => state.data.categories;
 export const selectUser = (state) => state.data.user;
 
-export const { setDataStarted, setDataSuccess, setDataFailed, addProduct, setProducts, updateCategory, setUser } =
-  dataSlice.actions;
+export const {
+  setDataStarted,
+  setDataSuccess,
+  setDataFailed,
+  addProduct,
+  setProducts,
+  updateCategory,
+  addCategory,
+  removeCategory,
+  setUser,
+} = dataSlice.actions;
 
 export default dataSlice.reducer;

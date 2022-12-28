@@ -8,11 +8,17 @@ import { useEffect, useState } from 'react';
 import { getReceipts } from '~/services/receiptServices';
 
 const optionsFilter = ['Tất cả', 'Giá tăng dần', 'Giá giảm dần', 'Đã thanh toán', 'Chưa thanh toán', 'Đã hủy'];
-let allReceipts;
+const ALL_RECEIPTS = [];
+const ASC_PRICE_RECEIPTS = [];
+const DESC_PRICE_RECEIPTS = [];
+const PAID_RECEIPTS = [];
+const UNPAID_RECEIPTS = [];
+const CANCELLED_RECEIPTS = [];
 
 export default function Bills() {
   const [receipts, setReceipts] = useState(null);
   const [currentBill, setCurrentBill] = useState();
+  const [mode, setMode] = useState(optionsFilter[0]);
 
   const getAllReceipts = async () => {
     const receiptRes = await getReceipts();
@@ -21,7 +27,7 @@ export default function Bills() {
     //   (receipt) => new Date(receipt.createdAt).toLocaleDateString() === new Date().toLocaleDateString(),
     // );
 
-    allReceipts = receiptsData;
+    ALL_RECEIPTS.push(...receiptsData);
     setReceipts(receiptsData);
     setCurrentBill(receiptsData[0]);
   };
@@ -36,7 +42,31 @@ export default function Bills() {
 
   const handleFilterDate = (date) => {
     const filterReceipts = [];
-    receipts.forEach((receipt) => {
+    let currentReceipts;
+    switch (mode) {
+      case optionsFilter[0]:
+        currentReceipts = [...ALL_RECEIPTS];
+        break;
+      case optionsFilter[1]:
+        currentReceipts = [...ASC_PRICE_RECEIPTS];
+        break;
+      case optionsFilter[2]:
+        currentReceipts = [...DESC_PRICE_RECEIPTS];
+        break;
+      case optionsFilter[3]:
+        currentReceipts = [...PAID_RECEIPTS];
+        break;
+      case optionsFilter[4]:
+        currentReceipts = [...UNPAID_RECEIPTS];
+        break;
+      case optionsFilter[5]:
+        currentReceipts = [...CANCELLED_RECEIPTS];
+        break;
+      default:
+        break;
+    }
+
+    currentReceipts.forEach((receipt) => {
       const currentReceiptDate = new Date(receipt.createdAt);
       const isSelectedDate = currentReceiptDate.toLocaleDateString() === new Date(date).toLocaleDateString();
       if (isSelectedDate) {
@@ -50,34 +80,53 @@ export default function Bills() {
   };
 
   const handleSelectMode = (mode) => {
+    setMode(mode);
+
     if (mode === optionsFilter[0]) {
-      setReceipts(allReceipts);
+      setReceipts(ALL_RECEIPTS);
     }
 
     if (mode === optionsFilter[1]) {
       const ascPriceReceipts = [...receipts];
       ascPriceReceipts.sort((a, b) => a.totalPrice - b.totalPrice);
+      if (ASC_PRICE_RECEIPTS.length === 0) {
+        ASC_PRICE_RECEIPTS.push(...ascPriceReceipts);
+      }
       setReceipts(ascPriceReceipts);
     }
 
     if (mode === optionsFilter[2]) {
       const desPriceReceipts = [...receipts];
       desPriceReceipts.sort((a, b) => b.totalPrice - a.totalPrice);
+      if (DESC_PRICE_RECEIPTS.length === 0) {
+        DESC_PRICE_RECEIPTS.push(...desPriceReceipts);
+      }
       setReceipts(desPriceReceipts);
     }
 
     if (mode === optionsFilter[3]) {
-      const paidReceipts = allReceipts.filter((receipt) => receipt.state === optionsFilter[3]);
+      const paidReceipts = ALL_RECEIPTS.filter((receipt) => receipt.state === optionsFilter[3]);
+      if (PAID_RECEIPTS.length === 0) {
+        console.log('paid');
+        PAID_RECEIPTS.push(...paidReceipts);
+      }
       setReceipts(paidReceipts);
     }
 
     if (mode === optionsFilter[4]) {
-      const unpaidReceipts = allReceipts.filter((receipt) => receipt.state === optionsFilter[4]);
+      const unpaidReceipts = ALL_RECEIPTS.filter((receipt) => receipt.state === optionsFilter[4]);
+      if (UNPAID_RECEIPTS.length === 0) {
+        console.log('unpaid');
+        UNPAID_RECEIPTS.push(...unpaidReceipts);
+      }
       setReceipts(unpaidReceipts);
     }
 
     if (mode === optionsFilter[5]) {
-      const cancelledReceipts = allReceipts.filter((receipt) => receipt.state === optionsFilter[5]);
+      const cancelledReceipts = ALL_RECEIPTS.filter((receipt) => receipt.state === optionsFilter[5]);
+      if (CANCELLED_RECEIPTS.length === 0) {
+        CANCELLED_RECEIPTS.push(...cancelledReceipts);
+      }
       setReceipts(cancelledReceipts);
     }
   };

@@ -19,7 +19,9 @@ export default function YearReport() {
   const getReport = async (year) => {
     try {
       setLoading(true);
-      const { data, status } = await getReportByYear({ year: year.$y });
+      console.log(year.$y);
+      const { data, status } = await getReportByYear({ year: year.$y.toString() });
+      console.log(data);
       if (status === 200) setData(data.report);
       setLoading(false);
     } catch (e) {
@@ -29,7 +31,7 @@ export default function YearReport() {
 
   useEffect(() => {
     getReport(year);
-  }, []);
+  }, [year]);
 
   const handleChangeYear = (newYear) => {
     setYear(newYear);

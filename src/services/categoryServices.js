@@ -18,3 +18,16 @@ export const deleteCategory = async (categoryId) => {
   });
   return res;
 };
+
+export const createCategory = async (categoryName) => {
+  const res = await baseService.post(
+    '/categories',
+    { categoryName },
+    {
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+    },
+  );
+  return res;
+};

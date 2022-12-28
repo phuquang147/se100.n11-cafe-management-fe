@@ -134,7 +134,7 @@ export default function Profile() {
         </Stack>
       </FormProvider>
 
-      <ResetPasswordModal isOpen={openModal} onCloseModal={() => setOpenModal(false)} />
+      <ResetPasswordModal isOpen={openModal} staffId={user._id} onCloseModal={() => setOpenModal(false)} />
     </Container>
   );
 }

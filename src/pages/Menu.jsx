@@ -4,7 +4,18 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 // @mui
-import { Box, Button, CircularProgress, Container, Grid, Stack, Tabs, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Grid,
+  IconButton,
+  Stack,
+  Tabs,
+  TextField,
+  Typography,
+} from '@mui/material';
 // components
 import { MetaTags } from 'react-meta-tags';
 import CategoryModal from '~/components/Menu/CategoryModal';
@@ -105,7 +116,11 @@ export default function Menu() {
     setOpenNewCategoryModal(false);
   };
 
-  if (loadedProducts.length === 0 && !searchValue) {
+  const handleOpenNewCategoryModal = () => {
+    setOpenNewCategoryModal(true);
+  };
+
+  if (loadedProducts.length === 0 && !searchValue && value === 0) {
     return (
       <Box sx={{ textAlign: 'center' }}>
         <CircularProgress sx={{ mt: 10 }} />
@@ -132,18 +147,24 @@ export default function Menu() {
         justifyContent="space-between"
         sx={{ borderColor: 'divider', display: 'flex' }}
       >
-        <Tabs value={value} sx={{ overflowX: 'auto' }} variant="scrollable" scrollButtons="auto">
-          {categories.map((category, index) => (
-            // <Tab key={index} label={category} />
-            <CategoryTab
-              key={index}
-              label={category.name}
-              value={index}
-              category={category}
-              handleChange={handleChangeTab}
-            />
-          ))}
-        </Tabs>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Tabs value={value} sx={{ overflowX: 'auto' }} variant="scrollable" scrollButtons="auto">
+            {categories.map((category, index) => (
+              // <Tab key={index} label={category} />
+              <CategoryTab
+                key={index}
+                label={category.name}
+                value={index}
+                category={category}
+                handleChange={handleChangeTab}
+              />
+            ))}
+          </Tabs>
+          <IconButton sx={{ borderRadius: '50%', width: '40px', height: '40px' }} onClick={handleOpenNewCategoryModal}>
+            <Iconify icon="ic:baseline-plus" />
+          </IconButton>
+        </Stack>
+
         <TextField
           variant="outlined"
           value={searchValue}
