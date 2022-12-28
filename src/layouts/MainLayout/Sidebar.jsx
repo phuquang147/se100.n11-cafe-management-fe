@@ -45,6 +45,11 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
 
   const isDesktop = useResponsive('up', 'lg');
 
+  let navConfigByRole = [...navConfig];
+  if (user?.name !== '' && user?.role?.name === 'Nhân viên') {
+    navConfigByRole = navConfig.slice(0, navConfig.length - 1);
+  }
+
   useEffect(() => {
     if (isOpenSidebar) {
       onCloseSidebar();
@@ -79,7 +84,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
         </Link>
       </Box>
 
-      <NavSection navConfig={navConfig} />
+      <NavSection navConfig={navConfigByRole} />
 
       <Box sx={{ flexGrow: 1 }} />
     </Scrollbar>

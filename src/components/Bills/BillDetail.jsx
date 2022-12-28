@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
   Box,
-  Button,
   Divider,
   IconButton,
   List,
@@ -77,21 +76,24 @@ export default function BillDetail({ bill, onReloadReceipts }) {
               </>
             )}
           </Stack>
-          <Button
+          <Typography
             sx={{
-              backgroundColor: bill.state !== 'Đã thanh toán' ? theme.palette.primary.main : theme.palette.success.main,
-              '&:hover': {
-                backgroundColor:
-                  bill.state !== 'Đã thanh toán' ? theme.palette.primary.dark : theme.palette.success.dark,
-              },
+              backgroundColor:
+                bill.state === 'Đã thanh toán'
+                  ? theme.palette.success.main
+                  : bill.state === 'Chưa thanh toán'
+                  ? theme.palette.primary.main
+                  : theme.palette.error.main,
+              borderRadius: '8px',
+              textAlign: 'center',
               color: 'white',
+              paddingY: '8px',
               width: '160px',
-              height: '40px',
               cursor: 'default',
             }}
           >
             {bill.state}
-          </Button>
+          </Typography>
         </Stack>
         <Divider />
         <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>

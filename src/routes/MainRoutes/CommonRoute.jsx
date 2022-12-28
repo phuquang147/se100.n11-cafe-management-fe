@@ -10,6 +10,7 @@ import Order from '~/pages/Order';
 import TableForm from '~/components/Table/TableForm';
 import Staff from '~/pages/Staff';
 import StaffForm from '~/components/Staff/StaffForm';
+import Profile from '~/pages/Profile';
 
 const CommonRoutes = [
   {
@@ -52,6 +53,10 @@ const CommonRoutes = [
   {
     path: '/staffs/edit/:staffId',
     element: <EditItemForm title="Chỉnh sửa thông tin nhân viên" Form={StaffForm} />,
+  },
+  {
+    path: '/profile',
+    element: <Profile />,
   },
   {
     path: '*',

@@ -19,6 +19,8 @@ import {
   IconButton,
   TableContainer,
   TablePagination,
+  CircularProgress,
+  Box,
 } from '@mui/material';
 // components
 import Label from '~/components/Label/Label';
@@ -35,6 +37,9 @@ import { deleteSelectedStaffs, deleteStaff, getStaffs } from '~/services/staffSe
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectUser } from '~/redux/dataSlice';
+import { useCallback } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -47,7 +52,7 @@ const TABLE_HEAD = [
   { id: '' },
 ];
 
-let allStaffs;
+let allStaffs = [];
 
 // ----------------------------------------------------------------------
 
@@ -68,6 +73,11 @@ function getComparator(order, orderBy) {
 }
 
 function applySortFilter(array, comparator, query) {
+  // console.log(query, array);
+  if (array.length === 0) {
+    console.log(allStaffs);
+    array = [...allStaffs];
+  }
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -105,18 +115,24 @@ export default function Staff() {
 
   const navigate = useNavigate();
 
+  const loggedInUser = useSelector(selectUser);
+
   const filteredStaffs = applySortFilter(staffs, getComparator(order, orderBy), filterName);
 
-  const getAllStaffs = async () => {
+  const getAllStaffs = useCallback(async () => {
     const staffRes = await getStaffs();
     const { users } = staffRes.data;
+
     allStaffs = users;
-    setStaffs(users);
-  };
+    const staffsExceptCurrentUser = users.filter(
+      (user) => user._id !== loggedInUser._id && user.role.name !== 'Chủ quán',
+    );
+    setStaffs(staffsExceptCurrentUser);
+  }, [loggedInUser._id]);
 
   useEffect(() => {
     getAllStaffs();
-  }, []);
+  }, [getAllStaffs]);
 
   const handleOpenMenu = (event, staff) => {
     setCurrentStaff(staff);
@@ -212,7 +228,15 @@ export default function Staff() {
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - staffs.length) : 0;
 
-  const isNotFound = staffs.length === 0;
+  const isNotFound = staffs.length === 0 && filterName.trim() !== '';
+
+  if (staffs.length === 0 && filterName === '') {
+    return (
+      <Box sx={{ textAlign: 'center' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -253,12 +277,12 @@ export default function Staff() {
                 <TableBody>
                   {staffs.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((staff) => {
                     const { _id, name, role, status, gender, birthday } = staff;
-                    const selectedUser = selected.findIndex((item) => item._id === _id) !== -1;
+                    const isSelected = selected.findIndex((item) => item._id === _id) !== -1;
 
                     return (
-                      <TableRow hover key={_id} tabIndex={-1} role="checkbox" selected={selectedUser}>
+                      <TableRow hover key={_id} tabIndex={-1} role="checkbox" selected={isSelected}>
                         <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, staff)} />
+                          <Checkbox checked={isSelected} onChange={(event) => handleClick(event, staff)} />
                         </TableCell>
 
                         <TableCell component="th" scope="row" padding="none">

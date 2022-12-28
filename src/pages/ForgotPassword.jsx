@@ -27,7 +27,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
 export default function ForgotPassword() {
   const { token } = useParams();
   const navigate = useNavigate();
-  console.log(token === undefined);
 
   useEffect(() => {
     const checkExistingAccount = async () => {

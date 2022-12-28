@@ -41,6 +41,9 @@ const dataSlice = createSlice({
         updatedCategories[existingCategoryIndex].name = name;
       }
     },
+    setUser(state, action) {
+      state.user = action.payload;
+    },
   },
 });
 
@@ -48,7 +51,7 @@ export const selectProducts = (state) => state.data.products;
 export const selectCategories = (state) => state.data.categories;
 export const selectUser = (state) => state.data.user;
 
-export const { setDataStarted, setDataSuccess, setDataFailed, addProduct, setProducts, updateCategory } =
+export const { setDataStarted, setDataSuccess, setDataFailed, addProduct, setProducts, updateCategory, setUser } =
   dataSlice.actions;
 
 export default dataSlice.reducer;

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // material
 import { Button, Card, Grid, IconButton, MenuItem, Stack, Typography } from '@mui/material';
 // components
@@ -21,6 +21,24 @@ export default function Table({
   openMergeTableModal,
 }) {
   const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
+  const [mergedTo, setMergedTo] = useState();
+  // console.log(table, mergedTo);
+
+  useEffect(() => {
+    const checkTableIsMerged = async () => {
+      if (!table.receipt) {
+        setMergedTo(null);
+        return;
+      }
+
+      const selectedTable = table.receipt.tables[table.receipt.tables.length - 1];
+      if (table._id !== selectedTable._id) {
+        setMergedTo(selectedTable.name);
+      }
+    };
+
+    checkTableIsMerged();
+  }, [table]);
 
   const handleOpenConfirmDeleteModal = () => {
     setShowConfirmDeleteModal(true);
@@ -94,11 +112,23 @@ export default function Table({
                 </Stack>
               </Grid>
             </Grid>
-            <IconButton ref={anchorRef} onClick={handleOpen}>
-              <Iconify icon={open ? 'eva:close-fill' : 'bx:dots-horizontal-rounded'} sx={{ width: 20, height: 20 }} />
-            </IconButton>
+            {mergedTo && (
+              <IconButton ref={anchorRef} onClick={handleOpen}>
+                <Iconify icon={open ? 'eva:close-fill' : 'bx:dots-horizontal-rounded'} sx={{ width: 20, height: 20 }} />
+              </IconButton>
+            )}
+            {table?.receipt?.tables?.length === 1 && (
+              <IconButton ref={anchorRef} onClick={handleOpen}>
+                <Iconify icon={open ? 'eva:close-fill' : 'bx:dots-horizontal-rounded'} sx={{ width: 20, height: 20 }} />
+              </IconButton>
+            )}
+            {!mergedTo && table.state === 'Còn trống' && (
+              <IconButton ref={anchorRef} onClick={handleOpen}>
+                <Iconify icon={open ? 'eva:close-fill' : 'bx:dots-horizontal-rounded'} sx={{ width: 20, height: 20 }} />
+              </IconButton>
+            )}
           </Stack>
-          {table.state === 'Còn trống' ? (
+          {!mergedTo && table.state === 'Còn trống' && (
             <Button
               variant="outlined"
               fullWidth
@@ -107,7 +137,9 @@ export default function Table({
             >
               Chọn món
             </Button>
-          ) : (
+          )}
+
+          {!mergedTo && table.state === 'Đang dùng' && (
             <Button
               variant="contained"
               fullWidth
@@ -116,6 +148,12 @@ export default function Table({
             >
               Thanh toán
             </Button>
+          )}
+
+          {mergedTo && (
+            <Typography sx={{ textAlign: 'center', height: '36px', lineHeight: '36px' }}>
+              Đang gộp với <strong>{mergedTo}</strong>
+            </Typography>
           )}
         </Stack>
       </Card>

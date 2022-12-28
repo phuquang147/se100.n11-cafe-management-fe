@@ -36,7 +36,7 @@ export default function CustomFilter({ options, onSelect }) {
       <List component="nav" aria-label="Device settings" sx={{ p: 0 }}>
         <ListItem
           button
-          sx={{ borderRadius: '10px', width: '200px' }}
+          sx={{ borderRadius: '10px', width: '220px' }}
           id="lock-button"
           aria-haspopup="listbox"
           aria-controls="lock-menu"

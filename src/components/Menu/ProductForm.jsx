@@ -11,23 +11,22 @@ import RHFTextField from '~/components/hook-form/RHFTextField';
 import RHFAutocomplete from '../hook-form/RHFAutocomplete';
 import Iconify from '~/components/UI/Iconify';
 import { useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addProduct, selectCategories } from '~/redux/dataSlice';
+import { useSelector } from 'react-redux';
+import { selectCategories } from '~/redux/dataSlice';
 import { toast } from 'react-toastify';
 // import { createProduct, postImage } from '~/services/productService';
 import Cookies from 'js-cookie';
 import { useEffect } from 'react';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 export default function ProductForm() {
   const location = useLocation();
-  console.log(location.state);
+  const navigate = useNavigate();
   const [filename, setFilename] = useState('');
   const [uploadedFile, setUploadedFile] = useState();
   const inputFileRef = useRef();
   const categories = useSelector(selectCategories);
   const categoryNames = categories.map((category) => category.name);
-  const dispatch = useDispatch();
 
   const editMode = Object.keys(location.state || {}).length > 0;
 
@@ -102,10 +101,14 @@ export default function ProductForm() {
           },
         });
         const productResData = await addProductRes.json();
-        const { message, product: addedProduct } = productResData;
-        console.log(productResData);
+        const { message } = productResData;
 
-        toast.success(message);
+        if (addProductRes.status === 201) {
+          toast.success(message);
+          navigate('/menu', { replace: true });
+        } else {
+          toast.error(message);
+        }
       } catch (err) {
         console.log(err);
         toast.error(err.message);
@@ -155,6 +158,7 @@ export default function ProductForm() {
         const productResData = await updateProductRes.json();
         toast.success(productResData.message);
       }
+      navigate('/menu', { replace: true });
     }
   };
 

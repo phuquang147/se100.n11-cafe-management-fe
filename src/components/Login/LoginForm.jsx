@@ -70,7 +70,7 @@ export default function LoginForm() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        <RHFTextField name="username" label="Tên dăng nhập" />
+        <RHFTextField name="username" label="Tên đăng nhập" />
 
         <RHFTextField
           name="password"

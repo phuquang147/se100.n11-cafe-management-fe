@@ -26,6 +26,8 @@ const style = {
 };
 
 export default function BillModal({ isOpen, receipt, onReloadTables, onCloseModal, onOpenConfirmModal }) {
+  const tableNames = receipt?.tables?.map((table) => table.name);
+
   const handlePay = async () => {
     onOpenConfirmModal();
     try {
@@ -53,6 +55,9 @@ export default function BillModal({ isOpen, receipt, onReloadTables, onCloseModa
             <Iconify icon="ep:close" width={24} height={24} />
           </IconButton>
         </Stack>
+        <Typography variant="subtitle1" sx={{ my: 1, fontSize: '18px' }}>
+          {tableNames?.join(' - ')}
+        </Typography>
         <Grid container spacing={2}>
           {receipt &&
             receipt.products.map((product, index) => (

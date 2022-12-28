@@ -6,7 +6,7 @@ import BillDetail from '~/components/Bills/BillDetail';
 import { useEffect, useState } from 'react';
 import { getReceipts } from '~/services/receiptServices';
 
-const optionsFilter = ['Tất cả', 'Giá tăng dần', 'Giá giảm dần'];
+const optionsFilter = ['Tất cả', 'Giá tăng dần', 'Giá giảm dần', 'Đã thanh toán', 'Chưa thanh toán', 'Đã hủy'];
 let allReceipts;
 
 export default function Bills() {
@@ -35,9 +35,10 @@ export default function Bills() {
 
   const handleFilterDate = (date) => {
     const filterReceipts = [];
-    allReceipts.forEach((receipt) => {
+    receipts.forEach((receipt) => {
       const currentReceiptDate = new Date(receipt.createdAt);
-      if (currentReceiptDate.toLocaleDateString() === new Date(date).toLocaleDateString()) {
+      const isSelectedDate = currentReceiptDate.toLocaleDateString() === new Date(date).toLocaleDateString();
+      if (isSelectedDate) {
         filterReceipts.push(receipt);
       }
     });
@@ -62,6 +63,21 @@ export default function Bills() {
       const desPriceReceipts = [...receipts];
       desPriceReceipts.sort((a, b) => b.totalPrice - a.totalPrice);
       setReceipts(desPriceReceipts);
+    }
+
+    if (mode === optionsFilter[3]) {
+      const paidReceipts = allReceipts.filter((receipt) => receipt.state === optionsFilter[3]);
+      setReceipts(paidReceipts);
+    }
+
+    if (mode === optionsFilter[4]) {
+      const unpaidReceipts = allReceipts.filter((receipt) => receipt.state === optionsFilter[4]);
+      setReceipts(unpaidReceipts);
+    }
+
+    if (mode === optionsFilter[5]) {
+      const cancelledReceipts = allReceipts.filter((receipt) => receipt.state === optionsFilter[5]);
+      setReceipts(cancelledReceipts);
     }
   };
 

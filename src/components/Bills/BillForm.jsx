@@ -41,8 +41,6 @@ export default function BillForm() {
 
   const totalPriceRef = useRef();
 
-  console.log(receiptId);
-
   const handleChangeQuantity = (index, type) => {
     const updatedFoods = [...selectedFoods];
     if (type === 'increase') {
@@ -66,7 +64,6 @@ export default function BillForm() {
   };
 
   const handleSelectFood = (food) => {
-    console.log(food, selectedFoods);
     const updatedFoods = [...selectedFoods];
     const existingFoodIndex = selectedFoods.findIndex(
       (item) => item?.product?._id === food._id || item._id === food._id,
@@ -98,7 +95,6 @@ export default function BillForm() {
       quantity: food.quantity,
       product: food?.product?._id || food._id,
     }));
-    console.log(formattedFoods);
 
     try {
       const receiptRes = await editReceipt(receiptId, formattedFoods);
@@ -113,10 +109,10 @@ export default function BillForm() {
 
   const total = useMemo(
     () =>
-      products.reduce((acc, cur) => {
+      selectedFoods.reduce((acc, cur) => {
         return acc + cur.price * cur.quantity;
       }, 0),
-    [products],
+    [selectedFoods],
   );
 
   return (
@@ -148,15 +144,23 @@ export default function BillForm() {
         </Typography>
       )}
 
-      <Stack direction="row" alignItems="center" justifyContent="end" spacing={3} sx={{ mt: 3 }}>
-        <Typography variant="h6">Tổng:</Typography>
-        <Typography ref={totalPriceRef} variant="h6">
-          {printNumberWithCommas(total)} VNĐ
-        </Typography>
-      </Stack>
+      {total > 0 && (
+        <Stack direction="row" alignItems="center" justifyContent="end" spacing={3} sx={{ mt: 3 }}>
+          <Typography variant="h6">Tổng:</Typography>
+          <Typography ref={totalPriceRef} variant="h6">
+            {printNumberWithCommas(total)} VNĐ
+          </Typography>
+        </Stack>
+      )}
 
       <Stack direction="row" justifyContent="end" sx={{ mt: 3 }}>
-        <LoadingButton size="large" type="submit" variant="contained" onClick={handleEditBill}>
+        <LoadingButton
+          size="large"
+          type="submit"
+          variant="contained"
+          disabled={selectedFoods.length === 0}
+          onClick={handleEditBill}
+        >
           Cập nhật
         </LoadingButton>
       </Stack>

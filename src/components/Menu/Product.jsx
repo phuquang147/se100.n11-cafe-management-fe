@@ -37,7 +37,13 @@ export default function Product({ data, onLoadProducts }) {
     <>
       <Card>
         <Stack rowGap={1}>
-          <img src={`http://localhost:3001/${data.image}`} alt={data.name} crossOrigin="anonymous" />
+          <img
+            src={`http://localhost:3001/${data.image}`}
+            alt={data.name}
+            crossOrigin="anonymous"
+            height="281"
+            style={{ objectFit: 'cover' }}
+          />
           <Stack rowGap={1} sx={{ px: 2, pb: 2 }}>
             <Stack>
               <Typography

@@ -98,7 +98,6 @@ export default function Order() {
   };
 
   const handleOpenMergeTableModal = (table) => {
-    console.log(table);
     setSelectedTable(table);
     setMode('merge');
     setOpenMergeTableModal(true);

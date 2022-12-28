@@ -1,11 +1,10 @@
-import { faker } from '@faker-js/faker';
 import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-import useResponsive from '~/hooks/useResponsive';
+// import useResponsive from '~/hooks/useResponsive';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 // @mui
-import { Box, Button, CircularProgress, Container, Grid, Stack, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Container, Grid, Stack, Tabs, TextField, Typography } from '@mui/material';
 // components
 import CategoryModal from '~/components/Menu/CategoryModal';
 import CategoryTab from '~/components/Menu/CategoryTab';
@@ -26,7 +25,7 @@ function TabPanel(props) {
 }
 
 export default function Menu() {
-  const isMobile = useResponsive('down', 'md');
+  // const isMobile = useResponsive('down', 'md');
   const [value, setValue] = useState(0);
   const [searchValue, setSearchValue] = useState('');
   const [openNewCategoryModal, setOpenNewCategoryModal] = useState(false);
@@ -99,10 +98,6 @@ export default function Menu() {
   const handleChangeTab = (newTab) => {
     setValue(newTab);
     handleChange(null, newTab);
-  };
-
-  const handleOpenNewCategoryModal = () => {
-    setOpenNewCategoryModal(true);
   };
 
   const handleCloseNewCategoryModal = () => {

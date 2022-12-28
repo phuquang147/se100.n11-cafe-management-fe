@@ -40,3 +40,12 @@ export const createStaff = async (staff) => {
   });
   return res;
 };
+
+export const editStaff = async (updatedStaff) => {
+  const res = await baseService.put(`/users/edit/${updatedStaff._id}`, updatedStaff, {
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token')}`,
+    },
+  });
+  return res;
+};

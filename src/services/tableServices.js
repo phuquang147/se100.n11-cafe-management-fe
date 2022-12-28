@@ -19,6 +19,15 @@ export const getTables = async () => {
   return res;
 };
 
+export const getTableById = async (tableId) => {
+  const res = await baseService.get(`/tables/${tableId}`, {
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token')}`,
+    },
+  });
+  return res;
+};
+
 export const updateTable = async (table, tableId) => {
   const res = await baseService.put(`/tables/${tableId}`, table, {
     headers: {

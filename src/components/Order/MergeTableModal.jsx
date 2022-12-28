@@ -59,6 +59,7 @@ export default function MergeTableModal({ isOpen, selectedTable, onCloseModal, o
     try {
       const tableIds = selectedTables.map((table) => table._id);
       tableIds.push(selectedTable._id);
+      console.log(tableIds);
 
       const tableRes = await mergeTable(tableIds);
       if (tableRes.status === 201) {

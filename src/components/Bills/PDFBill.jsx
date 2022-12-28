@@ -71,7 +71,6 @@ const styles = StyleSheet.create({
 });
 
 function PDFBill({ receipt }) {
-  console.log(receipt);
   const tableNames = receipt.tables.map((table) => table.name);
 
   return (
