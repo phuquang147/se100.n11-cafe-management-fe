@@ -20,7 +20,7 @@ export default function YearReport() {
     try {
       setLoading(true);
       console.log(year.$y);
-      const { data, status } = await getReportByYear({ year: year.$y.toString() });
+      const { data, status } = await getReportByYear({ year: year.$y });
       console.log(data);
       if (status === 200) setData(data.report);
       setLoading(false);

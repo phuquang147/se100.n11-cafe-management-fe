@@ -9,7 +9,12 @@ export default function ListBill({ bills, onSelectBill }) {
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
             <Stack direction="row" alignItems="center" spacing={2}>
               <Typography variant="h5">Đơn #{item._id.slice(0, 6).toUpperCase()}</Typography>
-              <Badge color={item.state !== 'Đã thanh toán' ? 'primary' : 'success'} variant="dot" />
+              <Badge
+                color={
+                  item.state === 'Đã thanh toán' ? 'success' : item.state === 'Chưa thanh toán' ? 'primary' : 'error'
+                }
+                variant="dot"
+              />
               <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
                 {item.state}
               </Typography>

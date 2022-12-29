@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { getReceipts } from '~/services/receiptServices';
 
 const optionsFilter = ['Tất cả', 'Giá tăng dần', 'Giá giảm dần', 'Đã thanh toán', 'Chưa thanh toán', 'Đã hủy'];
-const ALL_RECEIPTS = [];
+let ALL_RECEIPTS = [];
 const ASC_PRICE_RECEIPTS = [];
 const DESC_PRICE_RECEIPTS = [];
 const PAID_RECEIPTS = [];
@@ -27,6 +27,7 @@ export default function Bills() {
     //   (receipt) => new Date(receipt.createdAt).toLocaleDateString() === new Date().toLocaleDateString(),
     // );
 
+    ALL_RECEIPTS = [];
     ALL_RECEIPTS.push(...receiptsData);
     setReceipts(receiptsData);
     setCurrentBill(receiptsData[0]);
@@ -41,6 +42,8 @@ export default function Bills() {
   };
 
   const handleFilterDate = (date) => {
+    console.log(date);
+    console.log(mode);
     const filterReceipts = [];
     let currentReceipts;
     switch (mode) {
@@ -66,6 +69,8 @@ export default function Bills() {
         break;
     }
 
+    console.log(currentReceipts);
+
     currentReceipts.forEach((receipt) => {
       const currentReceiptDate = new Date(receipt.createdAt);
       const isSelectedDate = currentReceiptDate.toLocaleDateString() === new Date(date).toLocaleDateString();
@@ -83,6 +88,7 @@ export default function Bills() {
     setMode(mode);
 
     if (mode === optionsFilter[0]) {
+      console.log('all');
       setReceipts(ALL_RECEIPTS);
     }
 
@@ -90,7 +96,9 @@ export default function Bills() {
       const ascPriceReceipts = [...receipts];
       ascPriceReceipts.sort((a, b) => a.totalPrice - b.totalPrice);
       if (ASC_PRICE_RECEIPTS.length === 0) {
+        console.log('asc');
         ASC_PRICE_RECEIPTS.push(...ascPriceReceipts);
+        console.log(ASC_PRICE_RECEIPTS);
       }
       setReceipts(ascPriceReceipts);
     }
@@ -99,7 +107,9 @@ export default function Bills() {
       const desPriceReceipts = [...receipts];
       desPriceReceipts.sort((a, b) => b.totalPrice - a.totalPrice);
       if (DESC_PRICE_RECEIPTS.length === 0) {
+        console.log('desc');
         DESC_PRICE_RECEIPTS.push(...desPriceReceipts);
+        console.log(DESC_PRICE_RECEIPTS);
       }
       setReceipts(desPriceReceipts);
     }
@@ -109,6 +119,7 @@ export default function Bills() {
       if (PAID_RECEIPTS.length === 0) {
         console.log('paid');
         PAID_RECEIPTS.push(...paidReceipts);
+        console.log(PAID_RECEIPTS);
       }
       setReceipts(paidReceipts);
     }
@@ -118,6 +129,7 @@ export default function Bills() {
       if (UNPAID_RECEIPTS.length === 0) {
         console.log('unpaid');
         UNPAID_RECEIPTS.push(...unpaidReceipts);
+        console.log(UNPAID_RECEIPTS);
       }
       setReceipts(unpaidReceipts);
     }
@@ -125,7 +137,9 @@ export default function Bills() {
     if (mode === optionsFilter[5]) {
       const cancelledReceipts = ALL_RECEIPTS.filter((receipt) => receipt.state === optionsFilter[5]);
       if (CANCELLED_RECEIPTS.length === 0) {
+        console.log('cancelled');
         CANCELLED_RECEIPTS.push(...cancelledReceipts);
+        console.log(CANCELLED_RECEIPTS);
       }
       setReceipts(cancelledReceipts);
     }

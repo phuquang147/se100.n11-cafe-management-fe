@@ -12,7 +12,7 @@ export default function ViewsDatePicker({ onFilter }) {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
         views={['day', 'month', 'year']}
-        openTo="year"
+        openTo="day"
         label="Ngày"
         minDate={dayjs('2012-03-01')}
         maxDate={dayjs('2023-06-01')}
